@@ -3,9 +3,11 @@
 With SQLModel the ORM models double as domain entities; computed values
 (progress, scores, predictions) live in the application layer, never here.
 See docs/adr/0001-sqlmodel-entities.md for the trade-off discussion.
-"""
 
-from __future__ import annotations
+NOTE: no ``from __future__ import annotations`` here — SQLModel resolves
+``Relationship`` targets from evaluated annotations, and PEP 563 strings
+break that resolution.
+"""
 
 from datetime import date, datetime, timezone
 from uuid import uuid4
