@@ -1,10 +1,12 @@
-import { Link2, Plus, Timer, Trash2, X } from "lucide-react";
+import { Link2, Plus, Sparkles, Timer, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
   useAddDependency,
+  useAiStatus,
   useBoard,
   useDeleteTask,
+  useGenerateSubtasks,
   useLogWork,
   useRemoveDependency,
   useTask,
@@ -50,6 +52,8 @@ export function TaskDetailSheet({ taskId, onClose }: TaskDetailSheetProps) {
   const removeDependency = useRemoveDependency();
   const logWork = useLogWork();
   const deleteTask = useDeleteTask();
+  const generateSubtasks = useGenerateSubtasks();
+  const { data: aiStatus } = useAiStatus();
 
   const [description, setDescription] = useState("");
   const [workMinutes, setWorkMinutes] = useState("");
@@ -361,24 +365,42 @@ export function TaskDetailSheet({ taskId, onClose }: TaskDetailSheetProps) {
         </section>
 
         {/* Subtasks */}
-        {task.subtasks.length > 0 && (
-          <section>
+        <section>
+          <div className="flex items-center justify-between">
             <Label>Subtasks</Label>
-            <div className="mt-1.5 space-y-1.5">
-              {task.subtasks.map((sub) => (
-                <div
-                  key={sub.id}
-                  className="flex items-center justify-between rounded-md border px-2.5 py-1.5 text-sm"
-                >
-                  <span className="truncate">{sub.title}</span>
-                  <Badge variant="outline" className="capitalize">
-                    {STATUS_LABELS[sub.status]}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs"
+              disabled={generateSubtasks.isPending || aiStatus?.available === false}
+              title={
+                aiStatus?.available === false
+                  ? "AI unavailable — start Ollama (qwen3) to enable"
+                  : "Break this task down with AI"
+              }
+              onClick={() => generateSubtasks.mutate(task.id)}
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              {generateSubtasks.isPending ? "Generating…" : "AI breakdown"}
+            </Button>
+          </div>
+          <div className="mt-1.5 space-y-1.5">
+            {task.subtasks.length === 0 && (
+              <div className="text-xs text-muted-foreground">No subtasks</div>
+            )}
+            {task.subtasks.map((sub) => (
+              <div
+                key={sub.id}
+                className="flex items-center justify-between rounded-md border px-2.5 py-1.5 text-sm"
+              >
+                <span className="truncate">{sub.title}</span>
+                <Badge variant="outline" className="capitalize">
+                  {STATUS_LABELS[sub.status]}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </aside>
   );

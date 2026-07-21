@@ -1,0 +1,18 @@
+{
+  "$comment": "LLM model registry. The active provider/model is chosen via FOUNDEROS_LLM_PROVIDER / FOUNDEROS_LLM_MODEL env vars (see backend/app/core/config.py). This file documents known-good local options and their trade-offs.",
+  "default": { "provider": "ollama", "model": "qwen3" },
+  "providers": {
+    "ollama": {
+      "base_url": "http://127.0.0.1:11434",
+      "models": [
+        { "name": "qwen3", "context": 32768, "notes": "Default. Strong JSON adherence, good planning quality." },
+        { "name": "qwen3:14b", "context": 32768, "notes": "Better reviews/risk analysis; needs ~12GB RAM." },
+        { "name": "llama3.2", "context": 131072, "notes": "Fast fallback for low-RAM machines." }
+      ]
+    },
+    "openai": {
+      "base_url": "http://127.0.0.1:11434/v1",
+      "notes": "Any OpenAI-compatible server: vLLM, llama.cpp server, LM Studio, LiteLLM proxy."
+    }
+  }
+}

@@ -1,0 +1,65 @@
+"""Background jobs (APScheduler).
+
+Job logic delegates to application services so it stays testable; this module
+only handles wiring and session lifecycles.
+"""
+
+from __future__ import annotations
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+from apscheduler.triggers.interval import IntervalTrigger
+
+from app.core.config import Settings, get_shared_constants
+from app.core.logging import get_logger
+
+logger = get_logger("jobs")
+
+
+def recalculate_priorities_job() -> None:
+    """Priorities decay/urgency shift over time; keep scores fresh."""
+    from app.infrastructure.db import session_scope
+    from app.presentation.api.deps import get_task_service
+
+    with session_scope() as session:
+        service = get_task_service(session)
+        updated = service.recalculate_priorities()
+        service.refresh_blocked_statuses()
+        if updated:
+            logger.info("Priority recalc: %d tasks updated", updated)
+
+
+def rollover_job() -> None:
+    """Move unfinished planned work forward each night."""
+    from app.infrastructure.db import session_scope
+    from app.presentation.api.deps import get_planner_service
+
+    with session_scope() as session:
+        moved = get_planner_service(session).rollover()
+        if moved:
+            logger.info("Nightly rollover: %d entries moved", moved)
+
+
+def register_all_jobs(scheduler: BackgroundScheduler, settings: Settings) -> None:
+    get_shared_constants()  # fail fast if constants are unreadable
+    scheduler.add_job(
+        recalculate_priorities_job,
+        IntervalTrigger(minutes=settings.priority_recalc_interval_minutes),
+        id="recalc_priorities",
+        replace_existing=True,
+        max_instances=1,
+        coalesce=True,
+    )
+    scheduler.add_job(
+        rollover_job,
+        CronTrigger(hour=settings.rollover_hour, minute=0),
+        id="nightly_rollover",
+        replace_existing=True,
+        max_instances=1,
+        coalesce=True,
+    )
+    logger.info(
+        "Jobs registered: priority recalc every %dm, rollover at %02d:00",
+        settings.priority_recalc_interval_minutes,
+        settings.rollover_hour,
+    )

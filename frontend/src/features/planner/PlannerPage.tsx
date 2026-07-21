@@ -6,6 +6,7 @@
 import {
   BookOpen,
   Check,
+  ClipboardCheck,
   Coffee,
   Flame,
   Lock,
@@ -15,11 +16,25 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useGeneratePlan, usePlanToday, usePrefs, useUpdatePlanEntry } from "@/api/hooks";
+import {
+  useAiStatus,
+  useDailyReview,
+  useGeneratePlan,
+  usePlanToday,
+  usePrefs,
+  useUpdatePlanEntry,
+  type DailyReview,
+} from "@/api/hooks";
 import type { PlanEntry } from "@/api/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label, Skeleton } from "@/components/ui/misc";
 import { minutesToLabel } from "@/lib/display";
@@ -104,8 +119,11 @@ function EntryRow({ entry }: { entry: PlanEntry }) {
 export function PlannerPage() {
   const { data: plan, isLoading } = usePlanToday();
   const { data: prefs } = usePrefs();
+  const { data: aiStatus } = useAiStatus();
   const generatePlan = useGeneratePlan();
+  const dailyReview = useDailyReview();
   const [hours, setHours] = useState("");
+  const [review, setReview] = useState<DailyReview | null>(null);
 
   useEffect(() => {
     if (prefs && hours === "") setHours(String(prefs.available_hours));
@@ -162,8 +180,62 @@ export function PlannerPage() {
             {plan ? <RefreshCw className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
             {plan ? "Replan" : "Plan my day"}
           </Button>
+          {aiStatus?.available && (
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={dailyReview.isPending}
+              onClick={() => dailyReview.mutate(undefined, { onSuccess: setReview })}
+            >
+              <ClipboardCheck className="h-4 w-4" />
+              {dailyReview.isPending ? "Reviewing…" : "Daily review"}
+            </Button>
+          )}
         </div>
       </div>
+
+      <Dialog open={review !== null} onOpenChange={(open) => !open && setReview(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Daily review</DialogTitle>
+          </DialogHeader>
+          {review && (
+            <div className="space-y-4 text-sm">
+              <p>{review.summary}</p>
+              {review.wins.length > 0 && (
+                <div>
+                  <div className="mb-1 text-xs font-medium text-success">Wins</div>
+                  <ul className="list-disc space-y-0.5 pl-5">
+                    {review.wins.map((w) => (
+                      <li key={w}>{w}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {review.concerns.length > 0 && (
+                <div>
+                  <div className="mb-1 text-xs font-medium text-warning">Concerns</div>
+                  <ul className="list-disc space-y-0.5 pl-5">
+                    {review.concerns.map((c) => (
+                      <li key={c}>{c}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {review.tomorrow_focus.length > 0 && (
+                <div>
+                  <div className="mb-1 text-xs font-medium text-primary">Tomorrow</div>
+                  <ul className="list-disc space-y-0.5 pl-5">
+                    {review.tomorrow_focus.map((t) => (
+                      <li key={t}>{t}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {plan && (
         <div className="flex flex-wrap gap-2">

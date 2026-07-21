@@ -462,6 +462,54 @@ export function useDeleteReading(): UseMutationResult<void, unknown, string> {
   });
 }
 
+// AI ------------------------------------------------------------------------
+
+export interface AiStatus {
+  available: boolean;
+  provider: string | null;
+  detail: string;
+}
+
+export interface DailyReview {
+  summary: string;
+  wins: string[];
+  concerns: string[];
+  tomorrow_focus: string[];
+}
+
+export function useAiStatus(): UseQueryResult<AiStatus> {
+  return useQuery({
+    queryKey: ["ai", "status"],
+    queryFn: () => api.get<AiStatus>("/ai/status"),
+    staleTime: 60_000,
+    retry: false,
+  });
+}
+
+export function useGenerateSubtasks(): UseMutationResult<
+  { subtasks: { title: string }[] },
+  unknown,
+  string
+> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (taskId) => api.post<{ subtasks: { title: string }[] }>(`/ai/tasks/${taskId}/subtasks`),
+    onSuccess: (result, taskId) => {
+      toast.success(`Generated ${result.subtasks.length} subtasks`);
+      void qc.invalidateQueries({ queryKey: queryKeys.task(taskId) });
+      invalidateTaskWorld(qc);
+    },
+    onError: onApiError,
+  });
+}
+
+export function useDailyReview(): UseMutationResult<DailyReview, unknown, void> {
+  return useMutation({
+    mutationFn: () => api.post<DailyReview>("/ai/review/daily"),
+    onError: onApiError,
+  });
+}
+
 // Search & prefs ------------------------------------------------------------
 
 export function useSearch(query: string): UseQueryResult<SearchHit[]> {
