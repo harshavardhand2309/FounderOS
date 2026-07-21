@@ -5,6 +5,7 @@
 
 import {
   BookOpen,
+  CalendarPlus,
   Check,
   ClipboardCheck,
   Coffee,
@@ -189,6 +190,14 @@ export function PlannerPage() {
             >
               <ClipboardCheck className="h-4 w-4" />
               {dailyReview.isPending ? "Reviewing…" : "Daily review"}
+            </Button>
+          )}
+          {plan && (
+            <Button size="sm" variant="outline" asChild title="Export today's plan to your calendar">
+              <a href={`/api/planner/${plan.plan_date}/calendar.ics`} download>
+                <CalendarPlus className="h-4 w-4" />
+                .ics
+              </a>
             </Button>
           )}
         </div>

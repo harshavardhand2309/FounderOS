@@ -3,8 +3,9 @@
  * implementation scores and spaced revision reminders.
  */
 
-import { BookOpen, Check, ExternalLink, Plus, RotateCcw, Trash2 } from "lucide-react";
+import { BookOpen, Check, ExternalLink, FileUp, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { IntakeDialog } from "@/features/learning/IntakeDialog";
 import {
   useCompleteReview,
   useCreateReading,
@@ -184,6 +185,7 @@ export function ReadingPage() {
   const completeReview = useCompleteReview();
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [intakeOpen, setIntakeOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -220,10 +222,17 @@ export function ReadingPage() {
             Track what you read — and prove you understood it.
           </p>
         </div>
-        <Button onClick={() => setDialogOpen(true)}>
-          <Plus className="h-4 w-4" /> Add reading
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setIntakeOpen(true)}>
+            <FileUp className="h-4 w-4" /> Intake document
+          </Button>
+          <Button onClick={() => setDialogOpen(true)}>
+            <Plus className="h-4 w-4" /> Add reading
+          </Button>
+        </div>
       </div>
+
+      <IntakeDialog open={intakeOpen} onOpenChange={setIntakeOpen} />
 
       {due && due.length > 0 && (
         <Card className="border-warning/40">

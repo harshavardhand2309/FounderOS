@@ -3,6 +3,8 @@
 ``FOUNDEROS_LLM_PROVIDER`` selects the provider:
 - "ollama"              -> local Ollama (default; model FOUNDEROS_LLM_MODEL, default qwen3)
 - "openai"              -> any OpenAI-compatible server (FOUNDEROS_OPENAI_BASE_URL)
+- "anthropic"           -> Claude API (FOUNDEROS_ANTHROPIC_MODEL, default claude-opus-4-8;
+                           key via FOUNDEROS_ANTHROPIC_API_KEY or ANTHROPIC_API_KEY)
 - "none"                -> AI features disabled; heuristics only
 - "plugin:pkg.mod:Cls"  -> dotted-path class implementing LLMProvider
                            (see plugins/README.md for the contract)
@@ -36,6 +38,14 @@ def resolve_provider(settings: Settings) -> LLMProvider | None:
             base_url=settings.openai_base_url,
             api_key=settings.openai_api_key,
             model=settings.llm_model,
+            timeout_seconds=settings.llm_timeout_seconds,
+        )
+    if spec == "anthropic":
+        from app.infrastructure.llm.anthropic_provider import AnthropicProvider
+
+        return AnthropicProvider(
+            api_key=settings.anthropic_api_key,
+            model=settings.anthropic_model,
             timeout_seconds=settings.llm_timeout_seconds,
         )
     if spec.startswith("plugin:"):

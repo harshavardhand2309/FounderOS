@@ -5,7 +5,17 @@ Each module below owns one resource; ``api_router`` aggregates them under /api.
 
 from fastapi import APIRouter
 
-from app.presentation.api.routes import ai, health, misc, notes, planner, projects, reading, tasks
+from app.presentation.api.routes import (
+    ai,
+    automation,
+    health,
+    misc,
+    notes,
+    planner,
+    projects,
+    reading,
+    tasks,
+)
 
 api_router = APIRouter(prefix="/api")
 api_router.include_router(health.router)
@@ -15,4 +25,5 @@ api_router.include_router(planner.router)
 api_router.include_router(notes.router)
 api_router.include_router(reading.router)
 api_router.include_router(ai.router)
+api_router.include_router(automation.router)
 api_router.include_router(misc.router)

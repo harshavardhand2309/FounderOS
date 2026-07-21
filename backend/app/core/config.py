@@ -82,19 +82,31 @@ class Settings(BaseSettings):
 
     database_url: str = f"sqlite:///{DATABASE_DIR / 'founderos.db'}"
 
-    # LLM provider: "ollama", "openai" (any OpenAI-compatible server), or "none"
-    # ("none" disables LLM calls; deterministic heuristics are used instead).
+    # LLM provider: "ollama", "openai" (any OpenAI-compatible server),
+    # "anthropic" (Claude API), or "none" ("none" disables LLM calls;
+    # deterministic heuristics are used instead).
     llm_provider: str = "ollama"
     llm_model: str = "qwen3"
     ollama_base_url: str = "http://127.0.0.1:11434"
     openai_base_url: str = "http://127.0.0.1:11434/v1"
     openai_api_key: str = "not-needed-for-local"
+    anthropic_api_key: str = ""  # falls back to ANTHROPIC_API_KEY if empty
+    anthropic_model: str = "claude-opus-4-8"
     llm_timeout_seconds: float = 120.0
 
     # Background jobs
     scheduler_enabled: bool = True
     priority_recalc_interval_minutes: int = 30
     rollover_hour: int = 3  # local hour at which unfinished planned work rolls over
+
+    # Morning compile automation: scans workspaces, derives tasks per board,
+    # and builds the day plan. Time is local to `timezone` (default 06:00 IST).
+    timezone: str = "Asia/Kolkata"
+    morning_compile_enabled: bool = True
+    morning_compile_time: str = "06:00"
+    # Local repo paths to scan (one board each). Env: JSON list, e.g.
+    # FOUNDEROS_WORKSPACES='["~/code/proj-a", "~/code/proj-b", "~/code/proj-c"]'
+    workspaces: list[str] = []
 
     # File watching (markdown vault). Empty string disables watching.
     watch_directory: str = ""

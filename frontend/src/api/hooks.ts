@@ -510,6 +510,83 @@ export function useDailyReview(): UseMutationResult<DailyReview, unknown, void> 
   });
 }
 
+// Automation ----------------------------------------------------------------
+
+export interface AutomationStatus {
+  morning_compile_enabled: boolean;
+  morning_compile_time: string;
+  timezone: string;
+  workspaces: string[];
+  llm_provider: string;
+  llm_model: string;
+}
+
+export interface CompileReport {
+  ran_at: string;
+  rolled_over_entries: number;
+  tasks_created: number;
+  plan_entries: number;
+  plan_deferred_note: string;
+  workspaces: {
+    workspace: string;
+    created_tasks: string[];
+    skipped_duplicates: number;
+    source: string;
+  }[];
+}
+
+export interface IntakeResult {
+  note_id: string;
+  reading_item_id: string;
+  task_id: string;
+  title: string;
+  word_count: number;
+  estimated_minutes: number;
+  reading_minutes: number;
+  summary_minutes: number;
+  density: string;
+  summary: string;
+  suggested_priority: string;
+  key_topics: string[];
+  source: string;
+}
+
+export function useAutomationStatus(): UseQueryResult<AutomationStatus> {
+  return useQuery({
+    queryKey: ["automation", "status"],
+    queryFn: () => api.get<AutomationStatus>("/automation/status"),
+    staleTime: 60_000,
+  });
+}
+
+export function useRunCompile(): UseMutationResult<CompileReport, unknown, void> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.post<CompileReport>("/automation/compile"),
+    onSuccess: (report) => {
+      toast.success(
+        `Compile done: ${report.tasks_created} tasks created, plan has ${report.plan_entries} entries`,
+      );
+      invalidateTaskWorld(qc);
+      void qc.invalidateQueries({ queryKey: queryKeys.projects });
+    },
+    onError: onApiError,
+  });
+}
+
+export function useIntakeDocument(): UseMutationResult<IntakeResult, unknown, FormData> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (form) => api.postForm<IntakeResult>("/automation/intake/document", form),
+    onSuccess: () => {
+      invalidateTaskWorld(qc);
+      void qc.invalidateQueries({ queryKey: queryKeys.reading });
+      void qc.invalidateQueries({ queryKey: queryKeys.notes });
+    },
+    onError: onApiError,
+  });
+}
+
 // Search & prefs ------------------------------------------------------------
 
 export function useSearch(query: string): UseQueryResult<SearchHit[]> {

@@ -49,16 +49,52 @@ cd backend && .venv/bin/python -m pytest ../tests/backend   # 157 tests
 cd frontend && npm run build                                # strict TS + build
 ```
 
+## Morning compile (multi-workspace automation)
+
+Point FounderOS at your coding workspaces and it compiles your day **every
+morning at 06:00 IST** (configurable): rolls unfinished work forward, scans each
+workspace (recent commits, uncommitted changes, TODO/FIXME markers), asks the
+configured model — e.g. **Claude Opus 4.8** — to derive concrete tasks (testing,
+bug fixes, docs to read/review, development) onto that workspace's **own board**
+with time estimates, dedupes against existing work, recalculates priorities, and
+builds your day timeline. Export it to your real calendar via
+`GET /api/planner/{date}/calendar.ics` (button on My Day).
+
+```bash
+export FOUNDEROS_LLM_PROVIDER=anthropic          # Opus 4.8 via the Claude API
+export ANTHROPIC_API_KEY=sk-ant-...
+export FOUNDEROS_WORKSPACES='["~/code/session-a", "~/code/session-b", "~/code/session-c"]'
+export FOUNDEROS_TIMEZONE="Asia/Kolkata"         # default
+export FOUNDEROS_MORNING_COMPILE_TIME="06:00"    # default
+```
+
+Run it on demand with `POST /api/automation/compile` (or the button in
+Settings → Morning compile). Without a reachable model it degrades to
+deterministic heuristics, so the pipeline never breaks.
+
+**Ad-hoc document intake:** upload or paste a doc ("these are the docs we need
+to study and review") via Learning → *Intake document* (or
+`POST /api/automation/intake/document`). FounderOS parses it (.pdf/.md/.txt),
+estimates study time (reading + summarizing, AI-refined by density), and creates
+a note, a reading-queue entry, and a ready-to-schedule task — so you can decide
+when to place it, or let the next plan generation slot it by priority.
+
 ## Configuration
 
 Everything is env-driven with the `FOUNDEROS_` prefix (see `backend/app/core/config.py`):
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `FOUNDEROS_LLM_PROVIDER` | `ollama` | `ollama` \| `openai` \| `none` \| `plugin:module:Class` |
-| `FOUNDEROS_LLM_MODEL` | `qwen3` | model name for the chosen provider |
+| `FOUNDEROS_LLM_PROVIDER` | `ollama` | `ollama` \| `openai` \| `anthropic` \| `none` \| `plugin:module:Class` |
+| `FOUNDEROS_LLM_MODEL` | `qwen3` | model for ollama/openai providers |
+| `FOUNDEROS_ANTHROPIC_MODEL` | `claude-opus-4-8` | model for the anthropic provider |
+| `FOUNDEROS_ANTHROPIC_API_KEY` | — | falls back to `ANTHROPIC_API_KEY` |
 | `FOUNDEROS_OLLAMA_BASE_URL` | `http://127.0.0.1:11434` | local Ollama |
 | `FOUNDEROS_OPENAI_BASE_URL` | — | any OpenAI-compatible server |
+| `FOUNDEROS_WORKSPACES` | `[]` | JSON list of workspace paths for morning compile |
+| `FOUNDEROS_TIMEZONE` | `Asia/Kolkata` | timezone for the compile schedule + calendar export |
+| `FOUNDEROS_MORNING_COMPILE_TIME` | `06:00` | daily compile time (local to timezone) |
+| `FOUNDEROS_MORNING_COMPILE_ENABLED` | `true` | toggle the daily compile job |
 | `FOUNDEROS_WATCH_DIRECTORY` | *(off)* | markdown vault to mirror into Notes |
 | `FOUNDEROS_SCHEDULER_ENABLED` | `true` | background priority recalc + nightly rollover |
 

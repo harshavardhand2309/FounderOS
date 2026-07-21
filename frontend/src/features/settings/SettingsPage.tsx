@@ -1,11 +1,16 @@
-import { usePrefs, useUpdatePrefs } from "@/api/hooks";
+import { Play } from "lucide-react";
+import { useAutomationStatus, usePrefs, useRunCompile, useUpdatePrefs } from "@/api/hooks";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label, Skeleton, Switch } from "@/components/ui/misc";
 
 export function SettingsPage() {
   const { data: prefs, isLoading } = usePrefs();
+  const { data: automation } = useAutomationStatus();
   const updatePrefs = useUpdatePrefs();
+  const runCompile = useRunCompile();
 
   if (isLoading || !prefs) {
     return (
@@ -100,6 +105,53 @@ export function SettingsPage() {
               onCheckedChange={(v) => updatePrefs.mutate({ llm_enabled: v })}
             />
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Morning compile</CardTitle>
+          <CardDescription>
+            Every morning FounderOS rolls unfinished work forward, scans your configured
+            workspaces, derives tasks (testing, bug fixes, docs to review, development) onto each
+            project's board with estimates, and builds your day timeline. Configure workspaces via
+            the <code className="rounded bg-muted px-1">FOUNDEROS_WORKSPACES</code> env var.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Badge variant={automation?.morning_compile_enabled ? "success" : "outline"}>
+              {automation?.morning_compile_enabled ? "enabled" : "disabled"}
+            </Badge>
+            <Badge variant="outline">
+              daily at {automation?.morning_compile_time ?? "06:00"} {automation?.timezone ?? ""}
+            </Badge>
+            <Badge variant="outline">
+              model: {automation?.llm_provider ?? "…"}/{automation?.llm_model ?? "…"}
+            </Badge>
+          </div>
+          {automation && automation.workspaces.length > 0 ? (
+            <div className="space-y-1">
+              {automation.workspaces.map((ws) => (
+                <div key={ws} className="rounded-md border px-2.5 py-1.5 font-mono text-xs">
+                  {ws}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              No workspaces configured — the compile still rolls work over and rebuilds your plan.
+            </p>
+          )}
+          <Button
+            size="sm"
+            variant="secondary"
+            disabled={runCompile.isPending}
+            onClick={() => runCompile.mutate()}
+          >
+            <Play className="h-4 w-4" />
+            {runCompile.isPending ? "Compiling…" : "Run compile now"}
+          </Button>
         </CardContent>
       </Card>
 
