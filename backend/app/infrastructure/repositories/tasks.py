@@ -7,7 +7,16 @@ from collections import defaultdict
 
 from sqlmodel import Session, col, select
 
-from app.domain.entities import KnowledgeChecklist, Task, TaskDependency, WorkSession, utcnow
+from app.domain.entities import (
+    KnowledgeChecklist,
+    Note,
+    PlanEntry,
+    ReadingItem,
+    Task,
+    TaskDependency,
+    WorkSession,
+    utcnow,
+)
 from app.domain.enums import TaskStatus
 
 
@@ -60,16 +69,29 @@ class TaskRepository:
         return task
 
     def delete(self, task: Task) -> None:
-        # Clean up relational fan-out first (SQLite has no ON DELETE CASCADE here).
+        # Clean up relational fan-out first: SQLite enforces FKs (PRAGMA
+        # foreign_keys=ON) and none of these edges declare ON DELETE CASCADE.
         for dep in self._s.exec(
             select(TaskDependency).where(
                 (TaskDependency.task_id == task.id) | (TaskDependency.depends_on_id == task.id)
             )
         ).all():
             self._s.delete(dep)
+        for ws in self._s.exec(select(WorkSession).where(WorkSession.task_id == task.id)).all():
+            self._s.delete(ws)
         for child in self.subtasks_of(task.id):
             child.parent_id = None
             self._s.add(child)
+        # Detach non-owned references; the artifacts outlive the task.
+        for note in self._s.exec(select(Note).where(Note.task_id == task.id)).all():
+            note.task_id = None
+            self._s.add(note)
+        for item in self._s.exec(select(ReadingItem).where(ReadingItem.task_id == task.id)).all():
+            item.task_id = None
+            self._s.add(item)
+        for entry in self._s.exec(select(PlanEntry).where(PlanEntry.task_id == task.id)).all():
+            entry.task_id = None
+            self._s.add(entry)
         self._s.delete(task)
         self._s.commit()
 

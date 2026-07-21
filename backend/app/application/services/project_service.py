@@ -68,9 +68,14 @@ class ProjectService:
         project = self._projects.get(project_id)
         if project is None:
             return False
-        # Detach tasks rather than deleting work history.
+        # Detach tasks rather than deleting work history. Epic references must
+        # clear too — the project's epics are about to be deleted and SQLite
+        # enforces the FK.
+        epic_ids = {e.id for e in self._projects.epics(project_id)}
         for task in self._tasks.list(project_id=project_id, include_archived=True):
             task.project_id = None
+            if task.epic_id in epic_ids:
+                task.epic_id = None
             self._tasks.save(task)
         for milestone in self._projects.milestones(project_id):
             self._projects.delete_milestone(milestone)

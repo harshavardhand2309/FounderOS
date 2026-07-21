@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from sqlmodel import Session, col, select
 
-from app.domain.entities import Note, utcnow
+from app.domain.entities import Note, ReadingItem, utcnow
 
 
 class NoteRepository:
@@ -53,5 +53,9 @@ class NoteRepository:
         return note
 
     def delete(self, note: Note) -> None:
+        # Reading items may link to this note; detach before deleting (FKs on).
+        for item in self._s.exec(select(ReadingItem).where(ReadingItem.note_id == note.id)).all():
+            item.note_id = None
+            self._s.add(item)
         self._s.delete(note)
         self._s.commit()

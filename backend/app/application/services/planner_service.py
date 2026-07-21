@@ -3,7 +3,7 @@ and roll unfinished work forward."""
 
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 from app.application.engines.dependencies import DependencyEngine
 from app.application.engines.planner import PlannableTask, PlannerEngine

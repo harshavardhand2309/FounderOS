@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from sqlmodel import Session, col, select
 
-from app.domain.entities import Epic, Milestone, Project, utcnow
+from app.domain.entities import Epic, Milestone, Note, Project, ReadingItem, utcnow
 from app.domain.enums import ProjectStatus
 
 
@@ -36,6 +36,16 @@ class ProjectRepository:
         return project
 
     def delete(self, project: Project) -> None:
+        # Notes and reading items outlive the project; detach their FK first
+        # (SQLite enforces foreign keys and these declare no ON DELETE action).
+        for note in self._s.exec(select(Note).where(Note.project_id == project.id)).all():
+            note.project_id = None
+            self._s.add(note)
+        for item in self._s.exec(
+            select(ReadingItem).where(ReadingItem.project_id == project.id)
+        ).all():
+            item.project_id = None
+            self._s.add(item)
         self._s.delete(project)
         self._s.commit()
 

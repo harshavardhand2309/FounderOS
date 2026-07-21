@@ -84,3 +84,11 @@ Planner rules, estimation bases and scoring weights live in `shared/constants.js
 - `⌘K` / `Ctrl+K` — command palette (navigation, actions, global search)
 - `C` — new task
 - Dark mode by default; toggle in the sidebar.
+
+## Roadmap
+
+- Embedding-based semantic search (the keyword search service already exposes the
+  plug point; needs an embedding-capable provider).
+- Sprint generation UI (the AI weekly review already proposes next-week priorities).
+- Task file/link attachments UI (already in the data model and API).
+- Multi-device sync layer (see ADR 0002 — local SQLite stays the source of truth).
