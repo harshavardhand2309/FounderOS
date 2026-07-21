@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Builds
+frontend/dist/
+frontend/.vite/
+
+# Local data (local-first: user data never leaves the machine)
+database/*.db
+database/*.db-journal
+database/*.db-wal
+database/*.db-shm
+
+# Environment
+.env
+.env.local
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.log

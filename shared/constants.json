@@ -1,0 +1,68 @@
+{
+  "task_statuses": [
+    "inbox",
+    "backlog",
+    "ready",
+    "research",
+    "reading",
+    "coding",
+    "writing",
+    "review",
+    "blocked",
+    "done",
+    "archived"
+  ],
+  "working_statuses": ["research", "reading", "coding", "writing", "review"],
+  "task_types": ["research", "reading", "coding", "writing", "review", "planning", "admin"],
+  "priorities": ["urgent", "high", "medium", "low", "none"],
+  "energy_levels": ["low", "medium", "high"],
+  "risk_levels": ["low", "medium", "high", "critical"],
+  "project_statuses": ["active", "paused", "completed", "archived"],
+  "planner": {
+    "max_research_sessions": 2,
+    "max_implementation_sessions": 2,
+    "max_writing_sessions": 1,
+    "max_review_sessions": 1,
+    "break_interval_minutes": 90,
+    "break_duration_minutes": 15,
+    "buffer_ratio": 0.15,
+    "context_switch_penalty_minutes": 10,
+    "min_session_minutes": 25,
+    "max_session_minutes": 120,
+    "default_day_start": "09:00",
+    "default_available_hours": 8
+  },
+  "estimation": {
+    "base_minutes_by_type": {
+      "research": 120,
+      "reading": 90,
+      "coding": 150,
+      "writing": 90,
+      "review": 45,
+      "planning": 30,
+      "admin": 20
+    },
+    "complexity_multipliers": { "1": 0.5, "2": 0.75, "3": 1.0, "4": 1.5, "5": 2.25 },
+    "optimistic_factor": 0.7,
+    "pessimistic_factor": 1.8
+  },
+  "scoring": {
+    "priority_weights": {
+      "deadline_urgency": 0.25,
+      "business_impact": 0.2,
+      "dependency_unblocks": 0.15,
+      "knowledge_value": 0.1,
+      "project_priority": 0.15,
+      "risk": 0.1,
+      "effort_efficiency": 0.05
+    },
+    "knowledge_checklist_weights": {
+      "read_docs": 10,
+      "read_paper": 15,
+      "summarized": 20,
+      "explained_own_words": 25,
+      "compared_alternatives": 10,
+      "implemented": 20
+    }
+  }
+}

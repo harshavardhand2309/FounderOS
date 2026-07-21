@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 6% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 6% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 6% 10%;
+    --primary: 235 55% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 240 5% 94%;
+    --accent-foreground: 240 6% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 152 60% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 35 92% 44%;
+    --warning-foreground: 0 0% 100%;
+    --border: 240 6% 90%;
+    --input: 240 6% 87%;
+    --ring: 235 55% 52%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 6% 6%;
+    --foreground: 220 9% 89%;
+    --card: 240 5% 8%;
+    --card-foreground: 220 9% 89%;
+    --popover: 240 5% 9%;
+    --popover-foreground: 220 9% 89%;
+    --primary: 235 60% 64%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 4% 14%;
+    --secondary-foreground: 220 9% 89%;
+    --muted: 240 4% 12%;
+    --muted-foreground: 220 5% 58%;
+    --accent: 240 4% 15%;
+    --accent-foreground: 220 9% 92%;
+    --destructive: 0 62% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 152 55% 46%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 240 6% 6%;
+    --border: 240 4% 16%;
+    --input: 240 4% 18%;
+    --ring: 235 60% 64%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-muted-foreground/20;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/35;
+  }
+}
+
+/* TipTap editor base styles */
+@layer components {
+  .tiptap {
+    @apply min-h-[8rem] outline-none;
+  }
+  .tiptap p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    @apply pointer-events-none float-left h-0 text-muted-foreground;
+  }
+  .tiptap h1 {
+    @apply mb-3 mt-5 text-2xl font-semibold tracking-tight;
+  }
+  .tiptap h2 {
+    @apply mb-2 mt-4 text-xl font-semibold tracking-tight;
+  }
+  .tiptap h3 {
+    @apply mb-2 mt-3 text-lg font-medium;
+  }
+  .tiptap p {
+    @apply mb-2 leading-relaxed;
+  }
+  .tiptap ul {
+    @apply mb-2 list-disc pl-5;
+  }
+  .tiptap ol {
+    @apply mb-2 list-decimal pl-5;
+  }
+  .tiptap blockquote {
+    @apply my-2 border-l-2 border-primary/50 pl-4 italic text-muted-foreground;
+  }
+  .tiptap code {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm;
+  }
+  .tiptap pre {
+    @apply my-3 overflow-x-auto rounded-md bg-muted p-3;
+  }
+  .tiptap pre code {
+    @apply bg-transparent p-0;
+  }
+  .tiptap a {
+    @apply text-primary underline underline-offset-2;
+  }
+  .tiptap ul[data-type="taskList"] {
+    @apply list-none pl-1;
+  }
+  .tiptap ul[data-type="taskList"] li {
+    @apply flex items-start gap-2;
+  }
+  .tiptap ul[data-type="taskList"] li > label {
+    @apply mt-1;
+  }
+}
