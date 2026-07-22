@@ -442,27 +442,30 @@ export default function Home() {
         {/* nav (drops in from the top) */}
         <nav className="ag-rv ag-rv-top ag-pad" style={{ ...css('position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:24px 48px'), transitionDelay: '.05s' }}>
           <Link to="/" style={css('display:flex;align-items:center;gap:11px')}>
-            <span style={css("width:30px;height:30px;border-radius:8px;background:#a64dff;display:flex;align-items:center;justify-content:center;color:#fff;font:800 17px/1 'Sora'")}>L</span>
-            <span style={css("font:700 20px/1 'Sora';letter-spacing:-.01em;text-shadow:0 1px 12px rgba(0,0,0,.6)")}>Lvl-Up</span>
+            <span style={css("width:30px;height:30px;border-radius:8px;background:#0b0d10;display:flex;align-items:center;justify-content:center;color:#d6f637;font:800 17px/1 'Sora'")}>L</span>
+            <span style={css("font:700 20px/1 'Sora';letter-spacing:-.01em;color:#0b0d10")}>Lvl-Up</span>
           </Link>
           <div style={css('display:flex;align-items:center;gap:16px')}>
-            <a className="h-signin" style={css("font:600 14px/1 'Sora';color:#eef1f3;cursor:pointer;text-shadow:0 1px 10px rgba(0,0,0,.6)")}>Sign In</a>
-            <button className="h-lift" style={css("font:600 14px/1 'Sora';color:#fff;background:#a64dff;border:none;padding:11px 20px;border-radius:10px;cursor:pointer;transition:transform .15s;box-shadow:0 8px 26px rgba(166,77,255,.4)")}>Get Started</button>
+            <a className="h-signin" style={css("font:600 14px/1 'Sora';color:#33383f;cursor:pointer")}>Sign In</a>
+            <button className="h-lift" style={css("font:600 14px/1 'Sora';color:#fff;background:#0b0d10;border:none;padding:11px 20px;border-radius:10px;cursor:pointer;transition:transform .15s;box-shadow:0 8px 26px rgba(0,0,0,.25)")}>Get Started</button>
           </div>
         </nav>
 
         {/* hero headline — huge type straight over the video (no card) */}
         <div ref={copyRef} className="ag-pad ag-hero-copy" style={css('position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;max-width:1500px;margin:0 auto;padding:88px 40px 64px')}>
-          <div style={css("font:700 13px/1 'JetBrains Mono',monospace;letter-spacing:.4em;text-transform:uppercase;color:#e6c2ff;margin-bottom:6px;text-shadow:0 2px 22px rgba(0,0,0,.55)")}><span className="lr-line" style={{ transitionDelay: '.05s' }}>AI-Powered Athlete Intelligence</span></div>
+          <div style={css("font:700 13px/1 'JetBrains Mono',monospace;letter-spacing:.4em;text-transform:uppercase;color:#4b5158;margin-bottom:6px")}><span className="lr-line" style={{ transitionDelay: '.05s' }}>AI-Powered Athlete Intelligence</span></div>
           <h1 style={css("margin:0;font-family:'Sora',sans-serif;font-weight:800;line-height:.84;letter-spacing:-.035em;text-transform:uppercase")}>
-            <span style={css("display:block;font-size:clamp(20px,3.2vw,46px);font-weight:700;letter-spacing:.14em;color:#f0ddff;margin-bottom:.14em;text-shadow:0 2px 20px rgba(0,0,0,.55)")}>{heroLetters('Unlock your', 0.5, 0.03, 'lr-char')}</span>
-            <span style={css("display:block;font-size:clamp(64px,15vw,232px)")}>{heroLetters('Next', 0.95, 0.042, 'lr-hero')}</span>
-            <span style={css("display:block;font-size:clamp(64px,15vw,232px)")}>{heroLetters('Level', 1.118, 0.042, 'lr-hero')}</span>
+            <span style={css("display:block;font-size:clamp(20px,3.2vw,46px);font-weight:700;letter-spacing:.14em;color:#16181c;margin-bottom:.14em")}>{heroLetters('Play smarter —', 0.5, 0.03, 'lr-char')}</span>
+            <span style={css("display:block;font-size:clamp(56px,13.5vw,208px)")}>{heroLetters('Own every', 0.95, 0.042, 'lr-hero')}</span>
+            <span style={css("display:block;font-size:clamp(56px,13.5vw,208px);margin-top:.06em")}>
+              {/* tennis-ball lime "marker chip" behind the key word */}
+              <span style={css('display:inline-block;background:#d6f637;padding:.04em .14em .06em;border-radius:.06em')}>{heroLetters('Point', 1.118, 0.042, 'lr-hero')}</span>
+            </span>
           </h1>
           <div className="lr-btn" style={{ ...css('display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:38px'), transitionDelay: '2.1s' }}>
-            <button className="h-glass" style={css("display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:320px;font:600 14px/1 'Sora';color:#f0e2ff;padding:14px 40px 14px 16px;border-radius:12px;background:rgba(255,255,255,.07);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(227,167,255,.38);cursor:pointer;transition:background .15s")}>
-              <span style={css('width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#a64dff,#ff5fc4);display:flex;align-items:center;justify-content:center;animation:glowPulseP 2.4s infinite')}>
-                <span style={css('width:0;height:0;border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent #fff;margin-left:2px')} />
+            <button className="h-glass" style={css("display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:320px;font:600 14px/1 'Sora';color:#16181c;padding:14px 40px 14px 16px;border-radius:12px;background:rgba(255,255,255,.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.24);cursor:pointer;transition:background .15s")}>
+              <span style={css('width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c9ef2f,#a8cf12);display:flex;align-items:center;justify-content:center;animation:glowPulseP 2.4s infinite')}>
+                <span style={css('width:0;height:0;border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent #16181c;margin-left:2px')} />
               </span>
               Watch Trailer
             </button>

@@ -86,10 +86,10 @@ button {
 @keyframes glowPulseP {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(166, 77, 255, 0.5);
+    box-shadow: 0 0 0 0 rgba(181, 217, 22, 0.55);
   }
   50% {
-    box-shadow: 0 0 0 14px rgba(166, 77, 255, 0);
+    box-shadow: 0 0 0 14px rgba(181, 217, 22, 0);
   }
 }
 @keyframes drawLine {
@@ -295,17 +295,17 @@ button {
   transition: opacity 1.2s ease;
   background: linear-gradient(
       90deg,
-      rgba(8, 9, 11, 0.55) 0%,
-      rgba(8, 9, 11, 0.32) 26%,
-      rgba(8, 9, 11, 0.1) 52%,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.3) 26%,
+      rgba(255, 255, 255, 0.08) 52%,
       transparent 74%
     ),
     linear-gradient(
       180deg,
-      rgba(8, 9, 11, 0.5) 0%,
+      rgba(255, 255, 255, 0.5) 0%,
       transparent 30%,
       transparent 60%,
-      rgba(8, 9, 11, 0.92) 100%
+      rgba(250, 250, 252, 0.9) 100%
     );
 }
 .ag-on .ag-heroscrim {
@@ -320,21 +320,20 @@ button {
   pointer-events: none;
   opacity: 0;
   transition: opacity 1.2s ease;
-  /* strong cinematic purple-black wash: dark enough for crisp text,
-     with a purple glow pooling behind the headline */
+  /* "White Court" wash: bright white-out that keeps the video alive
+     underneath, with extra light pooling behind the headline */
   background: radial-gradient(
       120% 90% at 50% 40%,
-      rgba(155, 60, 225, 0.46),
-      transparent 62%
+      rgba(255, 255, 255, 0.55),
+      rgba(255, 255, 255, 0.26) 62%
     ),
     linear-gradient(
       180deg,
-      rgba(12, 6, 22, 0.78) 0%,
-      rgba(10, 5, 18, 0.5) 42%,
-      rgba(9, 4, 16, 0.66) 72%,
-      rgba(6, 3, 12, 0.94) 100%
-    ),
-    linear-gradient(0deg, rgba(7, 4, 13, 0.46), rgba(7, 4, 13, 0.46));
+      rgba(255, 255, 255, 0.64) 0%,
+      rgba(255, 255, 255, 0.4) 42%,
+      rgba(255, 255, 255, 0.5) 72%,
+      rgba(250, 250, 252, 0.86) 100%
+    );
 }
 .ag-on .ag-hero-tint {
   opacity: 1;
@@ -387,14 +386,8 @@ button {
   transform: translateY(14px) scale(0.9);
   transform-origin: 50% 72%;
   transition: opacity 0.5s ease, transform 0.62s cubic-bezier(0.16, 0.84, 0.44, 1);
-  /* same gradient as .ag-hero-grad; fixed attachment keeps one continuous sweep across all letters */
-  background: linear-gradient(100deg, #b774ff, #e9b3ff 24%, #ffd1f0 42%, #ff79d0 58%, #e9b3ff 76%, #b774ff);
-  background-attachment: fixed;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: #e0b3ff;
-  filter: drop-shadow(0 8px 34px rgba(190, 100, 255, 0.5)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+  /* White Court: solid ink letters, no gradient fill */
+  color: #0b0d10;
 }
 .lr-btn {
   opacity: 0;
@@ -417,9 +410,9 @@ button {
   pointer-events: none;
   opacity: 0;
   transition: opacity 1.2s ease;
-  backdrop-filter: blur(5px) saturate(1.16) brightness(0.92);
-  -webkit-backdrop-filter: blur(5px) saturate(1.16) brightness(0.92);
-  background: rgba(9, 5, 16, 0.1);
+  backdrop-filter: blur(6px) saturate(0.85) brightness(1.26);
+  -webkit-backdrop-filter: blur(6px) saturate(0.85) brightness(1.26);
+  background: rgba(255, 255, 255, 0.26);
 }
 .ag-on .ag-hero-frost {
   opacity: 1;
@@ -439,11 +432,10 @@ button {
   pointer-events: none;
   opacity: 0;
   transition: opacity 1.6s ease;
-  mix-blend-mode: screen;
   filter: blur(46px);
-  background: radial-gradient(38% 46% at 32% 42%, rgba(166, 77, 255, 0.42), transparent 60%),
-    radial-gradient(34% 42% at 70% 58%, rgba(255, 95, 196, 0.34), transparent 62%),
-    radial-gradient(30% 38% at 54% 30%, rgba(120, 60, 220, 0.32), transparent 60%);
+  background: radial-gradient(38% 46% at 32% 42%, rgba(214, 246, 55, 0.2), transparent 60%),
+    radial-gradient(34% 42% at 70% 58%, rgba(255, 255, 255, 0.32), transparent 62%),
+    radial-gradient(30% 38% at 54% 30%, rgba(214, 246, 55, 0.14), transparent 60%);
   animation: agAurora 20s ease-in-out infinite alternate;
 }
 .ag-on .ag-hero-aurora {
@@ -465,8 +457,8 @@ button {
 .ag-hero-particles i {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 200, 255, 0.95), rgba(166, 77, 255, 0.25) 55%, transparent 72%);
-  box-shadow: 0 0 10px rgba(214, 150, 255, 0.6);
+  background: radial-gradient(circle, rgba(190, 220, 30, 0.9), rgba(181, 217, 22, 0.25) 55%, transparent 72%);
+  box-shadow: 0 0 10px rgba(181, 217, 22, 0.6);
   opacity: 0;
   transition: opacity 1.4s ease;
   animation-name: agMote;
@@ -488,7 +480,7 @@ button {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: radial-gradient(125% 105% at 50% 42%, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+  background: radial-gradient(125% 105% at 50% 42%, transparent 55%, rgba(255, 255, 255, 0.55) 100%);
 }
 
 /* the headline block breathes gently so it floats above the footage */

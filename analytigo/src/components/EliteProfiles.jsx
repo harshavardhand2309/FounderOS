@@ -390,8 +390,8 @@ export default function EliteProfiles() {
           <span style={css('width:7px;height:7px;border-radius:50%;background:#0b0d10')} />
           <span style={css("font:700 12px/1 'JetBrains Mono',monospace;letter-spacing:.18em;color:#1a1d22")}>ATHLETE INTELLIGENCE</span>
         </div>
-        <h2 style={{ ...css("font:900 clamp(40px,4.6vw,60px)/1.04 'Sora';letter-spacing:-.03em;margin:0 0 14px;color:#0b0d10;text-wrap:balance"), ...reveal2(stage >= 1, 0.12) }}>Elite Athlete Profiles</h2>
-        <p style={{ ...css("font:500 18px/1.6 'Sora';color:#0b0d10;max-width:640px;margin:0 auto"), ...reveal2(stage >= 2, 0.05) }}>Explore player performance, analytics, rankings, trends, and achievements across every sport — filterable by region: country, state, city, ZIP code, and radius.</p>
+        <h2 style={{ ...css("font:400 clamp(36px,4.3vw,56px)/1.08 'Archivo Black','Sora',sans-serif;text-transform:uppercase;letter-spacing:.005em;margin:0 0 16px;color:#101216;text-shadow:0 2px 0 rgba(255,255,255,.5),0 0 26px rgba(255,255,255,.7);text-wrap:balance"), ...reveal2(stage >= 1, 0.12) }}>Elite Athlete Profiles</h2>
+        <p style={{ ...css("font:600 18px/1.65 'Sora';color:#16181c;max-width:660px;margin:0 auto;text-shadow:0 1px 0 rgba(255,255,255,.45),0 0 14px rgba(255,255,255,.55)"), ...reveal2(stage >= 2, 0.05) }}>Explore player performance, analytics, rankings, trends, and achievements across every sport — filterable by region: country, state, city, ZIP code, and radius.</p>
       </div>
 
       <div className="ep-stage" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onCancel}>
