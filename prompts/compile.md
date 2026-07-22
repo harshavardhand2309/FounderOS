@@ -18,6 +18,10 @@ Uncommitted changes:
 TODO/FIXME markers found in code:
 {todos}
 
+Recent Claude Code session activity in this workspace (what was being worked
+on last — unfinished threads here are strong task candidates):
+{session_activity}
+
 Existing open tasks on this board (do NOT duplicate these):
 {existing_tasks}
 

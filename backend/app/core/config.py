@@ -96,6 +96,9 @@ class Settings(BaseSettings):
     # Claude Code CLI provider: binary must be logged in (`claude` -> /login).
     claude_code_binary: str = "claude"
     claude_code_model: str = "opus"  # alias or full model id; "" = CLI default
+    # Where Claude Code stores per-project session transcripts; the workspace
+    # scanner reads recent activity from here as a planning signal.
+    claude_history_dir: str = "~/.claude/projects"
     llm_timeout_seconds: float = 120.0
 
     # Background jobs

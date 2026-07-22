@@ -168,6 +168,60 @@ def test_workspace_registration_creates_board_and_scans(no_llm, client, tmp_path
     assert client.delete(f"/api/automation/workspaces?path={repo}").status_code == 404
 
 
+def test_scanner_reads_claude_session_history(no_llm, client, tmp_path: Path) -> None:
+    """Local-only workspaces (no GitHub remote) still yield tasks: the scanner
+    reads ~/.claude/projects transcripts and derives a resume task."""
+    import re
+
+    from app.application.services.workspace_scanner import snapshot_workspace
+
+    # A plain local directory — deliberately NOT a git repo, nothing pushed.
+    workspace_dir = tmp_path / "local-session"
+    workspace_dir.mkdir()
+    (workspace_dir / "notes.py").write_text("print('wip')\n")
+
+    # Fake Claude Code history: ~/.claude/projects/<encoded-path>/<uuid>.jsonl
+    history_base = tmp_path / "claude-projects"
+    encoded = re.sub(r"[^A-Za-z0-9]", "-", str(workspace_dir.resolve()))
+    transcript_dir = history_base / encoded
+    transcript_dir.mkdir(parents=True)
+    transcript = transcript_dir / "abc123.jsonl"
+    transcript.write_text(
+        "\n".join(
+            [
+                json.dumps({"type": "user", "message": {"role": "user", "content": "Build the auth flow"}}),
+                json.dumps(
+                    {
+                        "type": "assistant",
+                        "message": {
+                            "role": "assistant",
+                            "content": [{"type": "text", "text": "Login works; token refresh is still failing"}],
+                        },
+                    }
+                ),
+                json.dumps({"type": "user", "message": {"role": "user", "content": "<system-reminder>ignore</system-reminder>"}}),
+            ]
+        )
+    )
+
+    os.environ["FOUNDEROS_CLAUDE_HISTORY_DIR"] = str(history_base)
+    get_settings.cache_clear()
+    try:
+        snapshot = snapshot_workspace(str(workspace_dir))
+        assert snapshot.error is None
+        assert any("token refresh is still failing" in n for n in snapshot.session_notes)
+        assert not any("system-reminder" in n for n in snapshot.session_notes)
+
+        # End-to-end: registering the dir derives a resume task from history.
+        added = client.post(
+            "/api/automation/workspaces", json={"path": str(workspace_dir), "scan_now": True}
+        ).json()
+        assert any("Resume Claude Code session" in t for t in added["scan"]["created_tasks"])
+    finally:
+        os.environ.pop("FOUNDEROS_CLAUDE_HISTORY_DIR", None)
+        get_settings.cache_clear()
+
+
 def test_claude_code_provider_parses_headless_json(monkeypatch) -> None:
     """The claude-code provider shells out to `claude -p --output-format json`
     and returns the `result` field; CLI errors surface as LLMError."""

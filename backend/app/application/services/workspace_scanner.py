@@ -1,17 +1,23 @@
 """Workspace scanner: turns local coding workspaces into board tasks.
 
 For each configured workspace (a local repo/directory), the scanner collects
-cheap static signals — recent commits, dirty files, TODO/FIXME markers — and
-asks the LLM (Opus 4.8 when configured) to derive concrete tasks: testing,
-bug fixing, reading/review, development. Tasks land on that workspace's own
-project board with estimates, deduplicated against existing open work.
+cheap local signals — recent commits, dirty files, TODO/FIXME markers, and
+recent Claude Code session activity from ~/.claude/projects — and asks the
+LLM to derive concrete tasks: testing, bug fixing, reading/review,
+development. Tasks land on that workspace's own project board with estimates,
+deduplicated against existing open work.
+
+Workspaces never need a GitHub remote: everything is read from the local
+filesystem, including plain directories that aren't git repos at all.
 
 Without a reachable provider it degrades to a deterministic heuristic:
-TODO/FIXME markers and dirty files become review/fix tasks directly.
+TODO/FIXME markers, dirty files, and session activity become tasks directly.
 """
 
 from __future__ import annotations
 
+import json
+import re
 import subprocess
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
@@ -20,7 +26,7 @@ from string import Formatter
 from typing import Any
 
 from app.application.services.task_service import TaskService
-from app.core.config import PROMPTS_DIR
+from app.core.config import PROMPTS_DIR, get_settings
 from app.core.logging import get_logger
 from app.domain.entities import Project
 from app.domain.enums import Priority, ProjectStatus, TaskStatus, TaskType
@@ -44,6 +50,12 @@ _SYSTEM = (
 )
 
 
+_MAX_SESSION_NOTES = 8
+_MAX_TRANSCRIPT_FILES = 2
+_MAX_TRANSCRIPT_TAIL_LINES = 400
+_SESSION_NOTE_CHARS = 180
+
+
 @dataclass(frozen=True)
 class WorkspaceSnapshot:
     name: str
@@ -51,6 +63,7 @@ class WorkspaceSnapshot:
     commits: list[str] = field(default_factory=list)
     dirty_files: list[str] = field(default_factory=list)
     todos: list[str] = field(default_factory=list)
+    session_notes: list[str] = field(default_factory=list)
     error: str | None = None
 
 
@@ -75,6 +88,65 @@ def _run_git(path: Path, *args: str) -> str:
         return completed.stdout if completed.returncode == 0 else ""
     except (OSError, subprocess.TimeoutExpired):
         return ""
+
+
+def _encode_project_path(path: Path) -> str:
+    """Claude Code encodes project paths by replacing non-alphanumerics with
+    '-' (e.g. /home/user/FounderOS -> -home-user-FounderOS)."""
+    return re.sub(r"[^A-Za-z0-9]", "-", str(path))
+
+
+def _message_text(obj: dict) -> str | None:
+    message = obj.get("message")
+    if not isinstance(message, dict):
+        return None
+    content = message.get("content")
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        for block in content:
+            if isinstance(block, dict) and block.get("type") == "text":
+                text = block.get("text")
+                if isinstance(text, str):
+                    return text
+    return None
+
+
+def claude_session_activity(path: Path, history_base: Path | None = None) -> list[str]:
+    """Recent user/assistant exchanges from this workspace's Claude Code
+    session transcripts — what was actually being worked on last."""
+    base = history_base or Path(get_settings().claude_history_dir).expanduser()
+    project_dir = base / _encode_project_path(path.resolve())
+    if not project_dir.is_dir():
+        return []
+
+    transcripts = sorted(
+        project_dir.glob("*.jsonl"), key=lambda f: f.stat().st_mtime, reverse=True
+    )[:_MAX_TRANSCRIPT_FILES]
+
+    notes: list[str] = []
+    for transcript in transcripts:
+        try:
+            lines = transcript.read_text(encoding="utf-8", errors="ignore").splitlines()
+        except OSError:
+            continue
+        for line in lines[-_MAX_TRANSCRIPT_TAIL_LINES:]:
+            try:
+                obj = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            role = obj.get("type")
+            if role not in ("user", "assistant"):
+                continue
+            text = _message_text(obj)
+            if not text:
+                continue
+            cleaned = " ".join(text.split())
+            if not cleaned or cleaned.startswith("<"):  # skip tool/system envelopes
+                continue
+            speaker = "user" if role == "user" else "claude"
+            notes.append(f"{speaker}: {cleaned[:_SESSION_NOTE_CHARS]}")
+    return notes[-_MAX_SESSION_NOTES:]
 
 
 def snapshot_workspace(path_str: str) -> WorkspaceSnapshot:
@@ -115,7 +187,14 @@ def snapshot_workspace(path_str: str) -> WorkspaceSnapshot:
             except OSError:
                 continue
 
-    return WorkspaceSnapshot(name=name, path=str(path), commits=commits, dirty_files=dirty, todos=todos)
+    return WorkspaceSnapshot(
+        name=name,
+        path=str(path),
+        commits=commits,
+        dirty_files=dirty,
+        todos=todos,
+        session_notes=claude_session_activity(path),
+    )
 
 
 class _SafeDict(dict):
@@ -200,6 +279,8 @@ class WorkspaceScanner:
                     commits="\n".join(snapshot.commits) or "(no commits found)",
                     dirty="\n".join(snapshot.dirty_files) or "(clean tree)",
                     todos="\n".join(snapshot.todos) or "(none found)",
+                    session_activity="\n".join(snapshot.session_notes)
+                    or "(no recent session history)",
                     existing_tasks="\n".join(f"- {t}" for t in existing) or "(none)",
                 )
                 data = extract_json(
@@ -248,6 +329,19 @@ class WorkspaceScanner:
                     "estimated_minutes": 45,
                     "importance": 3,
                     "complexity": 2,
+                }
+            )
+        if snapshot.session_notes:
+            specs.append(
+                {
+                    "title": f"Resume Claude Code session work in {snapshot.name}",
+                    "description": "Where the last session left off:\n"
+                    + "\n".join(snapshot.session_notes[-4:]),
+                    "task_type": "coding",
+                    "estimated_minutes": 60,
+                    "importance": 4,
+                    "complexity": 3,
+                    "deep_work": True,
                 }
             )
         return specs

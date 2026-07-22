@@ -87,10 +87,11 @@ export FOUNDEROS_TIMEZONE="Asia/Kolkata"         # default
 export FOUNDEROS_MORNING_COMPILE_TIME="06:00"    # default
 ```
 
-If your sessions are Claude Code **cloud** sessions, clone each session's repo
-locally and check out its working branch — the scanner reads the local
-checkout, so a `git pull` (cron it if you like) keeps the morning compile in
-sync with what the sessions pushed.
+Workspaces are read **entirely from your local filesystem** — no GitHub remote
+needed, and plain directories that aren't git repos work too. If a workspace
+has local Claude Code sessions, the scanner also reads their recent transcripts
+from `~/.claude/projects` so the compile knows what you and Claude were
+actually working on last (unfinished threads become "resume" tasks).
 
 Run the compile on demand with `POST /api/automation/compile` (or the button in
 Settings → Morning compile). Without a reachable model it degrades to
@@ -115,6 +116,7 @@ Everything is env-driven with the `FOUNDEROS_` prefix (see `backend/app/core/con
 | `FOUNDEROS_ANTHROPIC_API_KEY` | — | falls back to `ANTHROPIC_API_KEY` |
 | `FOUNDEROS_CLAUDE_CODE_MODEL` | `opus` | model alias/id for the claude-code provider |
 | `FOUNDEROS_CLAUDE_CODE_BINARY` | `claude` | path to the Claude Code CLI |
+| `FOUNDEROS_CLAUDE_HISTORY_DIR` | `~/.claude/projects` | Claude Code transcripts read by the scanner |
 | `FOUNDEROS_OLLAMA_BASE_URL` | `http://127.0.0.1:11434` | local Ollama |
 | `FOUNDEROS_OPENAI_BASE_URL` | — | any OpenAI-compatible server |
 | `FOUNDEROS_WORKSPACES` | `[]` | JSON list of workspace paths for morning compile |
