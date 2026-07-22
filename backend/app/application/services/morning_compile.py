@@ -19,14 +19,20 @@ from sqlmodel import Session
 from app.application.services.workspace_scanner import (
     WorkspaceResult,
     WorkspaceScanner,
+    effective_workspaces,
     ensure_project_for_workspace,
+    workspace_board_name,
 )
 from app.core.config import Settings, get_settings
 from app.core.logging import get_logger
 from app.domain.entities import utcnow
 from app.domain.enums import ActivityKind
 from app.infrastructure.llm.factory import resolve_provider
-from app.infrastructure.repositories import ActivityRepository, ProjectRepository
+from app.infrastructure.repositories import (
+    ActivityRepository,
+    PrefsRepository,
+    ProjectRepository,
+)
 
 logger = get_logger("morning_compile")
 
@@ -60,12 +66,13 @@ def run_morning_compile(
     # 1. Rollover: unfinished planned work moves forward automatically.
     rolled = planner_service.rollover()
 
-    # 2. Workspace scan -> tasks per board.
+    # 2. Workspace scan -> tasks per board (env-configured + UI-registered).
     provider = resolve_provider(settings)
     scanner = WorkspaceScanner(provider=provider, task_service=task_service)
+    workspaces = effective_workspaces(settings, PrefsRepository(session).get())
     results: list[WorkspaceResult] = []
-    for index, workspace_path in enumerate(settings.workspaces):
-        name = workspace_path.rstrip("/").split("/")[-1] or workspace_path
+    for index, workspace_path in enumerate(workspaces):
+        name = workspace_board_name(workspace_path)
         project = ensure_project_for_workspace(
             name, projects_repo, color=_WORKSPACE_COLORS[index % len(_WORKSPACE_COLORS)]
         )

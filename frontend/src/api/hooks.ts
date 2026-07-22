@@ -574,6 +574,49 @@ export function useRunCompile(): UseMutationResult<CompileReport, unknown, void>
   });
 }
 
+export interface WorkspaceListing {
+  env: string[];
+  user: string[];
+  effective: string[];
+}
+
+export function useWorkspaces(): UseQueryResult<WorkspaceListing> {
+  return useQuery({
+    queryKey: ["automation", "workspaces"],
+    queryFn: () => api.get<WorkspaceListing>("/automation/workspaces"),
+  });
+}
+
+export function useAddWorkspace(): UseMutationResult<
+  { path: string; project_name: string; scan: { created_tasks: string[] } | null },
+  unknown,
+  { path: string; scan_now?: boolean }
+> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input) => api.post("/automation/workspaces", input),
+    onSuccess: (result) => {
+      toast.success(
+        `Registered "${result.project_name}"` +
+          (result.scan ? ` — ${result.scan.created_tasks.length} tasks derived` : ""),
+      );
+      void qc.invalidateQueries({ queryKey: ["automation"] });
+      void qc.invalidateQueries({ queryKey: queryKeys.projects });
+      invalidateTaskWorld(qc);
+    },
+    onError: onApiError,
+  });
+}
+
+export function useRemoveWorkspace(): UseMutationResult<void, unknown, string> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (path) => api.delete(`/automation/workspaces?path=${encodeURIComponent(path)}`),
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ["automation"] }),
+    onError: onApiError,
+  });
+}
+
 export function useIntakeDocument(): UseMutationResult<IntakeResult, unknown, FormData> {
   const qc = useQueryClient();
   return useMutation({

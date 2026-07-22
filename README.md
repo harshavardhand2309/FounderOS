@@ -60,15 +60,39 @@ with time estimates, dedupes against existing work, recalculates priorities, and
 builds your day timeline. Export it to your real calendar via
 `GET /api/planner/{date}/calendar.ics` (button on My Day).
 
+**Pick the brain that fits your budget** (all features work on every option):
+
 ```bash
+# Option A — Claude subscription (Pro/Max), no API credits needed:
+# routes through the Claude Code CLI in headless mode. Install the CLI,
+# run `claude` once and /login, then:
+export FOUNDEROS_LLM_PROVIDER=claude-code
+export FOUNDEROS_CLAUDE_CODE_MODEL=opus          # alias or full model id
+
+# Option B — Claude API (pay-as-you-go credits):
 export FOUNDEROS_LLM_PROVIDER=anthropic          # Opus 4.8 via the Claude API
 export ANTHROPIC_API_KEY=sk-ant-...
+
+# Option C — free local model (default):
+export FOUNDEROS_LLM_PROVIDER=ollama             # qwen3 via local Ollama
+```
+
+**Registering your coding sessions as workspaces** — either from the UI
+(Settings → Morning compile → *Add*, which creates the board and runs an
+initial scan immediately) or via env:
+
+```bash
 export FOUNDEROS_WORKSPACES='["~/code/session-a", "~/code/session-b", "~/code/session-c"]'
 export FOUNDEROS_TIMEZONE="Asia/Kolkata"         # default
 export FOUNDEROS_MORNING_COMPILE_TIME="06:00"    # default
 ```
 
-Run it on demand with `POST /api/automation/compile` (or the button in
+If your sessions are Claude Code **cloud** sessions, clone each session's repo
+locally and check out its working branch — the scanner reads the local
+checkout, so a `git pull` (cron it if you like) keeps the morning compile in
+sync with what the sessions pushed.
+
+Run the compile on demand with `POST /api/automation/compile` (or the button in
 Settings → Morning compile). Without a reachable model it degrades to
 deterministic heuristics, so the pipeline never breaks.
 
@@ -85,10 +109,12 @@ Everything is env-driven with the `FOUNDEROS_` prefix (see `backend/app/core/con
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `FOUNDEROS_LLM_PROVIDER` | `ollama` | `ollama` \| `openai` \| `anthropic` \| `none` \| `plugin:module:Class` |
+| `FOUNDEROS_LLM_PROVIDER` | `ollama` | `ollama` \| `openai` \| `anthropic` \| `claude-code` \| `none` \| `plugin:module:Class` |
 | `FOUNDEROS_LLM_MODEL` | `qwen3` | model for ollama/openai providers |
 | `FOUNDEROS_ANTHROPIC_MODEL` | `claude-opus-4-8` | model for the anthropic provider |
 | `FOUNDEROS_ANTHROPIC_API_KEY` | — | falls back to `ANTHROPIC_API_KEY` |
+| `FOUNDEROS_CLAUDE_CODE_MODEL` | `opus` | model alias/id for the claude-code provider |
+| `FOUNDEROS_CLAUDE_CODE_BINARY` | `claude` | path to the Claude Code CLI |
 | `FOUNDEROS_OLLAMA_BASE_URL` | `http://127.0.0.1:11434` | local Ollama |
 | `FOUNDEROS_OPENAI_BASE_URL` | — | any OpenAI-compatible server |
 | `FOUNDEROS_WORKSPACES` | `[]` | JSON list of workspace paths for morning compile |

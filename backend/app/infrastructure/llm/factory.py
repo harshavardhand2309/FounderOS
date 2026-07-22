@@ -5,6 +5,8 @@
 - "openai"              -> any OpenAI-compatible server (FOUNDEROS_OPENAI_BASE_URL)
 - "anthropic"           -> Claude API (FOUNDEROS_ANTHROPIC_MODEL, default claude-opus-4-8;
                            key via FOUNDEROS_ANTHROPIC_API_KEY or ANTHROPIC_API_KEY)
+- "claude-code"         -> the Claude Code CLI in headless mode; runs on the
+                           user's Claude subscription, no API credits needed
 - "none"                -> AI features disabled; heuristics only
 - "plugin:pkg.mod:Cls"  -> dotted-path class implementing LLMProvider
                            (see plugins/README.md for the contract)
@@ -46,6 +48,14 @@ def resolve_provider(settings: Settings) -> LLMProvider | None:
         return AnthropicProvider(
             api_key=settings.anthropic_api_key,
             model=settings.anthropic_model,
+            timeout_seconds=settings.llm_timeout_seconds,
+        )
+    if spec in ("claude-code", "claude_code", "claudecode"):
+        from app.infrastructure.llm.claude_code import ClaudeCodeProvider
+
+        return ClaudeCodeProvider(
+            binary=settings.claude_code_binary,
+            model=settings.claude_code_model,
             timeout_seconds=settings.llm_timeout_seconds,
         )
     if spec.startswith("plugin:"):

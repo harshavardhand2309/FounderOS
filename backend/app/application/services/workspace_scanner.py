@@ -296,3 +296,19 @@ def ensure_project_for_workspace(
             color=color,
         )
     )
+
+
+def workspace_board_name(path_str: str) -> str:
+    return Path(path_str).expanduser().name or path_str
+
+
+def user_workspaces(prefs) -> list[str]:  # noqa: ANN001 - UserPrefs
+    """Workspace paths the user registered at runtime (stored in prefs)."""
+    extra = prefs.extra if isinstance(prefs.extra, dict) else {}
+    raw = extra.get("workspaces", [])
+    return [w for w in raw if isinstance(w, str)]
+
+
+def effective_workspaces(settings, prefs) -> list[str]:  # noqa: ANN001
+    """Env-configured plus UI-registered workspaces, deduplicated in order."""
+    return list(dict.fromkeys([*settings.workspaces, *user_workspaces(prefs)]))

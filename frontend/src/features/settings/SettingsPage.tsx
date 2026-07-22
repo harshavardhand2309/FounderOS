@@ -1,5 +1,14 @@
-import { Play } from "lucide-react";
-import { useAutomationStatus, usePrefs, useRunCompile, useUpdatePrefs } from "@/api/hooks";
+import { FolderPlus, Play, X } from "lucide-react";
+import { useState } from "react";
+import {
+  useAddWorkspace,
+  useAutomationStatus,
+  usePrefs,
+  useRemoveWorkspace,
+  useRunCompile,
+  useUpdatePrefs,
+  useWorkspaces,
+} from "@/api/hooks";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,8 +18,21 @@ import { Label, Skeleton, Switch } from "@/components/ui/misc";
 export function SettingsPage() {
   const { data: prefs, isLoading } = usePrefs();
   const { data: automation } = useAutomationStatus();
+  const { data: workspaces } = useWorkspaces();
   const updatePrefs = useUpdatePrefs();
   const runCompile = useRunCompile();
+  const addWorkspace = useAddWorkspace();
+  const removeWorkspace = useRemoveWorkspace();
+  const [newWorkspace, setNewWorkspace] = useState("");
+
+  function submitWorkspace() {
+    const path = newWorkspace.trim();
+    if (!path) return;
+    addWorkspace.mutate(
+      { path, scan_now: true },
+      { onSuccess: () => setNewWorkspace("") },
+    );
+  }
 
   if (isLoading || !prefs) {
     return (
@@ -112,10 +134,10 @@ export function SettingsPage() {
         <CardHeader>
           <CardTitle>Morning compile</CardTitle>
           <CardDescription>
-            Every morning FounderOS rolls unfinished work forward, scans your configured
+            Every morning FounderOS rolls unfinished work forward, scans your registered
             workspaces, derives tasks (testing, bug fixes, docs to review, development) onto each
-            project's board with estimates, and builds your day timeline. Configure workspaces via
-            the <code className="rounded bg-muted px-1">FOUNDEROS_WORKSPACES</code> env var.
+            project's board with estimates, and builds your day timeline. Register a workspace
+            below — its board is created immediately and an initial scan runs.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -130,19 +152,62 @@ export function SettingsPage() {
               model: {automation?.llm_provider ?? "…"}/{automation?.llm_model ?? "…"}
             </Badge>
           </div>
-          {automation && automation.workspaces.length > 0 ? (
-            <div className="space-y-1">
-              {automation.workspaces.map((ws) => (
-                <div key={ws} className="rounded-md border px-2.5 py-1.5 font-mono text-xs">
-                  {ws}
+
+          <div className="space-y-1.5">
+            {workspaces?.effective.map((ws) => {
+              const fromEnv = workspaces.env.includes(ws);
+              return (
+                <div
+                  key={ws}
+                  className="flex items-center justify-between gap-2 rounded-md border px-2.5 py-1.5"
+                >
+                  <span className="truncate font-mono text-xs">{ws}</span>
+                  <span className="flex shrink-0 items-center gap-1">
+                    <Badge variant="outline" className="text-[10px]">
+                      {fromEnv ? "env" : "user"}
+                    </Badge>
+                    {!fromEnv && (
+                      <Button
+                        variant="ghost"
+                        size="iconSm"
+                        aria-label={`Remove workspace ${ws}`}
+                        onClick={() => removeWorkspace.mutate(ws)}
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                  </span>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-xs text-muted-foreground">
-              No workspaces configured — the compile still rolls work over and rebuilds your plan.
-            </p>
-          )}
+              );
+            })}
+            {workspaces && workspaces.effective.length === 0 && (
+              <p className="text-xs text-muted-foreground">
+                No workspaces yet — add the local paths of your coding sessions below.
+              </p>
+            )}
+          </div>
+
+          <div className="flex gap-2">
+            <Input
+              placeholder="/path/to/your/session-repo"
+              className="h-8 font-mono text-xs"
+              value={newWorkspace}
+              onChange={(e) => setNewWorkspace(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") submitWorkspace();
+              }}
+            />
+            <Button
+              size="sm"
+              variant="secondary"
+              disabled={!newWorkspace.trim() || addWorkspace.isPending}
+              onClick={submitWorkspace}
+            >
+              <FolderPlus className="h-4 w-4" />
+              {addWorkspace.isPending ? "Scanning…" : "Add"}
+            </Button>
+          </div>
+
           <Button
             size="sm"
             variant="secondary"

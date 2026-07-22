@@ -1,21 +1,41 @@
-"""Automation endpoints: morning compile and ad-hoc document intake."""
+"""Automation endpoints: morning compile, workspace management, and ad-hoc
+document intake."""
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from pydantic import BaseModel, Field
 
 from app.application.services.document_intake import DocumentIntakeService, extract_text
 from app.application.services.morning_compile import run_morning_compile
+from app.application.services.workspace_scanner import (
+    WorkspaceScanner,
+    effective_workspaces,
+    ensure_project_for_workspace,
+    user_workspaces,
+    workspace_board_name,
+)
 from app.core.config import get_settings
 from app.infrastructure.llm.factory import resolve_provider
-from app.infrastructure.repositories import NoteRepository, ReadingRepository
+from app.infrastructure.repositories import (
+    NoteRepository,
+    PrefsRepository,
+    ProjectRepository,
+    ReadingRepository,
+)
 from app.presentation.api.deps import SessionDep, get_task_service
 
 router = APIRouter(prefix="/automation", tags=["automation"])
 
 _MAX_UPLOAD_BYTES = 25 * 1024 * 1024
+
+
+class WorkspaceAddRequest(BaseModel):
+    path: str = Field(min_length=1, max_length=1000)
+    scan_now: bool = False
 
 
 def get_intake_service(session: SessionDep) -> DocumentIntakeService:
@@ -31,19 +51,105 @@ def get_intake_service(session: SessionDep) -> DocumentIntakeService:
 IntakeServiceDep = Annotated[DocumentIntakeService, Depends(get_intake_service)]
 
 
+def _active_model(settings) -> str:  # noqa: ANN001
+    if settings.llm_provider == "anthropic":
+        return settings.anthropic_model
+    if settings.llm_provider in ("claude-code", "claude_code", "claudecode"):
+        return settings.claude_code_model or "(CLI default)"
+    return settings.llm_model
+
+
 @router.get("/status")
-def automation_status() -> dict:
+def automation_status(session: SessionDep) -> dict:
     settings = get_settings()
+    prefs = PrefsRepository(session).get()
     return {
         "morning_compile_enabled": settings.morning_compile_enabled,
         "morning_compile_time": settings.morning_compile_time,
         "timezone": settings.timezone,
-        "workspaces": settings.workspaces,
+        "workspaces": effective_workspaces(settings, prefs),
         "llm_provider": settings.llm_provider,
-        "llm_model": (
-            settings.anthropic_model if settings.llm_provider == "anthropic" else settings.llm_model
-        ),
+        "llm_model": _active_model(settings),
     }
+
+
+# Workspaces -----------------------------------------------------------------
+
+
+@router.get("/workspaces")
+def list_workspaces(session: SessionDep) -> dict:
+    settings = get_settings()
+    prefs = PrefsRepository(session).get()
+    return {
+        "env": settings.workspaces,
+        "user": user_workspaces(prefs),
+        "effective": effective_workspaces(settings, prefs),
+    }
+
+
+@router.post("/workspaces", status_code=201)
+def add_workspace(payload: WorkspaceAddRequest, session: SessionDep) -> dict:
+    """Register a workspace: creates its board immediately and (optionally)
+    runs an initial scan so tasks appear right away."""
+    settings = get_settings()
+    path = Path(payload.path).expanduser()
+    if not path.is_dir():
+        raise HTTPException(status_code=422, detail=f"Directory not found: {path}")
+
+    prefs_repo = PrefsRepository(session)
+    prefs = prefs_repo.get()
+    resolved = str(path)
+    if resolved in effective_workspaces(settings, prefs):
+        raise HTTPException(status_code=409, detail="Workspace already registered")
+
+    # JSON columns don't track in-place mutation — assign a fresh dict.
+    extra = dict(prefs.extra) if isinstance(prefs.extra, dict) else {}
+    extra["workspaces"] = [*user_workspaces(prefs), resolved]
+    prefs.extra = extra
+    prefs_repo.save(prefs)
+
+    project = ensure_project_for_workspace(
+        workspace_board_name(resolved), ProjectRepository(session)
+    )
+
+    scan_result = None
+    if payload.scan_now:
+        scanner = WorkspaceScanner(
+            provider=resolve_provider(settings), task_service=get_task_service(session)
+        )
+        result = scanner.scan_workspace(resolved, project)
+        scan_result = {
+            "created_tasks": result.created_tasks,
+            "skipped_duplicates": result.skipped_duplicates,
+            "source": result.source,
+        }
+
+    return {
+        "path": resolved,
+        "project_id": project.id,
+        "project_name": project.name,
+        "scan": scan_result,
+    }
+
+
+@router.delete("/workspaces", status_code=204)
+def remove_workspace(path: str, session: SessionDep) -> None:
+    settings = get_settings()
+    resolved = str(Path(path).expanduser())
+    if resolved in settings.workspaces or path in settings.workspaces:
+        raise HTTPException(
+            status_code=409,
+            detail="Configured via FOUNDEROS_WORKSPACES — remove it from the env var",
+        )
+    prefs_repo = PrefsRepository(session)
+    prefs = prefs_repo.get()
+    current = user_workspaces(prefs)
+    if resolved not in current and path not in current:
+        raise HTTPException(status_code=404, detail="Workspace not registered")
+    extra = dict(prefs.extra) if isinstance(prefs.extra, dict) else {}
+    extra["workspaces"] = [w for w in current if w not in (resolved, path)]
+    prefs.extra = extra
+    prefs_repo.save(prefs)
 
 
 @router.post("/compile")

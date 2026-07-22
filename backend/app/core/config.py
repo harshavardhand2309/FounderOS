@@ -83,8 +83,9 @@ class Settings(BaseSettings):
     database_url: str = f"sqlite:///{DATABASE_DIR / 'founderos.db'}"
 
     # LLM provider: "ollama", "openai" (any OpenAI-compatible server),
-    # "anthropic" (Claude API), or "none" ("none" disables LLM calls;
-    # deterministic heuristics are used instead).
+    # "anthropic" (Claude API), "claude-code" (the Claude Code CLI — runs on a
+    # Claude subscription, no API credits), or "none" ("none" disables LLM
+    # calls; deterministic heuristics are used instead).
     llm_provider: str = "ollama"
     llm_model: str = "qwen3"
     ollama_base_url: str = "http://127.0.0.1:11434"
@@ -92,6 +93,9 @@ class Settings(BaseSettings):
     openai_api_key: str = "not-needed-for-local"
     anthropic_api_key: str = ""  # falls back to ANTHROPIC_API_KEY if empty
     anthropic_model: str = "claude-opus-4-8"
+    # Claude Code CLI provider: binary must be logged in (`claude` -> /login).
+    claude_code_binary: str = "claude"
+    claude_code_model: str = "opus"  # alias or full model id; "" = CLI default
     llm_timeout_seconds: float = 120.0
 
     # Background jobs

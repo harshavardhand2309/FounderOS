@@ -110,6 +110,111 @@ def test_plan_ics_export(client) -> None:
     assert missing.status_code == 404
 
 
+@pytest.fixture()
+def no_llm():
+    os.environ["FOUNDEROS_LLM_PROVIDER"] = "none"
+    get_settings.cache_clear()
+    yield
+    os.environ.pop("FOUNDEROS_LLM_PROVIDER", None)
+    get_settings.cache_clear()
+
+
+def _make_repo(tmp_path: Path, name: str) -> Path:
+    repo = tmp_path / name
+    repo.mkdir()
+    (repo / "app.py").write_text("# TODO: wire up config\n")
+    subprocess.run(["git", "init", "-q", str(repo)], check=True)
+    subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "init"],
+        check=True,
+    )
+    return repo
+
+
+def test_workspace_registration_creates_board_and_scans(no_llm, client, tmp_path: Path) -> None:
+    """POST /automation/workspaces registers the repo, creates its board, and
+    an initial scan populates it; the workspace persists into the compile."""
+    repo = _make_repo(tmp_path, "session-alpha")
+
+    added = client.post(
+        "/api/automation/workspaces", json={"path": str(repo), "scan_now": True}
+    )
+    assert added.status_code == 201
+    body = added.json()
+    assert body["project_name"] == "session-alpha"
+    assert body["scan"]["source"] == "heuristic"
+    assert len(body["scan"]["created_tasks"]) > 0
+
+    # Duplicate registration is refused.
+    assert client.post("/api/automation/workspaces", json={"path": str(repo)}).status_code == 409
+    # Missing directories are refused.
+    assert (
+        client.post("/api/automation/workspaces", json={"path": str(tmp_path / "nope")}).status_code
+        == 422
+    )
+
+    listing = client.get("/api/automation/workspaces").json()
+    assert str(repo) in listing["user"]
+    assert str(repo) in listing["effective"]
+
+    # The morning compile picks up UI-registered workspaces too.
+    report = client.post("/api/automation/compile").json()
+    assert any(w["workspace"] == "session-alpha" for w in report["workspaces"])
+
+    # And removal works.
+    assert client.delete(f"/api/automation/workspaces?path={repo}").status_code == 204
+    assert str(repo) not in client.get("/api/automation/workspaces").json()["effective"]
+    assert client.delete(f"/api/automation/workspaces?path={repo}").status_code == 404
+
+
+def test_claude_code_provider_parses_headless_json(monkeypatch) -> None:
+    """The claude-code provider shells out to `claude -p --output-format json`
+    and returns the `result` field; CLI errors surface as LLMError."""
+    from app.infrastructure.llm.base import CompletionRequest, LLMError
+    from app.infrastructure.llm.claude_code import ClaudeCodeProvider
+
+    provider = ClaudeCodeProvider(binary="claude", model="opus", timeout_seconds=30)
+    captured: dict = {}
+
+    def fake_run(command, **kwargs):
+        captured["command"] = command
+        captured["input"] = kwargs.get("input")
+        return SimpleNamespace(
+            returncode=0,
+            stdout=json.dumps({"type": "result", "is_error": False, "result": '{"tasks": []}'}),
+            stderr="",
+        )
+
+    monkeypatch.setattr("app.infrastructure.llm.claude_code.subprocess.run", fake_run)
+    text = provider.complete(CompletionRequest(prompt="derive tasks", system="sys"))
+
+    assert text == '{"tasks": []}'
+    assert captured["command"][0] == "claude"
+    assert "-p" in captured["command"]
+    assert "--output-format" in captured["command"] and "json" in captured["command"]
+    assert "--model" in captured["command"] and "opus" in captured["command"]
+    assert captured["input"].startswith("sys\n\n")
+
+    def fake_run_error(command, **kwargs):
+        return SimpleNamespace(returncode=1, stdout="", stderr="not logged in")
+
+    monkeypatch.setattr("app.infrastructure.llm.claude_code.subprocess.run", fake_run_error)
+    with pytest.raises(LLMError, match="not logged in"):
+        provider.complete(CompletionRequest(prompt="x"))
+
+    def fake_run_refused(command, **kwargs):
+        return SimpleNamespace(
+            returncode=0,
+            stdout=json.dumps({"type": "result", "is_error": True, "result": "limit reached"}),
+            stderr="",
+        )
+
+    monkeypatch.setattr("app.infrastructure.llm.claude_code.subprocess.run", fake_run_refused)
+    with pytest.raises(LLMError, match="error"):
+        provider.complete(CompletionRequest(prompt="x"))
+
+
 def test_anthropic_provider_request_shape() -> None:
     """Opus 4.8 rejects temperature/top_p and thinking budgets — the provider
     must send adaptive thinking and no sampling params."""
