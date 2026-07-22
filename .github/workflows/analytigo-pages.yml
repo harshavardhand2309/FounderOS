@@ -1,5 +1,6 @@
 # Deploys the AnalytiGo prototype (analytigo/) to GitHub Pages so design
 # variants can be tested at a public URL before the site moves to Vercel.
+# Requires Pages enabled once in repo settings (Source: GitHub Actions).
 name: Deploy AnalytiGo to GitHub Pages
 
 on:
