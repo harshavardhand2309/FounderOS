@@ -1,0 +1,108 @@
+/* Nav Lab chrome. Scoped to .nl-*. Also hides the classic rail on desktop
+   whenever a non-classic variant is active (its mobile FAB stays in charge
+   below 900px, where every variant hides itself). */
+@media (min-width: 901px) {
+  html[data-nav]:not([data-nav='classic']) .sn-root {
+    display: none !important;
+  }
+}
+
+/* variant switcher pill (test tool — remove once a design is finalized) */
+.nl-switch {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 70;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+.ag-home:not(.ag-on) .nl-switch {
+  opacity: 0;
+  pointer-events: none;
+}
+.nl-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(16, 14, 22, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  color: #e9e6f2;
+  font: 600 11px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+.nl-toggle:hover {
+  border-color: rgba(203, 182, 255, 0.45);
+  color: #ffffff;
+}
+.nl-toggle-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a64dff;
+  box-shadow: 0 0 8px rgba(166, 77, 255, 0.8);
+}
+.nl-menu {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(14, 12, 20, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transform-origin: bottom left;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+.nl-switch.open .nl-menu {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.nl-opt {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #c7c3d0;
+  font: 600 12px/1 'Sora', sans-serif;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.nl-opt:hover,
+.nl-opt:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+.nl-opt.active {
+  color: #ffffff;
+  background: rgba(166, 77, 255, 0.14);
+}
+
+@media (max-width: 900px) {
+  .nl-switch {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nl-switch,
+  .nl-menu {
+    transition: none !important;
+  }
+}

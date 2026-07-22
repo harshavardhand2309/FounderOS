@@ -10,7 +10,7 @@ import Recommendations from '../components/Recommendations.jsx'
 import GhostPlay from '../components/GhostPlay.jsx'
 import Ecosystem from '../components/Ecosystem.jsx'
 import HeroShowcase from '../components/HeroShowcase.jsx'
-import SectionNav from '../components/SectionNav.jsx'
+import NavLab from '../components/nav/NavLab.jsx'
 import About from '../components/About.jsx'
 
 // Lvl-Up Home — a cinematic, interaction-gated experience:
@@ -550,8 +550,9 @@ export default function Home() {
         <span style={css("font:400 13px/1 'Sora';color:#7d8691")}>Advanced analytics for every athlete.</span>
       </footer>
 
-      {/* floating section navigator (overlay only) */}
-      <SectionNav />
+      {/* floating section navigator (overlay only) — Nav Lab holds the
+          switchable design variants until one is finalized */}
+      <NavLab />
     </div>
   )
 }
