@@ -18,12 +18,12 @@ ask *"what should I do next?"*
 | --- | --- |
 | **Projects** | goals, milestones, epics, priority, progress %, knowledge progress %, estimated remaining hours, predicted completion date |
 | **Kanban** | 11-stage flow (Inbox → … → Done/Archived), drag & drop, priority scores on every card, blocked-task surfacing |
-| **My Day** | tell it your available hours; it builds the schedule: max 2 research + 2 implementation + 1 writing + 1 review sessions, a break every 90 minutes, 15% buffer, context-switch penalties, deep-work blocks, a learning slot — excess work defers automatically |
+| **My Day** | *Plan sprint* proposes a capacity-checked task selection for next week (AI-themed when a model is reachable) — accepting labels the tasks and logs the decision; tell it your available hours; it builds the schedule: max 2 research + 2 implementation + 1 writing + 1 review sessions, a break every 90 minutes, 15% buffer, context-switch penalties, deep-work blocks, a learning slot — excess work defers automatically |
 | **AI planner** | task estimation (optimistic/realistic/pessimistic + confidence, corrected by your historical bias), 0–100 priority scoring, dependency-aware auto-block/unblock with cycle refusal, AI subtask breakdown, daily/weekly reviews, risk analysis, knowledge quizzes, duplicate detection |
 | **Knowledge system** | TipTap notes (research, summaries, paper reviews, ADRs, decision logs), linked to tasks/projects, plus an Obsidian-style watched markdown vault |
 | **Learning engine** | per-task learning checklist (docs → paper → summarize → explain → compare → implement) scored 0–100 — completion alone never equals knowledge; reading tracker with understanding/implementation scores and spaced revision reminders |
 | **Dashboard** | today's plan, velocity, burndown, focus distribution, learning heatmap, project health and completion predictions, overload warnings |
-| **Search** | instant global search (⌘K) across tasks, projects, notes and reading |
+| **Search** | instant global search (⌘K) across tasks, projects, notes and reading; with a local embedding model (`ollama pull nomic-embed-text`) it also matches by *meaning* — hybrid keyword+semantic ranking with graceful keyword-only fallback |
 
 ## Quick start
 
@@ -45,7 +45,7 @@ ollama pull qwen3                       # that's it — FounderOS finds it at :1
 Run the tests:
 
 ```bash
-cd backend && .venv/bin/python -m pytest ../tests/backend   # 169 tests
+cd backend && .venv/bin/python -m pytest ../tests/backend   # 177 tests
 cd frontend && npm run build                                # strict TS + build
 ```
 
@@ -123,6 +123,8 @@ Everything is env-driven with the `FOUNDEROS_` prefix (see `backend/app/core/con
 | `FOUNDEROS_TIMEZONE` | `Asia/Kolkata` | timezone for the compile schedule + calendar export |
 | `FOUNDEROS_MORNING_COMPILE_TIME` | `06:00` | daily compile time (local to timezone) |
 | `FOUNDEROS_MORNING_COMPILE_ENABLED` | `true` | toggle the daily compile job |
+| `FOUNDEROS_EMBEDDING_PROVIDER` | `auto` | semantic-search embedder: `auto`/`ollama` \| `openai` \| `none` \| `plugin:...` |
+| `FOUNDEROS_EMBEDDING_MODEL` | `nomic-embed-text` | embedding model for semantic search |
 | `FOUNDEROS_WATCH_DIRECTORY` | *(off)* | markdown vault to mirror into Notes |
 | `FOUNDEROS_SCHEDULER_ENABLED` | `true` | background priority recalc + nightly rollover |
 
@@ -151,8 +153,4 @@ Planner rules, estimation bases and scoring weights live in `shared/constants.js
 
 ## Roadmap
 
-- Embedding-based semantic search (the keyword search service already exposes the
-  plug point; needs an embedding-capable provider).
-- Sprint generation UI (the AI weekly review already proposes next-week priorities).
-- Task file/link attachments UI (already in the data model and API).
 - Multi-device sync layer (see ADR 0002 — local SQLite stays the source of truth).
