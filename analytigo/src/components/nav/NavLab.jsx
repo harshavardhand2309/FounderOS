@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 import SectionNav from '../SectionNav.jsx'
-import OrbitNav from './OrbitNav.jsx'
-import LensNav from './LensNav.jsx'
+import GlobeNav from './GlobeNav.jsx'
 import FanNav from './FanNav.jsx'
 import '../../styles/navlab.css'
 
 // Nav Lab — lets us A/B the section-navigator designs live. The variant comes
 // from ?nav=<id> in the URL, else the last choice saved in localStorage, else
-// the orbit globe. A small switcher pill (bottom-left) flips between designs
+// the lens globe. A small switcher pill (bottom-left) flips between designs
 // at runtime; remove it once a design is finalized.
 //
 // The classic <SectionNav /> is always mounted: below 900px every variant
@@ -16,8 +15,7 @@ import '../../styles/navlab.css'
 // chosen variant.
 
 const VARIANTS = [
-  { id: 'orbit', name: 'Orbit Globe' },
-  { id: 'lens', name: 'Lens Dock' },
+  { id: 'globe', name: 'Lens Globe' },
   { id: 'fan', name: 'Halo Fan' },
   { id: 'classic', name: 'Classic Rail' },
 ]
@@ -28,7 +26,7 @@ const initialVariant = () => {
   if (VARIANTS.some((v) => v.id === fromUrl)) return fromUrl
   const saved = localStorage.getItem(STORE_KEY)
   if (VARIANTS.some((v) => v.id === saved)) return saved
-  return 'orbit'
+  return 'globe'
 }
 
 export default function NavLab() {
@@ -43,8 +41,7 @@ export default function NavLab() {
 
   return (
     <>
-      {variant === 'orbit' && <OrbitNav />}
-      {variant === 'lens' && <LensNav />}
+      {variant === 'globe' && <GlobeNav />}
       {variant === 'fan' && <FanNav />}
       <SectionNav />
 

@@ -1,25 +1,10 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { css } from '../utils/css.js'
 import TennisBall from './TennisBall.jsx'
 
 // Elite Athlete Profiles — a premium 3D coverflow carousel of player cards with
 // drag/swipe, infinite looping, hover lift, and a cinematic spotlight modal that
 // flips the selected card in 3D to reveal detailed analytics.
-
-const ICONS = {
-  basketball: (
-    <svg viewBox="0 0 24 24" fill="none" width="100%" height="100%">
-      <circle cx="12" cy="12" r="9.2" stroke="rgba(255,255,255,.9)" strokeWidth="1.1" />
-      <path d="M3 12h18M12 2.8v18.4M5.6 5.6c4 3.2 8.8 3.2 12.8 0M5.6 18.4c4-3.2 8.8-3.2 12.8 0" stroke="rgba(255,255,255,.9)" strokeWidth="0.9" />
-    </svg>
-  ),
-  volleyball: (
-    <svg viewBox="0 0 24 24" fill="none" width="100%" height="100%">
-      <circle cx="12" cy="12" r="9.2" stroke="rgba(255,255,255,.9)" strokeWidth="1.1" />
-      <path d="M12 2.8c-3.2 5.4-3.2 10.6 0 18.4M3.6 8c5.2 2.2 11.2 1.2 15.4-3.2M4 18.4c3.1-4.4 9.2-6.4 15.4-4.4" stroke="rgba(255,255,255,.9)" strokeWidth="0.9" />
-    </svg>
-  ),
-}
 
 const PLAYERS = [
   {
@@ -41,22 +26,6 @@ const PLAYERS = [
     form: [5, 6, 7, 6, 8, 7, 9], record: ['W', 'L', 'W', 'W', 'W'],
   },
   {
-    name: 'Andre Cole', sport: 'Basketball', accent: '#d2d2d8', rgb: '210,210,216',
-    rating: 92, winRate: 78, ranking: 6, image: null, icon: 'basketball',
-    strengths: ['Three-Point Range', 'Court Vision', 'Clutch Scoring'],
-    weaknesses: ['Free Throws', 'Perimeter Defense'],
-    bars: [['Scoring', 93], ['Vision', 88], ['Speed', 90], ['Defense', 82]],
-    form: [7, 5, 8, 6, 7, 8, 9], record: ['W', 'W', 'W', 'L', 'W'],
-  },
-  {
-    name: 'Lena Petrova', sport: 'Volleyball', accent: '#f2f2f6', rgb: '242,242,246',
-    rating: 90, winRate: 81, ranking: 5, image: null, icon: 'volleyball',
-    strengths: ['Spike Power', 'Block Timing', 'Serve Precision'],
-    weaknesses: ['Back-Row Defense', 'Quick Sets'],
-    bars: [['Attack', 94], ['Block', 89], ['Serve', 87], ['Agility', 88]],
-    form: [6, 7, 6, 8, 7, 9, 8], record: ['W', 'W', 'L', 'W', 'W'],
-  },
-  {
     name: 'Aarav Menon', sport: 'Badminton', accent: '#e6e6ea', rgb: '230,230,234',
     rating: 91, winRate: 79, ranking: 5, image: '/assets/sport-badminton.jpg',
     strengths: ['Smash Speed', 'Net Kills', 'Footwork'],
@@ -65,28 +34,12 @@ const PLAYERS = [
     form: [7, 6, 8, 7, 9, 8, 8], record: ['W', 'W', 'W', 'L', 'W'],
   },
   {
-    name: 'Lucas Moreau', sport: 'Padel', accent: '#dcdce2', rgb: '220,220,226',
-    rating: 89, winRate: 80, ranking: 6, image: '/assets/sport-padel.jpg',
-    strengths: ['Wall Play', 'Volleys', 'Positioning'],
-    weaknesses: ['Bandeja', 'Lob Defense'],
-    bars: [['Volley', 90], ['Wall Play', 88], ['Serve', 85], ['Agility', 87]],
-    form: [6, 7, 7, 8, 6, 8, 9], record: ['W', 'L', 'W', 'W', 'W'],
-  },
-  {
     name: 'Omar Haddad', sport: 'Squash', accent: '#eeeef2', rgb: '238,238,242',
     rating: 90, winRate: 82, ranking: 4, image: '/assets/sport-squash.jpg',
     strengths: ['Length', 'Boast', 'Court Control'],
     weaknesses: ['Front Drops', 'Stamina'],
     bars: [['Length', 92], ['Angles', 88], ['Speed', 89], ['Stamina', 86]],
     form: [7, 8, 6, 9, 7, 8, 8], record: ['W', 'W', 'L', 'W', 'W'],
-  },
-  {
-    name: 'Ishaan Kapoor', sport: 'Cricket', accent: '#d6d6dc', rgb: '214,214,220',
-    rating: 93, winRate: 77, ranking: 3, image: '/assets/sport-cricket.jpg',
-    strengths: ['Cover Drive', 'Strike Rate', 'Field Awareness'],
-    weaknesses: ['Short Ball', 'Spin Play'],
-    bars: [['Batting', 94], ['Timing', 90], ['Fielding', 86], ['Power', 91]],
-    form: [8, 7, 9, 6, 8, 7, 9], record: ['W', 'W', 'W', 'W', 'L'],
   },
 ]
 
@@ -112,11 +65,7 @@ function Visual({ p, popup }) {
   if (p.image) {
     return <img className="ep-img" src={p.image} alt={p.name} draggable="false" />
   }
-  return (
-    <div className="ep-img" style={css(`background:radial-gradient(circle at 50% 30%,rgba(${p.rgb},.42),#0d1015 70%)`)}>
-      <span style={css('position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);width:118px;height:118px;opacity:.92')}>{ICONS[p.icon]}</span>
-    </div>
-  )
+  return <div className="ep-img" style={css(`background:radial-gradient(circle at 50% 30%,rgba(${p.rgb},.42),#0d1015 70%)`)} />
 }
 
 function Front({ p, big }) {
@@ -230,8 +179,50 @@ export default function EliteProfiles() {
   // 'done' = the existing carousel is live (unchanged from here on).
   const [phase, setPhase] = useState('idle')
   const ready = phase === 'done'
+  // header reveal: 0 = only the rotating ball, 1 = + headline, 2 = + explanation.
+  // One-way latch driven by how far the section has scrolled into view.
+  const [stage, setStage] = useState(0)
+  const sectionRef = useRef(null)
+  const seqT = useRef(0)
   const posRefs = useRef([])
   const drag = useRef({ active: false, startX: 0, startPos: 0, moved: 0, lastX: 0, raf: 0 })
+
+  useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const el = sectionRef.current
+      if (!el) return
+      const top = el.getBoundingClientRect().top
+      const vh = window.innerHeight
+      setStage((s) => {
+        // the section snap-scrolls into view, so the explanation is sequenced
+        // off the headline (a beat later) rather than off scroll depth alone
+        if (top < vh * 0.42) return Math.max(s, 2)
+        if (top < vh * 0.72 && s === 0) {
+          clearTimeout(seqT.current)
+          seqT.current = setTimeout(() => setStage((x) => Math.max(x, 2)), 1100)
+          return 1
+        }
+        return s
+      })
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+      clearTimeout(seqT.current)
+    }
+  }, [])
+  const reveal2 = (on, delay = 0) => ({
+    opacity: on ? 1 : 0,
+    transform: on ? 'none' : 'translateY(26px)',
+    transition: `opacity .8s ease ${delay}s, transform .8s cubic-bezier(.16,.84,.44,1) ${delay}s`,
+  })
 
   const active = ((Math.round(pos) % N) + N) % N
   const offsetOf = (i) => {
@@ -387,17 +378,20 @@ export default function EliteProfiles() {
   }
 
   return (
-    <section className="ep-section" id="profiles">
+    <section className="ep-section" id="profiles" ref={sectionRef}>
       <div style={css('position:absolute;top:0;left:12%;width:42%;height:64%;background:radial-gradient(ellipse at center,rgba(255,255,255,.08),transparent 64%);pointer-events:none')} />
       <div style={css('position:absolute;bottom:0;right:8%;width:46%;height:62%;background:radial-gradient(ellipse at center,rgba(255,255,255,.06),transparent 64%);pointer-events:none')} />
 
+      {/* staged header: the section opens with only the rotating ball; the
+          headline rises in as it scrolls into view, then the explanation.
+          Dark text — the section backdrop artwork is white. */}
       <div style={css('position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 48px;text-align:center')}>
-        <div style={css('display:inline-flex;align-items:center;gap:10px;margin-bottom:16px')}>
-          <span style={css('width:7px;height:7px;border-radius:50%;background:#ffffff;box-shadow:0 0 10px #ffffff')} />
-          <span style={css("font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.18em;color:#eaeaee")}>ATHLETE INTELLIGENCE</span>
+        <div style={{ ...css('display:inline-flex;align-items:center;gap:10px;margin-bottom:16px'), ...reveal2(stage >= 1) }}>
+          <span style={css('width:7px;height:7px;border-radius:50%;background:#0b0d10')} />
+          <span style={css("font:700 12px/1 'JetBrains Mono',monospace;letter-spacing:.18em;color:#1a1d22")}>ATHLETE INTELLIGENCE</span>
         </div>
-        <h2 style={css("font:800 clamp(40px,4.6vw,60px)/1.04 'Sora';letter-spacing:-.03em;margin:0 0 14px;text-wrap:balance")}>Elite Athlete Profiles</h2>
-        <p style={css("font:400 18px/1.6 'Sora';color:#9aa3ad;max-width:640px;margin:0 auto")}>Explore player performance, analytics, rankings, trends, and achievements across every sport — filterable by region: country, state, city, ZIP code, and radius.</p>
+        <h2 style={{ ...css("font:900 clamp(40px,4.6vw,60px)/1.04 'Sora';letter-spacing:-.03em;margin:0 0 14px;color:#0b0d10;text-wrap:balance"), ...reveal2(stage >= 1, 0.12) }}>Elite Athlete Profiles</h2>
+        <p style={{ ...css("font:500 18px/1.6 'Sora';color:#0b0d10;max-width:640px;margin:0 auto"), ...reveal2(stage >= 2, 0.05) }}>Explore player performance, analytics, rankings, trends, and achievements across every sport — filterable by region: country, state, city, ZIP code, and radius.</p>
       </div>
 
       <div className="ep-stage" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onCancel}>

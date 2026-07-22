@@ -161,16 +161,12 @@ function SportGlyph({ name, c }) {
   }
 }
 
-// full Pick Your Game roster — 2 live, 6 coming soon
+// full Pick Your Game roster — 2 live, 2 coming soon
 const SPORTS = [
   { title: 'Tennis', to: '/tennis', img: '/assets/sport-tennis.jpg', desc: 'Serve, return, and full rally intelligence.', glyph: 'tennis', live: true },
   { title: 'Pickleball', to: '/pickleball', img: '/assets/sport-pickleball.jpg', desc: 'Shot tracking, kitchen play, and rally analytics.', glyph: 'pickle', live: true },
-  { title: 'Basketball', img: '/assets/sport-basketball.jpg', desc: 'Shooting, possession, and court coverage.', glyph: 'basket', live: false },
-  { title: 'Volleyball', img: '/assets/sport-volleyball.jpg', desc: 'Sets, spikes, and rotation efficiency.', glyph: 'volley', live: false },
   { title: 'Badminton', img: '/assets/sport-badminton.jpg', desc: 'Smash speed, footwork, and rally control.', glyph: 'badminton', live: false },
-  { title: 'Padel', img: '/assets/sport-padel.jpg', desc: 'Wall play, positioning, and shot selection.', glyph: 'padel', live: false },
   { title: 'Squash', img: '/assets/sport-squash.jpg', desc: 'Length, angles, and relentless court control.', glyph: 'squash', live: false },
-  { title: 'Cricket', img: '/assets/sport-cricket.jpg', desc: 'Batting, bowling, and match strategy.', glyph: 'cricket', live: false },
 ]
 const GOLD = '#e3b94a'
 const SOON_BADGE = css("font:600 8.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#e6e9ee;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:5px 9px;border-radius:6px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)")
