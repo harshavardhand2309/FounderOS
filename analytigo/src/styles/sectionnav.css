@@ -1,0 +1,255 @@
+/* Premium floating section navigator. Scoped to .sn-*. Pure overlay — pointer-events
+   are off except on the interactive controls, so it never blocks page clicks/drags. */
+.sn-root {
+  position: fixed;
+  right: 22px;
+  top: 0;
+  height: 100vh;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+/* stay hidden during the intro (before the page is "started") */
+.ag-home:not(.ag-on) .sn-root,
+.ag-home:not(.ag-on) .sn-fab {
+  opacity: 0;
+  pointer-events: none;
+}
+.sn-rail {
+  position: relative;
+  height: min(74vh, 660px);
+  width: 40px;
+  pointer-events: none;
+}
+.sn-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.14);
+}
+.sn-fill {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  transform: translateX(-50%) scaleY(0);
+  transform-origin: top center;
+  background: linear-gradient(180deg, #d8ccff, #a64dff);
+  box-shadow: 0 0 7px rgba(166, 77, 255, 0.4);
+  will-change: transform;
+}
+.sn-orb {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #ffffff, #cbb6ff 55%, #a64dff);
+  box-shadow: 0 0 10px rgba(203, 182, 255, 0.85), 0 0 22px rgba(166, 77, 255, 0.5);
+  will-change: transform;
+}
+.sn-nodes {
+  position: absolute;
+  inset: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sn-nodes li {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--i) / (var(--n) - 1) * 100%);
+  transform: translate(-50%, -50%);
+}
+.sn-node {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.sn-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.32);
+  transition: width 0.4s cubic-bezier(0.16, 0.84, 0.44, 1),
+    height 0.4s cubic-bezier(0.16, 0.84, 0.44, 1), background 0.4s ease, box-shadow 0.4s ease;
+}
+.sn-node:hover .sn-dot,
+.sn-node:focus-visible .sn-dot {
+  background: rgba(255, 255, 255, 0.8);
+}
+.sn-node.active .sn-dot {
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(203, 182, 255, 0.9), 0 0 16px rgba(166, 77, 255, 0.5);
+}
+.sn-tip {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  white-space: nowrap;
+  padding: 6px 11px;
+  border-radius: 8px;
+  font: 600 11px/1 'Sora', sans-serif;
+  letter-spacing: 0.01em;
+  color: #f0eef6;
+  background: rgba(16, 14, 22, 0.74);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+.sn-node:hover .sn-tip,
+.sn-node:focus-visible .sn-tip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+/* expand-on-hover: hovering (or focusing) the rail reveals every section name at once */
+.sn-root:hover .sn-tip,
+.sn-root:focus-within .sn-tip {
+  opacity: 0.72;
+  transform: translateY(-50%) translateX(0);
+}
+.sn-root:hover .sn-node:hover .sn-tip,
+.sn-root .sn-node.active .sn-tip {
+  opacity: 1;
+}
+.sn-node.active .sn-tip {
+  border-color: rgba(203, 182, 255, 0.4);
+}
+.sn-node:focus-visible {
+  outline: 2px solid rgba(203, 182, 255, 0.85);
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+
+/* ---- compact mobile control ---- */
+.sn-fab {
+  position: fixed;
+  right: 16px;
+  bottom: 18px;
+  z-index: 61;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  cursor: pointer;
+  color: #f2eff8;
+  background: rgba(18, 16, 24, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.5s ease;
+}
+.sn-fab-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: conic-gradient(#a64dff calc(var(--p) * 360deg), rgba(255, 255, 255, 0.16) 0);
+  -webkit-mask: radial-gradient(closest-side, transparent 73%, #000 75%);
+  mask: radial-gradient(closest-side, transparent 73%, #000 75%);
+}
+.sn-fab-ic { position: relative; font-size: 16px; line-height: 1; }
+.sn-sheet {
+  position: fixed;
+  right: 14px;
+  bottom: 74px;
+  z-index: 61;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(14, 12, 20, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  max-height: 72vh;
+  overflow: auto;
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transform-origin: bottom right;
+  pointer-events: none;
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+.sn-sheet.open {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.sn-sheet-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 13px 16px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: #c7c3d0;
+  font: 600 14px/1 'Sora', sans-serif;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.sn-sheet-item:hover,
+.sn-sheet-item:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+.sn-sheet-item.active {
+  color: #fff;
+  background: rgba(166, 77, 255, 0.14);
+}
+.sn-sheet-num {
+  font: 700 10px/1 'JetBrains Mono', monospace;
+  color: #8a86a0;
+}
+.sn-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+@media (max-width: 900px) {
+  .sn-root { display: none; }
+  .sn-fab { display: flex; }
+  .sn-sheet { display: flex; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sn-dot,
+  .sn-tip,
+  .sn-sheet,
+  .sn-fab,
+  .sn-root { transition: none !important; }
+}
