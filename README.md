@@ -45,7 +45,7 @@ ollama pull qwen3                       # that's it — FounderOS finds it at :1
 Run the tests:
 
 ```bash
-cd backend && .venv/bin/python -m pytest ../tests/backend   # 157 tests
+cd backend && .venv/bin/python -m pytest ../tests/backend   # 169 tests
 cd frontend && npm run build                                # strict TS + build
 ```
 
