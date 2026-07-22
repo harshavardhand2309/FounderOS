@@ -190,6 +190,14 @@ export function PaletteProvider({ children }: { children: React.ReactNode }) {
                         <div className="truncate text-xs text-muted-foreground">{hit.snippet}</div>
                       )}
                     </div>
+                    {hit.match !== "keyword" && (
+                      <span
+                        className="ml-2 shrink-0 rounded-full border border-primary/40 px-1.5 text-[9px] uppercase tracking-wide text-primary"
+                        title="Found by meaning, not keywords (embedding similarity)"
+                      >
+                        ≈ semantic
+                      </span>
+                    )}
                     <span className="ml-2 shrink-0 text-[10px] uppercase tracking-wide text-muted-foreground">
                       {hit.kind}
                     </span>

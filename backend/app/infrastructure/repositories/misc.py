@@ -6,7 +6,7 @@ from datetime import date, datetime
 
 from sqlmodel import Session, col, select
 
-from app.domain.entities import ActivityLog, DayPlan, PlanEntry, UserPrefs
+from app.domain.entities import ActivityLog, DayPlan, Embedding, PlanEntry, UserPrefs
 from app.domain.enums import ActivityKind, PlanEntryKind
 
 
@@ -73,6 +73,37 @@ class PrefsRepository:
         self._s.commit()
         self._s.refresh(prefs)
         return prefs
+
+
+class EmbeddingRepository:
+    def __init__(self, session: Session) -> None:
+        self._s = session
+
+    def list_all(self) -> list[Embedding]:
+        return list(self._s.exec(select(Embedding)).all())
+
+    def get(self, embedding_id: str) -> Embedding | None:
+        return self._s.get(Embedding, embedding_id)
+
+    def save(self, embedding: Embedding) -> Embedding:
+        self._s.add(embedding)
+        self._s.commit()
+        self._s.refresh(embedding)
+        return embedding
+
+    def count(self) -> int:
+        return len(self._s.exec(select(Embedding.id)).all())
+
+    def delete_orphans(self, live_ids: set[str]) -> int:
+        """Remove vectors whose source entity no longer exists."""
+        removed = 0
+        for row in self.list_all():
+            if row.id not in live_ids:
+                self._s.delete(row)
+                removed += 1
+        if removed:
+            self._s.commit()
+        return removed
 
 
 class ActivityRepository:

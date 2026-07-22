@@ -7,12 +7,16 @@ from fastapi import APIRouter, HTTPException, Response
 from app.core.config import get_settings
 from app.domain.entities import DayPlan, utcnow
 from app.domain.enums import PlanEntryKind
-from app.presentation.api.deps import PlannerServiceDep
+from app.presentation.api.deps import PlannerServiceDep, SprintServiceDep
 from app.presentation.schemas.misc import (
     DayPlanRead,
     PlanEntryRead,
     PlanEntryUpdate,
     PlanGenerateRequest,
+    SprintAcceptRequest,
+    SprintAcceptResult,
+    SprintProposalRead,
+    SprintProposeRequest,
 )
 
 router = APIRouter(prefix="/planner", tags=["planner"])
@@ -95,6 +99,19 @@ def plan_calendar(plan_date: date, service: PlannerServiceDep) -> Response:
         media_type="text/calendar",
         headers={"Content-Disposition": f'attachment; filename="founderos-{plan_date}.ics"'},
     )
+
+
+@router.post("/sprint/propose", response_model=SprintProposalRead)
+def propose_sprint(payload: SprintProposeRequest, service: SprintServiceDep) -> SprintProposalRead:
+    return SprintProposalRead(**service.propose(payload.week_start))
+
+
+@router.post("/sprint/accept", response_model=SprintAcceptResult)
+def accept_sprint(payload: SprintAcceptRequest, service: SprintServiceDep) -> SprintAcceptResult:
+    try:
+        return SprintAcceptResult(**service.accept(payload.week_start, payload.task_ids))
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from None
 
 
 @router.patch("/entries/{entry_id}", response_model=PlanEntryRead)

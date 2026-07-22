@@ -169,6 +169,7 @@ class ActivityKind(str, Enum):
     STATUS_CHANGED = "status_changed"
     PLAN_GENERATED = "plan_generated"
     PLAN_ROLLED_OVER = "plan_rolled_over"
+    SPRINT_ACCEPTED = "sprint_accepted"
     NOTE_CREATED = "note_created"
     READING_COMPLETED = "reading_completed"
     SESSION_LOGGED = "session_logged"

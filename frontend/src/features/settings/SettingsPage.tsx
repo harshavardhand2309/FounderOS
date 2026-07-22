@@ -1,11 +1,13 @@
-import { FolderPlus, Play, X } from "lucide-react";
+import { FolderPlus, Play, RefreshCw, X } from "lucide-react";
 import { useState } from "react";
 import {
   useAddWorkspace,
   useAutomationStatus,
   usePrefs,
+  useReindexSearch,
   useRemoveWorkspace,
   useRunCompile,
+  useSemanticStatus,
   useUpdatePrefs,
   useWorkspaces,
 } from "@/api/hooks";
@@ -19,10 +21,12 @@ export function SettingsPage() {
   const { data: prefs, isLoading } = usePrefs();
   const { data: automation } = useAutomationStatus();
   const { data: workspaces } = useWorkspaces();
+  const { data: semantic } = useSemanticStatus();
   const updatePrefs = useUpdatePrefs();
   const runCompile = useRunCompile();
   const addWorkspace = useAddWorkspace();
   const removeWorkspace = useRemoveWorkspace();
+  const reindex = useReindexSearch();
   const [newWorkspace, setNewWorkspace] = useState("");
 
   function submitWorkspace() {
@@ -216,6 +220,41 @@ export function SettingsPage() {
           >
             <Play className="h-4 w-4" />
             {runCompile.isPending ? "Compiling…" : "Run compile now"}
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Semantic search</CardTitle>
+          <CardDescription>
+            With a local embedding model, ⌘K search finds items by meaning — "sign-in flow" surfaces
+            the OAuth login task. Runs independently of the main AI provider (chat models can't
+            embed); without one, instant keyword search covers everything.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Badge variant={semantic?.available ? "success" : "outline"}>
+              {semantic?.available ? "ready" : "keyword-only"}
+            </Badge>
+            {semantic?.model && <Badge variant="outline">model: {semantic.model}</Badge>}
+            <Badge variant="outline">{semantic?.indexed ?? 0} items indexed</Badge>
+          </div>
+          {!semantic?.available && (
+            <p className="text-xs text-muted-foreground">
+              Enable it with <code className="rounded bg-muted px-1">ollama pull nomic-embed-text</code>{" "}
+              — the index builds automatically in the background.
+            </p>
+          )}
+          <Button
+            size="sm"
+            variant="secondary"
+            disabled={!semantic?.available || reindex.isPending}
+            onClick={() => reindex.mutate()}
+          >
+            <RefreshCw className="h-4 w-4" />
+            {reindex.isPending ? "Indexing…" : "Reindex now"}
           </Button>
         </CardContent>
       </Card>

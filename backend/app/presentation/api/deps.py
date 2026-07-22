@@ -23,13 +23,17 @@ from app.application.services.planner_service import PlannerService
 from app.application.services.project_service import ProjectService
 from app.application.services.reading_service import ReadingService
 from app.application.services.search_service import SearchService
+from app.application.services.semantic_index import SemanticIndexService
+from app.application.services.sprint_service import SprintService
 from app.application.services.task_service import TaskService
-from app.core.config import get_shared_constants
+from app.core.config import get_settings, get_shared_constants
 from app.infrastructure.db import get_session
+from app.infrastructure.llm.factory import resolve_embeddings, resolve_provider
 from app.infrastructure.repositories import (
     ActivityRepository,
     ChecklistRepository,
     DependencyRepository,
+    EmbeddingRepository,
     NoteRepository,
     PlanRepository,
     PrefsRepository,
@@ -99,12 +103,35 @@ def get_reading_service(session: SessionDep) -> ReadingService:
     return ReadingService(reading=ReadingRepository(session), activity=ActivityRepository(session))
 
 
+def get_semantic_index(session: SessionDep) -> SemanticIndexService:
+    return SemanticIndexService(
+        embedder=resolve_embeddings(get_settings()),
+        embeddings=EmbeddingRepository(session),
+        tasks=TaskRepository(session),
+        projects=ProjectRepository(session),
+        notes=NoteRepository(session),
+        reading=ReadingRepository(session),
+    )
+
+
 def get_search_service(session: SessionDep) -> SearchService:
     return SearchService(
         tasks=TaskRepository(session),
         projects=ProjectRepository(session),
         notes=NoteRepository(session),
         reading=ReadingRepository(session),
+        semantic=get_semantic_index(session),
+    )
+
+
+def get_sprint_service(session: SessionDep) -> SprintService:
+    return SprintService(
+        tasks=TaskRepository(session),
+        prefs=PrefsRepository(session),
+        notes=NoteRepository(session),
+        activity=ActivityRepository(session),
+        planner_constants=get_shared_constants().planner,
+        provider=resolve_provider(get_settings()),
     )
 
 
@@ -119,4 +146,6 @@ DashboardServiceDep = Annotated[DashboardService, Depends(get_dashboard_service)
 NoteServiceDep = Annotated[NoteService, Depends(get_note_service)]
 ReadingServiceDep = Annotated[ReadingService, Depends(get_reading_service)]
 SearchServiceDep = Annotated[SearchService, Depends(get_search_service)]
+SemanticIndexDep = Annotated[SemanticIndexService, Depends(get_semantic_index)]
+SprintServiceDep = Annotated[SprintService, Depends(get_sprint_service)]
 PrefsRepoDep = Annotated[PrefsRepository, Depends(get_prefs_repo)]

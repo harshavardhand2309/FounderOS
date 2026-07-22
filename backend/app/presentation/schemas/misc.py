@@ -162,6 +162,63 @@ class SearchHitRead(BaseModel):
     score: float
     project_id: str | None
     status: str | None
+    match: str = "keyword"  # keyword | semantic | hybrid
+
+
+class SemanticStatusRead(BaseModel):
+    available: bool
+    provider: str | None
+    model: str | None
+    indexed: int
+    detail: str
+
+
+class ReindexResultRead(BaseModel):
+    indexed: int
+    skipped: int
+    deleted: int
+    total: int
+
+
+# Sprint -------------------------------------------------------------------
+
+
+class SprintProposeRequest(BaseModel):
+    week_start: date | None = None  # defaults to next Monday
+
+
+class SprintTaskRead(BaseModel):
+    id: str
+    title: str
+    task_type: TaskType
+    status: str
+    project_id: str | None
+    estimated_minutes: int
+    priority_score: float
+    deep_work: bool
+
+
+class SprintProposalRead(BaseModel):
+    week_start: date
+    week_end: date
+    capacity_minutes: int
+    planned_minutes: int
+    theme: str
+    summary: str
+    source: str  # "ai" | "heuristic"
+    tasks: list[SprintTaskRead]
+    stretch: list[SprintTaskRead]
+
+
+class SprintAcceptRequest(BaseModel):
+    week_start: date
+    task_ids: list[str] = Field(min_length=1)
+
+
+class SprintAcceptResult(BaseModel):
+    week_start: date
+    updated: int
+    note_id: str
 
 
 # Prefs --------------------------------------------------------------------

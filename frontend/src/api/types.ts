@@ -297,6 +297,51 @@ export interface SearchHit {
   score: number;
   project_id: string | null;
   status: string | null;
+  match: "keyword" | "semantic" | "hybrid";
+}
+
+export interface SemanticStatus {
+  available: boolean;
+  provider: string | null;
+  model: string | null;
+  indexed: number;
+  detail: string;
+}
+
+export interface ReindexResult {
+  indexed: number;
+  skipped: number;
+  deleted: number;
+  total: number;
+}
+
+export interface SprintTask {
+  id: string;
+  title: string;
+  task_type: TaskType;
+  status: string;
+  project_id: string | null;
+  estimated_minutes: number;
+  priority_score: number;
+  deep_work: boolean;
+}
+
+export interface SprintProposal {
+  week_start: string;
+  week_end: string;
+  capacity_minutes: number;
+  planned_minutes: number;
+  theme: string;
+  summary: string;
+  source: "ai" | "heuristic";
+  tasks: SprintTask[];
+  stretch: SprintTask[];
+}
+
+export interface SprintAcceptResult {
+  week_start: string;
+  updated: number;
+  note_id: string;
 }
 
 export interface Prefs {

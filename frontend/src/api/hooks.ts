@@ -31,7 +31,11 @@ import type {
   ReadingCreateInput,
   ReadingItem,
   ReadingUpdateInput,
+  ReindexResult,
   SearchHit,
+  SemanticStatus,
+  SprintAcceptResult,
+  SprintProposal,
   Task,
   TaskCreateInput,
   TaskDetail,
@@ -630,7 +634,58 @@ export function useIntakeDocument(): UseMutationResult<IntakeResult, unknown, Fo
   });
 }
 
+// Sprint --------------------------------------------------------------------
+
+export function useProposeSprint(): UseMutationResult<
+  SprintProposal,
+  unknown,
+  { week_start?: string }
+> {
+  return useMutation({
+    mutationFn: (input) => api.post<SprintProposal>("/planner/sprint/propose", input),
+    onError: onApiError,
+  });
+}
+
+export function useAcceptSprint(): UseMutationResult<
+  SprintAcceptResult,
+  unknown,
+  { week_start: string; task_ids: string[] }
+> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input) => api.post<SprintAcceptResult>("/planner/sprint/accept", input),
+    onSuccess: (result) => {
+      toast.success(`Sprint accepted — ${result.updated} tasks queued for the week`);
+      invalidateTaskWorld(qc);
+      void qc.invalidateQueries({ queryKey: queryKeys.notes });
+    },
+    onError: onApiError,
+  });
+}
+
 // Search & prefs ------------------------------------------------------------
+
+export function useSemanticStatus(): UseQueryResult<SemanticStatus> {
+  return useQuery({
+    queryKey: ["search", "semantic-status"],
+    queryFn: () => api.get<SemanticStatus>("/search/semantic/status"),
+    staleTime: 60_000,
+    retry: false,
+  });
+}
+
+export function useReindexSearch(): UseMutationResult<ReindexResult, unknown, void> {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => api.post<ReindexResult>("/search/reindex"),
+    onSuccess: (result) => {
+      toast.success(`Semantic index updated — ${result.indexed} embedded, ${result.total} total`);
+      void qc.invalidateQueries({ queryKey: ["search"] });
+    },
+    onError: onApiError,
+  });
+}
 
 export function useSearch(query: string): UseQueryResult<SearchHit[]> {
   return useQuery({

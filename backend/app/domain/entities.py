@@ -280,6 +280,24 @@ class UserPrefs(SQLModel, table=True):
     extra: dict = Field(default_factory=dict, sa_column=Column(JSON))
 
 
+class Embedding(SQLModel, table=True):
+    """Semantic-search vector for one entity (task/project/note/reading).
+
+    ``content_hash`` lets reindexing skip unchanged content; vectors are small
+    enough (single-user scale) that JSON storage + in-process cosine works.
+    """
+
+    __tablename__ = "embeddings"
+
+    id: str = Field(primary_key=True)  # "<kind>:<entity_id>"
+    kind: str = Field(index=True)
+    entity_id: str = Field(index=True)
+    model: str
+    content_hash: str
+    vector: list[float] = Field(default_factory=list, sa_column=Column(JSON))
+    updated_at: datetime = Field(default_factory=utcnow)
+
+
 class ActivityLog(SQLModel, table=True):
     """Append-only event log powering velocity, burndown and history charts."""
 

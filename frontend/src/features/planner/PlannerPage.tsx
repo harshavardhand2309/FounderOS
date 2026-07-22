@@ -6,6 +6,7 @@
 import {
   BookOpen,
   CalendarPlus,
+  CalendarRange,
   Check,
   ClipboardCheck,
   Coffee,
@@ -17,6 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { SprintDialog } from "./SprintDialog";
 import {
   useAiStatus,
   useDailyReview,
@@ -125,6 +127,7 @@ export function PlannerPage() {
   const dailyReview = useDailyReview();
   const [hours, setHours] = useState("");
   const [review, setReview] = useState<DailyReview | null>(null);
+  const [sprintOpen, setSprintOpen] = useState(false);
 
   useEffect(() => {
     if (prefs && hours === "") setHours(String(prefs.available_hours));
@@ -192,6 +195,15 @@ export function PlannerPage() {
               {dailyReview.isPending ? "Reviewing…" : "Daily review"}
             </Button>
           )}
+          <Button
+            size="sm"
+            variant="outline"
+            title="Propose a capacity-checked task selection for next week"
+            onClick={() => setSprintOpen(true)}
+          >
+            <CalendarRange className="h-4 w-4" />
+            Plan sprint
+          </Button>
           {plan && (
             <Button size="sm" variant="outline" asChild title="Export today's plan to your calendar">
               <a href={`/api/planner/${plan.plan_date}/calendar.ics`} download>
@@ -202,6 +214,8 @@ export function PlannerPage() {
           )}
         </div>
       </div>
+
+      <SprintDialog open={sprintOpen} onClose={() => setSprintOpen(false)} />
 
       <Dialog open={review !== null} onOpenChange={(open) => !open && setReview(null)}>
         <DialogContent>

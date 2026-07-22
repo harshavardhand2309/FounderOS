@@ -2,18 +2,22 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 
+from app.infrastructure.llm.base import LLMError
 from app.presentation.api.deps import (
     DashboardServiceDep,
     PrefsRepoDep,
     SearchServiceDep,
+    SemanticIndexDep,
 )
 from app.presentation.schemas.misc import (
     DashboardOverviewRead,
     PrefsRead,
     PrefsUpdate,
+    ReindexResultRead,
     SearchHitRead,
+    SemanticStatusRead,
     TodaySummaryRead,
 )
 
@@ -54,6 +58,25 @@ def search(
     limit: int = Query(default=30, ge=1, le=100),
 ) -> list[SearchHitRead]:
     return [SearchHitRead(**hit.__dict__) for hit in service.search(q, limit=limit)]
+
+
+@router.get("/search/semantic/status", response_model=SemanticStatusRead)
+def semantic_status(index: SemanticIndexDep) -> SemanticStatusRead:
+    return SemanticStatusRead(**index.status())
+
+
+@router.post("/search/reindex", response_model=ReindexResultRead)
+def semantic_reindex(index: SemanticIndexDep) -> ReindexResultRead:
+    try:
+        return ReindexResultRead(**index.reindex())
+    except LLMError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                f"Semantic reindex unavailable: {exc}. Pull an embedding model "
+                "(`ollama pull nomic-embed-text`) or set FOUNDEROS_EMBEDDING_PROVIDER."
+            ),
+        ) from None
 
 
 @router.get("/prefs", response_model=PrefsRead)

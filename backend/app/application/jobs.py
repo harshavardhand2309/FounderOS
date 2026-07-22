@@ -55,6 +55,27 @@ def morning_compile_job() -> None:
         )
 
 
+def semantic_reindex_job() -> None:
+    """Keep the semantic-search index in sync with entity changes."""
+    from app.infrastructure.db import session_scope
+    from app.infrastructure.llm.base import LLMError
+    from app.presentation.api.deps import get_semantic_index
+
+    with session_scope() as session:
+        index = get_semantic_index(session)
+        try:
+            result = index.reindex()
+        except LLMError:
+            return  # embedder offline right now — keyword search covers it
+        if result["indexed"] or result["deleted"]:
+            logger.info(
+                "Semantic index refreshed: %d embedded, %d removed (%d total)",
+                result["indexed"],
+                result["deleted"],
+                result["total"],
+            )
+
+
 def _parse_hhmm(value: str, default: tuple[int, int] = (6, 0)) -> tuple[int, int]:
     try:
         hours, minutes = value.split(":", 1)
@@ -97,6 +118,17 @@ def register_all_jobs(scheduler: BackgroundScheduler, settings: Settings) -> Non
             minute,
             settings.timezone,
             len(settings.workspaces),
+        )
+    from app.infrastructure.llm.factory import resolve_embeddings
+
+    if resolve_embeddings(settings) is not None:
+        scheduler.add_job(
+            semantic_reindex_job,
+            IntervalTrigger(minutes=settings.embedding_reindex_interval_minutes),
+            id="semantic_reindex",
+            replace_existing=True,
+            max_instances=1,
+            coalesce=True,
         )
     logger.info(
         "Jobs registered: priority recalc every %dm, rollover at %02d:00",

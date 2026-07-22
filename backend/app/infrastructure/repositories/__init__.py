@@ -2,6 +2,7 @@
 
 from app.infrastructure.repositories.misc import (
     ActivityRepository,
+    EmbeddingRepository,
     PlanRepository,
     PrefsRepository,
 )
@@ -19,6 +20,7 @@ __all__ = [
     "ActivityRepository",
     "ChecklistRepository",
     "DependencyRepository",
+    "EmbeddingRepository",
     "NoteRepository",
     "PlanRepository",
     "PrefsRepository",

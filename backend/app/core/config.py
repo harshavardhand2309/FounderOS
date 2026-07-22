@@ -101,6 +101,13 @@ class Settings(BaseSettings):
     claude_history_dir: str = "~/.claude/projects"
     llm_timeout_seconds: float = 120.0
 
+    # Semantic search embeddings — independent of the completion provider,
+    # since chat models like Opus (via CLI) can't embed. "auto" uses local
+    # Ollama when reachable; search stays keyword-only otherwise.
+    embedding_provider: str = "auto"  # auto | ollama | openai | none | plugin:...
+    embedding_model: str = "nomic-embed-text"
+    embedding_reindex_interval_minutes: int = 60
+
     # Background jobs
     scheduler_enabled: bool = True
     priority_recalc_interval_minutes: int = 30

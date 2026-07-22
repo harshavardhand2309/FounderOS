@@ -1,4 +1,4 @@
-import { Link2, Plus, Sparkles, Timer, Trash2, X } from "lucide-react";
+import { ExternalLink, FileText, Link2, Paperclip, Plus, Sparkles, Timer, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -58,6 +58,7 @@ export function TaskDetailSheet({ taskId, onClose }: TaskDetailSheetProps) {
   const [description, setDescription] = useState("");
   const [workMinutes, setWorkMinutes] = useState("");
   const [dependencyPick, setDependencyPick] = useState("");
+  const [attachment, setAttachment] = useState("");
 
   useEffect(() => {
     setDescription(task?.description ?? "");
@@ -88,6 +89,18 @@ export function TaskDetailSheet({ taskId, onClose }: TaskDetailSheetProps) {
   function patch(changes: Parameters<typeof updateTask.mutate>[0]["changes"]) {
     if (!taskId) return;
     updateTask.mutate({ id: taskId, changes });
+  }
+
+  function addAttachment() {
+    if (!task) return;
+    const value = attachment.trim();
+    if (!value) return;
+    if (/^https?:\/\//i.test(value)) {
+      if (!task.links.includes(value)) patch({ links: [...task.links, value] });
+    } else if (!task.files.includes(value)) {
+      patch({ files: [...task.files, value] });
+    }
+    setAttachment("");
   }
 
   return (
@@ -363,6 +376,81 @@ export function TaskDetailSheet({ taskId, onClose }: TaskDetailSheetProps) {
             </div>
           </div>
         </section>
+
+        {/* Attachments: URLs open in a new tab; anything else is a file path */}
+        <section>
+          <Label>Attachments</Label>
+          <div className="mt-1.5 space-y-1.5">
+            {task.links.length === 0 && task.files.length === 0 && (
+              <div className="text-xs text-muted-foreground">No links or files</div>
+            )}
+            {task.links.map((link) => (
+              <div
+                key={link}
+                className="flex items-center justify-between gap-2 rounded-md border px-2.5 py-1.5 text-sm"
+              >
+                <a
+                  href={link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex min-w-0 items-center gap-2 hover:underline"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                  <span className="truncate">{link}</span>
+                </a>
+                <Button
+                  variant="ghost"
+                  size="iconSm"
+                  aria-label={`Remove link ${link}`}
+                  onClick={() => patch({ links: task.links.filter((l) => l !== link) })}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            ))}
+            {task.files.map((file) => (
+              <div
+                key={file}
+                className="flex items-center justify-between gap-2 rounded-md border px-2.5 py-1.5 text-sm"
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <FileText className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                  <span className="truncate font-mono text-xs">{file}</span>
+                </span>
+                <Button
+                  variant="ghost"
+                  size="iconSm"
+                  aria-label={`Remove file ${file}`}
+                  onClick={() => patch({ files: task.files.filter((f) => f !== file) })}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            ))}
+            <div className="flex gap-2">
+              <Input
+                placeholder="https://… or /path/to/file"
+                className="h-8 text-xs"
+                value={attachment}
+                onChange={(e) => setAttachment(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") addAttachment();
+                }}
+              />
+              <Button
+                size="sm"
+                variant="secondary"
+                disabled={!attachment.trim()}
+                onClick={addAttachment}
+                aria-label="Add attachment"
+              >
+                <Paperclip className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        <Separator />
 
         {/* Subtasks */}
         <section>
