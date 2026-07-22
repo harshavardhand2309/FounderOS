@@ -458,8 +458,9 @@ export default function Home() {
             <span style={css("display:block;font-size:clamp(20px,3.2vw,46px);font-weight:700;letter-spacing:.14em;color:#16181c;margin-bottom:.14em")}>{heroLetters('Play smarter —', 0.5, 0.03, 'lr-char')}</span>
             <span style={css("display:block;font-size:clamp(56px,13.5vw,208px)")}>{heroLetters('Own every', 0.95, 0.042, 'lr-hero')}</span>
             <span style={css("display:block;font-size:clamp(56px,13.5vw,208px);margin-top:.06em")}>
-              {/* tennis-ball lime "marker chip" behind the key word */}
-              <span style={css('display:inline-block;background:#d6f637;padding:.04em .14em .06em;border-radius:.06em')}>{heroLetters('Point', 1.118, 0.042, 'lr-hero')}</span>
+              {/* tennis-ball lime "marker chip" behind the key word — the lime
+                  fill is gated on .ag-on so it never shows over the intro video */}
+              <span className="hero-chip" style={css('display:inline-block;padding:.04em .14em .06em;border-radius:.06em')}>{heroLetters('Point', 1.118, 0.042, 'lr-hero')}</span>
             </span>
           </h1>
           <div className="lr-btn" style={{ ...css('display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:38px'), transitionDelay: '2.1s' }}>

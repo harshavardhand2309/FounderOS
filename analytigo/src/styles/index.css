@@ -474,13 +474,28 @@ button {
   100% { transform: translateY(8px) translateX(0); }
 }
 
-/* cinematic edge vignette */
+/* soft edge vignette — hidden until the page starts so the intro video stays clean */
 .ag-hero-vignette {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
   background: radial-gradient(125% 105% at 50% 42%, transparent 55%, rgba(255, 255, 255, 0.55) 100%);
+}
+.ag-on .ag-hero-vignette {
+  opacity: 1;
+}
+
+/* the lime marker chip behind the hero's key word — fills in with the letters,
+   never over the intro video */
+.hero-chip {
+  background: transparent;
+  transition: background 0.7s ease 1.05s;
+}
+.ag-on .hero-chip {
+  background: #d6f637;
 }
 
 /* the headline block breathes gently so it floats above the footage */
