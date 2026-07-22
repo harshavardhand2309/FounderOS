@@ -75,3 +75,11 @@ app/
 │  └─ styles/index.css      reset, fonts, keyframes, hover + responsive rules
 └─ index.html               Google Fonts (Sora, JetBrains Mono)
 ```
+
+## Test deployment
+
+Pushes to `claude/analyitgo-prototype-updates-w9go7q` auto-deploy to
+<https://harshavardhand2309.github.io/FounderOS/> via GitHub Actions
+(see `.github/workflows/analytigo-pages.yml`) while the nav designs are
+being tested. Pick a design with the bottom-left switcher or `?nav=`
+(`orbit`, `lens`, `fan`, `classic`).
