@@ -70,9 +70,11 @@ export default function GhostPlay() {
           </p>
         </div>
 
-        <div className="gp-console" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+        <div className="gp-console">
           {/* vertical AI command panel */}
-          <aside className="gp-nav" role="tablist" aria-label="Ghost Play simulations">
+          {/* pause only while hovering the actual controls — a cursor resting on
+              the stage imagery must not stall the 5s auto-advance */}
+          <aside className="gp-nav" role="tablist" aria-label="Ghost Play simulations" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
             <div className="gp-nav-head">
               <span className="gp-nav-dot" />SIMULATION ENGINE
             </div>

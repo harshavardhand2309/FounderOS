@@ -11,7 +11,7 @@ import '../../styles/globenav.css'
 
 const STEP = 16 // degrees between neighbouring sections on the wheel
 const VISIBLE = 4 // labels shown either side of the selection
-const GAP = 88 // ≈ vertical px between neighbouring labels at the apex (R·sin STEP)
+const GAP = 77 // ≈ vertical px between neighbouring labels at the apex (R·sin STEP)
 const WHEEL_NOTCH = 70 // wheel delta per spin step
 const SETTLE_MS = 550 // idle time before a wheel-spin navigates
 

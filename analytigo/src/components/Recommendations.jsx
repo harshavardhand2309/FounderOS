@@ -70,7 +70,7 @@ export default function Recommendations() {
         ))}
       </div>
 
-      <div className="rec-stage" style={{ animationDelay: '.62s' }} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+      <div className="rec-stage" style={{ animationDelay: '.62s' }}>
         <span className="rec-sweep" key={active} aria-hidden="true" />
         {TABS.map((t, i) => (
           <img
