@@ -6,6 +6,7 @@
 .gp-section {
   position: relative;
   overflow: hidden;
+  --ap-accent: #e6c48a; /* auto-play dots pick up the section's champagne */
   padding: 120px 48px 132px;
   background: radial-gradient(120% 92% at 50% 0%, #131210 0%, #0a0908 46%, #060605 100%);
   color: #efe7d6;

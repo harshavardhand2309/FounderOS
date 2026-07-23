@@ -1,0 +1,51 @@
+/* Auto-play progress dots. Scoped to .ap-*. The active dot stretches into a
+   pill whose fill sweeps over the slide's duration; sections tint it via
+   --ap-accent. */
+.ap-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+}
+.ap-dot {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.24);
+  cursor: pointer;
+  overflow: hidden;
+  transition: width 0.45s cubic-bezier(0.16, 0.84, 0.44, 1), background 0.3s ease;
+}
+.ap-dot:hover {
+  background: rgba(255, 255, 255, 0.45);
+}
+.ap-dot:focus-visible {
+  outline: 2px solid var(--ap-accent, #fff);
+  outline-offset: 3px;
+}
+.ap-dot.on {
+  width: 38px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.ap-fill {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  border-radius: 999px;
+  background: var(--ap-accent, #fff);
+  box-shadow: 0 0 10px var(--ap-accent, rgba(255, 255, 255, 0.6));
+  animation: apFill linear forwards;
+}
+@keyframes apFill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ap-dot { transition: none; }
+  .ap-fill { animation: none; transform: scaleX(1); }
+}

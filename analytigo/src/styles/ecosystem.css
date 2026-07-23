@@ -65,7 +65,9 @@
   color: #fff;
   text-shadow: 0 3px 30px rgba(0, 0, 0, 0.55);
 }
-.eco-word { display: inline; }
+/* unbreakable words — the per-letter inline-blocks would otherwise allow the
+   browser to wrap mid-word ("Every St / akeholder") */
+.eco-word { display: inline-block; white-space: nowrap; }
 .eco-ch {
   display: inline-block;
   opacity: 0;
@@ -173,6 +175,53 @@
 .eco-card:hover .eco-card-ic { background: rgba(224, 184, 119, 0.18); border-color: rgba(232, 196, 138, 0.6); box-shadow: 0 0 22px rgba(224, 184, 119, 0.4); }
 .eco-card:hover .eco-card-list { opacity: 1; transform: none; }
 
+/* scroll-gated cards: hidden until the pin's progress reveals them (.eco-show).
+   Placed before the hover rules so a revealed card's hover lift still wins. */
+.eco-card:not(.eco-show) {
+  opacity: 0;
+  transform: translateY(36px) scale(0.985);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+/* per-stakeholder progress dots under the grid */
+.eco-progress {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+.eco-pdot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(224, 184, 119, 0.22);
+  transition: background 0.5s ease, box-shadow 0.5s ease, transform 0.5s ease;
+}
+.eco-pdot.on {
+  background: #e0b877;
+  box-shadow: 0 0 10px rgba(224, 184, 119, 0.7);
+  transform: scale(1.15);
+}
+
+/* pinned (desktop) layout: the sticky stage is exactly one viewport tall, so
+   tighten the vertical rhythm to keep header + 2x2 grid comfortably inside */
+@media (min-width: 1081px) {
+  .eco-track .eco-section {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 44px 48px;
+  }
+  .eco-track .eco-head { margin-bottom: 30px; }
+  .eco-track .eco-h2 { font-size: clamp(30px, 3.4vw, 46px); margin-bottom: 16px; }
+  .eco-track .eco-desc { font-size: 15px; line-height: 1.6; max-width: 700px; }
+  .eco-track .eco-grid { gap: 16px; }
+  .eco-track .eco-card-body { padding: 20px 22px 18px; }
+  .eco-track .eco-card-head { margin-bottom: 12px; }
+}
+
 @media (max-width: 820px) {
   .eco-section { padding: 80px 20px 92px; }
   .eco-grid { grid-template-columns: 1fr; }
@@ -182,4 +231,5 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .eco-a, .eco-ch { transition: opacity 0.4s ease !important; transform: none !important; filter: none !important; }
+  .eco-card:not(.eco-show) { transform: none; filter: none; }
 }

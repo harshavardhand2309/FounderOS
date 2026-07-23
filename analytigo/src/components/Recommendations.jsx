@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useAutoPlay, PlayDots } from './AutoPlay.jsx'
 
 // AI Recommendations — a tab-based reveal. Each tab swaps a full, self-contained
 // background image (all copy/stats live inside the image). All four images are kept
@@ -15,10 +16,14 @@ const TABS = [
 ]
 const HEADING_WORDS = ['AI', 'Recommendations']
 
+const SLIDE_MS = 5000
+
 export default function Recommendations() {
-  const [active, setActive] = useState(0)
   const ref = useRef(null)
   const [shown, setShown] = useState(false)
+  // auto-advances the four tabs while the section is on screen; hovering the
+  // tabs or the stage pauses, selecting a tab restarts the clock
+  const { active, go, running, epoch, setPaused } = useAutoPlay(TABS.length, SLIDE_MS, ref)
 
   useEffect(() => {
     const el = ref.current
@@ -48,7 +53,7 @@ export default function Recommendations() {
         </p>
       </div>
 
-      <div className="rec-tabs" role="tablist">
+      <div className="rec-tabs" role="tablist" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
         {TABS.map((t, i) => (
           <button
             key={t.num}
@@ -56,7 +61,7 @@ export default function Recommendations() {
             aria-selected={i === active}
             className={i === active ? 'rec-tab active' : 'rec-tab'}
             style={{ animationDelay: (0.52 + i * 0.09).toFixed(2) + 's' }}
-            onClick={() => setActive(i)}
+            onClick={() => go(i)}
           >
             <span className="rec-tab-num">{t.num}</span>
             <span className="rec-tab-label">{t.label}</span>
@@ -65,7 +70,7 @@ export default function Recommendations() {
         ))}
       </div>
 
-      <div className="rec-stage" style={{ animationDelay: '.62s' }}>
+      <div className="rec-stage" style={{ animationDelay: '.62s' }} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
         <span className="rec-sweep" key={active} aria-hidden="true" />
         {TABS.map((t, i) => (
           <img
@@ -78,6 +83,8 @@ export default function Recommendations() {
           />
         ))}
       </div>
+
+      <PlayDots count={TABS.length} active={active} epoch={epoch} running={running} ms={SLIDE_MS} onSelect={go} label="AI Recommendations" />
     </section>
   )
 }

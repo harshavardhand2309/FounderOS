@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useAutoPlay, PlayDots } from './AutoPlay.jsx'
 import './../styles/ghostplay.css'
 
 // Ghost Play — a cinematic "AI simulation console", deliberately unlike the AI
@@ -21,12 +22,16 @@ const TABS = [
 // calm, non-arcade chip entrances (alternating slide / rise — no pop or glitch)
 const HUDANIM = ['gp-h-slide', 'gp-h-rise', 'gp-h-slide', 'gp-h-rise']
 
+const SLIDE_MS = 5000
+
 export default function GhostPlay() {
-  const [active, setActive] = useState(0)
   const [shown, setShown] = useState(false)
   const sectionRef = useRef(null)
   const itemRefs = useRef([])
   const beamRef = useRef(null)
+  // auto-advances the four simulations while the section is on screen;
+  // hovering the console pauses, clicking a mission restarts the clock
+  const { active, go, running, epoch, setPaused } = useAutoPlay(TABS.length, SLIDE_MS, sectionRef)
 
   useEffect(() => { TABS.forEach((t) => { const im = new Image(); im.src = t.src }) }, []) // preload
 
@@ -65,7 +70,7 @@ export default function GhostPlay() {
           </p>
         </div>
 
-        <div className="gp-console">
+        <div className="gp-console" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
           {/* vertical AI command panel */}
           <aside className="gp-nav" role="tablist" aria-label="Ghost Play simulations">
             <div className="gp-nav-head">
@@ -81,7 +86,7 @@ export default function GhostPlay() {
                   ref={(el) => { itemRefs.current[i] = el }}
                   className={i === active ? 'gp-navitem active' : 'gp-navitem'}
                   style={{ animationDelay: (0.24 + i * 0.09).toFixed(2) + 's' }}
-                  onClick={() => setActive(i)}
+                  onClick={() => go(i)}
                 >
                   <span className="gp-navitem-led" />
                   <span className="gp-navitem-body">
@@ -118,6 +123,8 @@ export default function GhostPlay() {
             <div className="gp-vignette" aria-hidden="true" />
           </div>
         </div>
+
+        <PlayDots count={TABS.length} active={active} epoch={epoch} running={running} ms={SLIDE_MS} onSelect={go} label="Ghost Play simulations" />
       </div>
     </section>
   )

@@ -261,7 +261,12 @@ button {
   overflow: hidden;
   pointer-events: none;
   transform: scale(1.14);
-  transition: transform 1.6s cubic-bezier(0.16, 0.84, 0.44, 1);
+  transition: transform 1.6s cubic-bezier(0.16, 0.84, 0.44, 1), opacity 0.45s ease;
+}
+/* hero out of view → the fixed montage fades out (and JS pauses playback) so it
+   can never show through the seams between later sections */
+.ag-video-wrap.ag-video-off {
+  opacity: 0;
 }
 .ag-on .ag-video-wrap {
   transform: scale(1);
@@ -2309,6 +2314,7 @@ button {
    mono eyebrow). Entrance is a calm word-by-word editorial reveal. */
 .rec-section {
   position: relative;
+  --ap-accent: #c9bfe0; /* auto-play dots pick up the section's lavender */
   background: radial-gradient(125% 95% at 50% 0%, #16141b 0%, #100e14 52%, #0b0a0e 100%);
   padding: 122px 48px 134px;
   overflow: hidden;

@@ -176,6 +176,7 @@ const CARD_SOON = 'display:flex;flex-direction:column;justify-content:space-betw
 
 export default function Home() {
   const videoRef = useRef(null)
+  const videoWrapRef = useRef(null)
   const heroRef = useRef(null)
   const cardsRef = useRef(null)
   const cardWrapRefs = useRef([])
@@ -201,6 +202,25 @@ export default function Home() {
     v.defaultMuted = true
     const p = v.play()
     if (p && p.catch) p.catch(() => {})
+  }, [])
+
+  // The montage is a FIXED layer behind the whole page — once the hero is
+  // scrolled away, fade it out and pause playback so it can never peek through
+  // section seams (and stops burning cycles). Resumes when the hero returns.
+  useEffect(() => {
+    const hero = heroRef.current
+    const wrap = videoWrapRef.current
+    if (!hero || !wrap) return
+    const io = new IntersectionObserver(([e]) => {
+      const off = !e.isIntersecting
+      wrap.classList.toggle('ag-video-off', off)
+      const v = videoRef.current
+      if (!v) return
+      if (off) v.pause()
+      else { const p = v.play(); if (p && p.catch) p.catch(() => {}) }
+    }, { threshold: 0 })
+    io.observe(hero)
+    return () => io.disconnect()
   }, [])
 
   // intro: lock scroll and wait for the first interaction (click / scroll / key / tap)
@@ -398,7 +418,7 @@ export default function Home() {
   return (
     <div className={started ? 'ag-home ag-on' : 'ag-home'} style={css('position:relative;background:#0a0b0d')}>
       {/* fixed background intro video */}
-      <div className="ag-video-wrap">
+      <div className="ag-video-wrap" ref={videoWrapRef}>
         <video ref={videoRef} autoPlay muted loop playsInline preload="auto" poster="/assets/home-intro-poster.jpg" aria-hidden="true">
           <source src="/assets/home-intro.mp4" type="video/mp4" />
         </video>
