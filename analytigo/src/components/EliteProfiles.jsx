@@ -8,17 +8,17 @@ import TennisBall from './TennisBall.jsx'
 
 const PLAYERS = [
   {
-    name: 'Marcus Vale', sport: 'Pickleball', accent: '#ffffff', rgb: '255,255,255',
-    rating: 96, winRate: 84, ranking: 2, image: '/assets/card-pickleball.jpg',
+    name: 'Ashwin', sport: 'Pickleball', accent: '#ffffff', rgb: '255,255,255',
+    rating: 96, winRate: 84, ranking: 2, image: '/assets/PB_Image.jpg',
     strengths: ['Kitchen Play', 'Third-Shot Drop', 'Hand Speed'],
     weaknesses: ['Deep Lobs', 'Backhand Dinks'],
     bars: [['Dinking', 95], ['Speed', 91], ['Net Play', 93], ['Serve', 86]],
     form: [6, 7, 5, 8, 7, 9, 8], record: ['W', 'W', 'L', 'W', 'W'],
   },
   {
-    name: 'Diego Rivera', sport: 'Tennis', accent: '#e8e8ec', rgb: '232,232,236',
-    rating: 94, winRate: 82, ranking: 4, image: '/assets/card-tennis.jpg',
-    video: '/assets/tennis-card.mp4', popupImage: '/assets/tennis-popup.jpg',
+    name: 'Amir', sport: 'Tennis', accent: '#e8e8ec', rgb: '232,232,236',
+    rating: 94, winRate: 82, ranking: 4, image: '/assets/Tennis_Image.jpg',
+    popupImage: '/assets/Tennis_Image.jpg',
     popupStats: [['Serve Accuracy', '92%'], ['Court Coverage', '88%'], ['Rally Consistency', '90%']],
     strengths: ['Serve Accuracy', 'Court Coverage', 'Rally Consistency'],
     weaknesses: ['Second Serve', 'Net Approach'],
@@ -27,7 +27,7 @@ const PLAYERS = [
   },
   {
     name: 'Aarav Menon', sport: 'Badminton', accent: '#e6e6ea', rgb: '230,230,234',
-    rating: 91, winRate: 79, ranking: 5, image: '/assets/sport-badminton.jpg',
+    rating: 91, winRate: 79, ranking: 5, image: '/assets/Badminton_Image.jpg',
     strengths: ['Smash Speed', 'Net Kills', 'Footwork'],
     weaknesses: ['Deep Clears', 'Backhand Defense'],
     bars: [['Smash', 93], ['Speed', 90], ['Defense', 84], ['Net Play', 89]],
