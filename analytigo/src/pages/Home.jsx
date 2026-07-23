@@ -164,7 +164,7 @@ function SportGlyph({ name, c }) {
 // full Pick Your Game roster — 2 live, 2 coming soon
 const SPORTS = [
   { title: 'Tennis', to: '/tennis', img: '/assets/sport-tennis.jpg', desc: 'Serve, return, and full rally intelligence.', glyph: 'tennis', live: true },
-  { title: 'Pickleball', to: '/pickleball', img: '/assets/PB_Image_Card.jpg', desc: 'Shot tracking, kitchen play, and rally analytics.', glyph: 'pickle', live: true },
+  { title: 'Pickleball', to: '/pickleball', img: '/assets/sport-pickleball-edit.png', desc: 'Shot tracking, kitchen play, and rally analytics.', glyph: 'pickle', live: true },
   { title: 'Badminton', img: '/assets/sport-badminton.jpg', desc: 'Smash speed, footwork, and rally control.', glyph: 'badminton', live: false },
   { title: 'Squash', img: '/assets/sport-squash.jpg', desc: 'Length, angles, and relentless court control.', glyph: 'squash', live: false },
 ]
