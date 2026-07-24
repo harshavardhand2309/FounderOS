@@ -804,10 +804,10 @@ button {
      with a soft dark scrim so the heading and cards stay readable */
   background: linear-gradient(
       180deg,
-      rgba(9, 9, 11, 0.8) 0%,
-      rgba(9, 9, 11, 0.58) 28%,
-      rgba(9, 9, 11, 0.54) 60%,
-      rgba(9, 9, 11, 0.85) 100%
+      rgba(9, 9, 11, 0.86) 0%,
+      rgba(9, 9, 11, 0.68) 28%,
+      rgba(9, 9, 11, 0.64) 60%,
+      rgba(9, 9, 11, 0.9) 100%
     ),
     url('/assets/elite-bg4-edited.png') center / contain no-repeat;
   background-color: #08080a;
@@ -1928,7 +1928,7 @@ button {
 .bm-desc {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 22px;
   max-width: 440px;
 }
 .bm-sent {

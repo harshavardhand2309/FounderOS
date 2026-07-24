@@ -14,7 +14,26 @@
   z-index: 60;
   pointer-events: none;
   opacity: 1;
-  transition: opacity 0.6s ease;
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 0.9, 0.3, 1);
+}
+/* tucked away while the user reads: only a sliver of rim + the apex dot peek
+   from the edge; scrolling, or hovering/clicking that edge, brings it back */
+.gn-root.gn-away {
+  transform: translateX(70px);
+}
+.gn-away .gn-item,
+.gn-away .gn-hint {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.gn-ring,
+.gn-ring-in,
+.gn-apex {
+  transition: opacity 0.5s ease;
+}
+.gn-away .gn-ring,
+.gn-away .gn-ring-in {
+  opacity: 0.6;
 }
 /* stay hidden during the intro (before the page is "started") */
 .ag-home:not(.ag-on) .gn-root {

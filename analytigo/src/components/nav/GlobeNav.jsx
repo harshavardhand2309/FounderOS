@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import useSections from '../../hooks/useSections.js'
 import '../../styles/globenav.css'
 
@@ -14,18 +14,42 @@ const VISIBLE = 4 // labels shown either side of the selection
 const GAP = 77 // ≈ vertical px between neighbouring labels at the apex (R·sin STEP)
 const WHEEL_NOTCH = 70 // wheel delta per spin step
 const SETTLE_MS = 550 // idle time before a wheel-spin navigates
+const AWAY_MS = 1100 // scroll idle before the globe tucks away
 
 export default function GlobeNav() {
   const { items, active, go } = useSections()
   const [sel, setSel] = useState(0)
   const [lens, setLens] = useState(null) // fractional focus under the cursor
+  const [away, setAway] = useState(false) // tucked to the edge while the user reads
   const rootRef = useRef(null)
   const selRef = useRef(0)
   const engagedRef = useRef(false)
+  const hoverRef = useRef(false)
   const idleT = useRef(0)
+  const awayT = useRef(0)
   const wheelAcc = useRef(0)
   const moveRaf = useRef(0)
   selRef.current = sel
+
+  // stay-out-of-the-way behavior: the globe pops out while the page scrolls
+  // (or on hover/click at the edge) and tucks itself away after a beat of
+  // stillness so it never sits over content the user is reading
+  const armAway = useCallback(() => {
+    clearTimeout(awayT.current)
+    awayT.current = setTimeout(() => {
+      if (!hoverRef.current && !engagedRef.current) setAway(true)
+    }, AWAY_MS)
+  }, [])
+
+  useEffect(() => {
+    const onScroll = () => { setAway(false); armAway() }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    armAway()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      clearTimeout(awayT.current)
+    }
+  }, [armAway])
 
   // follow the page scroll unless the user is driving the wheel
   useEffect(() => {
@@ -40,6 +64,7 @@ export default function GlobeNav() {
     const onWheel = (e) => {
       e.preventDefault()
       engagedRef.current = true
+      setAway(false)
       setLens(null) // wheel takes over from the cursor lens
       wheelAcc.current += e.deltaY
       while (Math.abs(wheelAcc.current) >= WHEEL_NOTCH) {
@@ -77,16 +102,24 @@ export default function GlobeNav() {
       setLens(Math.max(0, Math.min(N - 1, f)))
     })
   }
+  const onEnter = () => {
+    hoverRef.current = true
+    setAway(false)
+    clearTimeout(awayT.current)
+  }
   const onLeave = () => {
+    hoverRef.current = false
     if (moveRaf.current) { cancelAnimationFrame(moveRaf.current); moveRaf.current = 0 }
     setLens(null)
+    armAway()
   }
 
   return (
     <nav
-      className="gn-root"
+      className={away ? 'gn-root gn-away' : 'gn-root'}
       ref={rootRef}
       aria-label="Section navigation"
+      onMouseEnter={onEnter}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
     >

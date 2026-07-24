@@ -12,7 +12,7 @@ import './../styles/ecosystem.css'
 const CARDS = [
   {
     title: 'Players', tag: 'Train smarter. Rise faster.', glyph: 'player',
-    items: ['Performance Analytics', 'Rankings', 'AI Recommendations', 'Ghost Play', 'Progress Tracking', 'Career Growth'],
+    items: ['Performance Analytics', 'Rankings', 'AI Recommendations', 'Face Off Comparisons', 'Progress Tracking', 'Career Growth'],
   },
   {
     title: 'Coaches', tag: 'Lead every session with data.', glyph: 'whistle',
