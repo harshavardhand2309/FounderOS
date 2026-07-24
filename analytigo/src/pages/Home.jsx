@@ -529,7 +529,7 @@ export default function Home() {
               <span style={css('width:30px;height:1px;background:rgba(255,255,255,.25)')} />
             </div>
             <h2 className="ag-h2" style={css("font:800 clamp(40px,4.8vw,60px)/1.03 'Sora';letter-spacing:-.03em;margin:0 0 14px;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.6)")}>Pick your game</h2>
-            <p style={css("font:400 16px/1.6 'Sora';color:#aab2bb;max-width:500px;margin:0 auto;text-shadow:0 1px 14px rgba(0,0,0,.6)")}>Sport-specific analytics — every metric and model tuned to the game you play. Pinpoint your percentage deficiencies, track your monthly evolution, and turn every session into measurable progress.</p>
+            <p style={css("font:400 16px/1.6 'Sora';color:#ffffff;max-width:500px;margin:0 auto;text-shadow:0 1px 14px rgba(0,0,0,.6)")}>Sport-specific analytics — every metric and model tuned to the game you play. Pinpoint your percentage deficiencies, track your monthly evolution, and turn every session into measurable progress.</p>
           </div>
 
           {/* sport cards */}
@@ -586,17 +586,17 @@ export default function Home() {
       <footer style={css('position:relative;z-index:10;background:#0a0b0d;border-top:1px solid rgba(255,255,255,.06);padding:64px 48px 26px')}>
         <div style={css('max-width:1240px;margin:0 auto')}>
           {/* brand block */}
-          <div style={css('display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin-bottom:44px')}>
-            <span style={css("width:46px;height:46px;border-radius:12px;background:#d6f637;display:flex;align-items:center;justify-content:center;color:#0b0d10;font:800 25px/1 'Sora'")}>L</span>
-            <span style={css("font:800 24px/1 'Sora';letter-spacing:-.01em;color:#fff")}>Lvl-Up Sports</span>
-            <span style={css("font:500 14px/1.5 'Sora';color:#9aa3ad")}>Your AI-powered Coaching Assistant</span>
+          <div style={css('display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin-bottom:46px')}>
+            <span style={css("width:52px;height:52px;border-radius:13px;background:#d6f637;display:flex;align-items:center;justify-content:center;color:#0b0d10;font:800 28px/1 'Sora'")}>L</span>
+            <h2 style={css("margin:0;font:800 clamp(34px,4vw,48px)/1.02 'Sora';letter-spacing:-.03em;color:#fff")}>Lvl-Up <span style={css('color:#d6f637')}>Sports</span></h2>
+            <span style={css("font:600 17px/1.5 'Sora';color:#b9c1ca;letter-spacing:.01em")}>Your AI-powered Coaching Assistant</span>
           </div>
 
           {/* one app per audience */}
           <div style={css('display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-bottom:52px')}>
             {FOOT_ROLES.map((r) => (
               <div key={r.title} style={css('border:1px solid rgba(255,255,255,.09);border-radius:18px;background:linear-gradient(165deg,#101216,#0c0e11);padding:22px')}>
-                <h3 style={css("margin:0 0 6px;font:800 19px/1.1 'Sora';color:#fff")}>{r.title}</h3>
+                <h3 style={css("margin:0 0 6px;font:800 19px/1.1 'Sora';color:#d6f637")}>{r.title}</h3>
                 <p style={css("margin:0 0 16px;font:500 13px/1.45 'Sora';color:#8d96a0")}>{r.line}</p>
                 <div style={css('display:flex;flex-direction:column;gap:8px;align-items:flex-start')}>
                   <a className="ft-store" href="#" aria-label={`${r.title} app on the App Store`}><AppleIcon />App Store</a>
@@ -622,11 +622,6 @@ export default function Home() {
               <a className="ft-link" href="tel:+919025867882">+91 90258 67882 · Call &amp; WhatsApp</a>
               <a className="ft-link" href="https://maps.google.com/?q=Lvl-Up+Sports" target="_blank" rel="noreferrer">Find us on Google Maps</a>
             </div>
-          </div>
-
-          <div style={css('display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:22px;border-top:1px solid rgba(255,255,255,.06)')}>
-            <span style={css("font:400 13px/1 'JetBrains Mono',monospace;color:#7d8691")}>© 2026 Lvl-Up Sports. All rights reserved.</span>
-            <span style={css("font:400 13px/1 'Sora';color:#7d8691")}>Advanced analytics for every athlete.</span>
           </div>
         </div>
       </footer>
