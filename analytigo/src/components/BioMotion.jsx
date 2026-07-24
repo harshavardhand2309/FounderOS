@@ -17,9 +17,9 @@ const HEAD = ['BIO MOTION', 'ANALYSIS']
 const HEAD_WINS = [[0.04, 0.2], [0.14, 0.3]]
 
 const SENTENCES = [
-  'Every joint, angle, and vector — mapped in real time.',
-  'Pro-grade biomechanics for every player.',
-  'Injury risk, surfaced before it costs you.',
+  'Real-time pose estimation maps every joint, angle, and movement vector as you play.',
+  'Movement efficiency and biomechanics, measured with professional-grade precision.',
+  'Spot injury risk before it becomes injury — and refine your mechanics like the pros do.',
 ]
 const DESC_WINS = [[0.32, 0.44], [0.42, 0.54], [0.52, 0.64]]
 

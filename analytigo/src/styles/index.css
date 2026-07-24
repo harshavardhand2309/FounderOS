@@ -1244,13 +1244,13 @@ button {
   pointer-events: none;
   background: linear-gradient(
       180deg,
-      rgba(10, 18, 13, 0.72) 0%,
-      rgba(12, 20, 15, 0.34) 24%,
-      rgba(12, 20, 15, 0.36) 50%,
-      rgba(9, 15, 11, 0.78) 76%,
+      rgba(10, 18, 13, 0.78) 0%,
+      rgba(12, 20, 15, 0.46) 24%,
+      rgba(12, 20, 15, 0.48) 50%,
+      rgba(9, 15, 11, 0.84) 76%,
       #0a0f0b 100%
     ),
-    radial-gradient(120% 88% at 50% 44%, transparent 46%, rgba(4, 10, 6, 0.5) 100%);
+    radial-gradient(120% 88% at 50% 44%, transparent 46%, rgba(4, 10, 6, 0.56) 100%);
 }
 /* split volumetric lighting — royal green on the left, gold on the right */
 .fo-glow {
@@ -1796,9 +1796,9 @@ button {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(60% 62% at 24% 42%, rgba(3, 8, 12, 0.86), transparent 66%),
-    linear-gradient(180deg, rgba(4, 7, 10, 0.4) 0%, rgba(4, 7, 10, 0.16) 32%, rgba(4, 7, 10, 0.5) 72%, rgba(4, 7, 10, 0.88) 100%),
-    radial-gradient(122% 120% at 50% 50%, transparent 50%, rgba(2, 4, 7, 0.58) 100%);
+  background: radial-gradient(60% 62% at 24% 42%, rgba(3, 8, 12, 0.88), transparent 66%),
+    linear-gradient(180deg, rgba(4, 7, 10, 0.52) 0%, rgba(4, 7, 10, 0.3) 32%, rgba(4, 7, 10, 0.62) 72%, rgba(4, 7, 10, 0.9) 100%),
+    radial-gradient(122% 120% at 50% 50%, transparent 50%, rgba(2, 4, 7, 0.62) 100%);
 }
 .bm-grid {
   position: absolute;

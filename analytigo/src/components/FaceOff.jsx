@@ -26,8 +26,8 @@ const A = {
   rating: 95, winRate: 84, ranking: 3, power: 91, accuracy: 94, consistency: 92, speed: 88, coverage: 89, rally: 93, serve: 91, mental: 89, matchiq: 91,
 }
 const B = {
-  name: 'Suresh', sport: 'Tennis', tag: 'WORLD NO. 4', accent: '#d0aa54', rgb: '208,170,84',
-  rating: 94, winRate: 83, ranking: 4, power: 93, accuracy: 90, consistency: 89, speed: 91, coverage: 92, rally: 90, serve: 92, mental: 92, matchiq: 90,
+  name: 'Suresh', sport: 'Tennis', tag: 'WORLD NO. 30', accent: '#d0aa54', rgb: '208,170,84',
+  rating: 94, winRate: 83, ranking: 30, power: 93, accuracy: 90, consistency: 89, speed: 91, coverage: 92, rally: 90, serve: 92, mental: 92, matchiq: 90,
 }
 
 const SCOPES = ['Professional Athletes', 'Regional Players', 'Local Competitors']
@@ -202,7 +202,7 @@ export default function FaceOff() {
                 Put any two competitors side by side — strengths, weaknesses, and live metrics, from tour professionals to the player across town.
               </p>
               <div style={css('display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px')}>
-                <span style={css("font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#bfb79f")}>COMPARE AGAINST</span>
+                <span style={css("font:800 11px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#f0e8cf")}>COMPARE AGAINST</span>
                 {SCOPES.map((s) => (
                   <span key={s} className="fo-chip">{s}</span>
                 ))}
