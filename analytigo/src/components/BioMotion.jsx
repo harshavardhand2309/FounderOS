@@ -13,13 +13,13 @@ const clamp01 = (x) => Math.max(0, Math.min(1, x))
 const rv = (p, a, b) => clamp01((p - a) / (b - a))
 const eo = (t) => 1 - Math.pow(1 - t, 3)
 
-const HEAD = ['AI-POWERED', 'BIO MOTION', 'ANALYSIS']
-const HEAD_WINS = [[0.04, 0.18], [0.12, 0.26], [0.2, 0.34]]
+const HEAD = ['BIO MOTION', 'ANALYSIS']
+const HEAD_WINS = [[0.04, 0.2], [0.14, 0.3]]
 
 const SENTENCES = [
-  'Real-time AI pose estimation maps every joint, angle, and movement vector as you play.',
-  'Track movement efficiency and biomechanics with professional-grade precision.',
-  'Surface injury risk early and optimize performance like the world’s elite athletes.',
+  'Every joint, angle, and vector — mapped in real time.',
+  'Pro-grade biomechanics for every player.',
+  'Injury risk, surfaced before it costs you.',
 ]
 const DESC_WINS = [[0.32, 0.44], [0.42, 0.54], [0.52, 0.64]]
 
@@ -190,7 +190,7 @@ export default function BioMotion() {
 
         <div className="bm-inner">
           <div className="bm-copy">
-            <div className="bm-eyebrow"><span className="bm-eyedot" />BIO MOTION · AI TELEMETRY</div>
+            <div className="bm-eyebrow"><span className="bm-eyedot" />AI TELEMETRY</div>
             <h2 className="bm-h2">
               {HEAD.map((l, i) => (
                 <span key={i} className="bm-line" ref={(el) => { lineRefs.current[i] = el }} style={{ opacity: 0 }}>{l}</span>

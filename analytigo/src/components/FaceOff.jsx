@@ -22,15 +22,15 @@ const METRICS = [
 ]
 
 const A = {
-  name: 'Diego Rivera', sport: 'Tennis', tag: 'CHALLENGER', accent: '#3fae86', rgb: '63,174,134',
+  name: 'Aadhitya', sport: 'Tennis', tag: 'CHALLENGER', accent: '#3fae86', rgb: '63,174,134',
   rating: 95, winRate: 84, ranking: 3, power: 91, accuracy: 94, consistency: 92, speed: 88, coverage: 89, rally: 93, serve: 91, mental: 89, matchiq: 91,
 }
 const B = {
-  name: 'Nikola Vasic', sport: 'Tennis', tag: 'WORLD NO. 4', accent: '#d0aa54', rgb: '208,170,84',
+  name: 'Suresh', sport: 'Tennis', tag: 'WORLD NO. 4', accent: '#d0aa54', rgb: '208,170,84',
   rating: 94, winRate: 83, ranking: 4, power: 93, accuracy: 90, consistency: 89, speed: 91, coverage: 92, rally: 90, serve: 92, mental: 92, matchiq: 90,
 }
 
-const SCOPES = ['Professional Athletes', 'Regional Players', 'Local Competitors', 'Country · State · City', 'ZIP Code · Radius']
+const SCOPES = ['Professional Athletes', 'Regional Players', 'Local Competitors']
 
 // Stage-2 AI "analysis" read-outs — cosmetic build-up that fills with scroll progress
 const ANALYZE = [
@@ -195,13 +195,14 @@ export default function FaceOff() {
             <div style={css('text-align:center;margin-bottom:38px')}>
               <div style={css('display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;border:1px solid rgba(208,170,84,.45);background:rgba(208,170,84,.13);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);margin-bottom:22px')}>
                 <span style={css('width:7px;height:7px;border-radius:50%;background:#d0aa54;box-shadow:0 0 10px #d0aa54')} />
-                <span style={css("font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#e8cf8f")}>AI ATHLETE INTELLIGENCE</span>
+                <span style={css("font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#e8cf8f")}>HEAD-TO-HEAD INTELLIGENCE</span>
               </div>
               <h2 className="ag-h2" style={css("font:800 56px/1.02 'Sora';letter-spacing:-.03em;margin:0 0 18px;color:#f6f0e2;text-shadow:0 4px 30px rgba(0,0,0,.6),0 0 34px rgba(208,170,84,.28)")}>Face Off</h2>
               <p style={css("font:400 16.5px/1.7 'Sora';color:#ece5d6;max-width:520px;margin:0 auto 22px;text-shadow:0 1px 14px rgba(0,0,0,.65)")}>
-                Side-by-side athlete intelligence — strengths, weaknesses, and live metrics for any two competitors, anywhere.
+                Put any two competitors side by side — strengths, weaknesses, and live metrics, from tour professionals to the player across town.
               </p>
-              <div style={css('display:flex;flex-wrap:wrap;justify-content:center;gap:8px')}>
+              <div style={css('display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px')}>
+                <span style={css("font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#bfb79f")}>COMPARE AGAINST</span>
                 {SCOPES.map((s) => (
                   <span key={s} className="fo-chip">{s}</span>
                 ))}

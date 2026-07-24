@@ -78,7 +78,7 @@ function Front({ p, big }) {
       <Visual p={p} popup={big} />
       <div className="ep-shine" />
       <div style={css('position:absolute;top:14px;left:14px;right:14px;z-index:2;display:flex;align-items:flex-start;justify-content:space-between')}>
-        <span style={css(`font:700 10px/1 'JetBrains Mono',monospace;letter-spacing:.12em;color:#fff;background:${p.accent};padding:6px 10px;border-radius:7px`)}>{p.sport.toUpperCase()}</span>
+        <span style={css("font:700 10px/1 'JetBrains Mono',monospace;letter-spacing:.12em;color:#fff;background:rgba(0,0,0,.78);border:1px solid rgba(255,255,255,.25);padding:6px 10px;border-radius:7px")}>{p.sport.toUpperCase()}</span>
         <span style={css('display:flex;flex-direction:column;align-items:center;justify-content:center;width:48px;height:48px;border-radius:13px;background:rgba(8,9,11,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18)')}>
           <span style={css(`font:800 ${big ? '23' : '20'}px/1 'Sora';color:${p.accent}`)}>{p.rating}</span>
           <span style={css("font:600 6px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#9aa3ad;margin-top:2px")}>RATING</span>
@@ -118,7 +118,7 @@ function Back({ p }) {
     <div style={css('position:absolute;inset:0;padding:26px 24px;display:flex;flex-direction:column')}>
       <div style={css('display:flex;align-items:center;justify-content:space-between;margin-bottom:4px')}>
         <span style={css(`font:800 20px/1 'Sora';letter-spacing:-.02em`)}>{p.name}</span>
-        <span style={css(`font:700 9px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#fff;background:${p.accent};padding:5px 8px;border-radius:6px`)}>{p.sport.toUpperCase()}</span>
+        <span style={css("font:700 9px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#fff;background:rgba(0,0,0,.78);border:1px solid rgba(255,255,255,.25);padding:5px 8px;border-radius:6px")}>{p.sport.toUpperCase()}</span>
       </div>
       <div style={css("font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#6b7480;margin-bottom:18px")}>PERFORMANCE ANALYTICS</div>
 
@@ -391,7 +391,7 @@ export default function EliteProfiles() {
           <span style={css("font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.18em;color:#eaeaee")}>ATHLETE INTELLIGENCE</span>
         </div>
         <h2 style={{ ...css("font:800 clamp(40px,4.6vw,60px)/1.04 'Sora';letter-spacing:-.03em;margin:0 0 14px;text-wrap:balance"), ...reveal2(stage >= 1, 0.12) }}>Elite Athlete Profiles</h2>
-        <p style={{ ...css("font:600 18px/1.6 'Sora';color:#ffffff;max-width:640px;margin:0 auto;text-shadow:0 1px 2px rgba(0,0,0,.6),0 0 18px rgba(0,0,0,.35)"), ...reveal2(stage >= 2, 0.05) }}>Explore player performance, analytics, rankings, trends, and achievements across every sport — filterable by region: country, state, city, ZIP code, and radius.</p>
+        <p style={{ ...css("font:600 18px/1.6 'Sora';color:#ffffff;max-width:640px;margin:0 auto;text-shadow:0 1px 2px rgba(0,0,0,.6),0 0 18px rgba(0,0,0,.35)"), ...reveal2(stage >= 2, 0.05) }}>Explore player performance, analytics, rankings, trends, and achievements across every sport — filterable by region: country, state, city, ZIP code, and radius. Then put your rank to the test: Ghost Play benchmarks you against challengers in your area.</p>
       </div>
 
       <div className="ep-stage" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onCancel}>
