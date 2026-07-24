@@ -15,7 +15,6 @@ const SECTIONS = [
   { sel: '.fo-section', label: 'Face Off' },
   { sel: '.cm-section', label: 'AI Commentary' },
   { sel: '#profiles', label: 'Elite Athlete Profiles' },
-  { sel: '.gp-section', label: 'Ghost Play' },
   { sel: '#recommendations', label: 'AI Recommendations' },
   { sel: '.gv-section', label: 'Go Viral Instantly' },
   { sel: '.eco-section', label: 'Ecosystem' },

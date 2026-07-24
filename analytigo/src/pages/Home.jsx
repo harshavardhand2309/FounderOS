@@ -7,7 +7,6 @@ import GoViral from '../components/GoViral.jsx'
 import BioMotion from '../components/BioMotion.jsx'
 import Commentary from '../components/Commentary.jsx'
 import Recommendations from '../components/Recommendations.jsx'
-import GhostPlay from '../components/GhostPlay.jsx'
 import Ecosystem from '../components/Ecosystem.jsx'
 import HeroShowcase from '../components/HeroShowcase.jsx'
 import NavLab from '../components/nav/NavLab.jsx'
@@ -168,6 +167,28 @@ const SPORTS = [
   { title: 'Badminton', img: '/assets/sport-badminton.jpg', desc: 'Smash speed, footwork, and rally control.', glyph: 'badminton', live: false },
   { title: 'Squash', img: '/assets/sport-squash.jpg', desc: 'Length, angles, and relentless court control.', glyph: 'squash', live: false },
 ]
+// footer: one app card per audience, each with store links
+const FOOT_ROLES = [
+  { title: 'Player', line: 'Track your game, compare, and climb the ranks.' },
+  { title: 'Venues', line: 'Courts, cameras, and bookings in one place.' },
+  { title: 'Organisers', line: 'Draws, scheduling, scoring, and live streams.' },
+  { title: 'Coaches', line: 'Session plans backed by player data.' },
+]
+const FOOT_EXPLORE = ['Cams', 'Analytics', 'Tools', 'Contact Us']
+const FOOT_LEGAL = ['Terms of Service', 'Privacy Policy', 'Return & Refund Policy']
+
+const AppleIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.5 12.6c0-2.4 2-3.6 2-3.6-1.1-1.6-2.8-1.9-3.4-1.9-1.5-.2-2.9.9-3.6.9-.7 0-1.9-.9-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.5.8 1.1 1.7 2.4 3 2.4 1.2-.1 1.7-.8 3.1-.8s1.9.8 3.1.8c1.3 0 2.1-1.2 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.6-1-2.6-3.9zM15 5.6c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.7 1.4-.6.7-1.2 1.9-1 3 1.1.1 2.1-.6 2.7-1.4z" />
+  </svg>
+)
+const PlayIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M5 3.9v16.2c0 .7.8 1.1 1.4.8l14.2-8.1c.6-.4.6-1.2 0-1.6L6.4 3.1c-.6-.3-1.4.1-1.4.8z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+    <path d="M5.3 3.6 16 12 5.3 20.4" stroke="currentColor" strokeWidth="1.2" />
+  </svg>
+)
+
 const GOLD = '#e3b94a'
 const SOON_BADGE = css("font:600 8.5px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#e6e9ee;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:5px 9px;border-radius:6px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)")
 const LIVE_BADGE = css("font:600 9px/1 'JetBrains Mono',monospace;letter-spacing:.12em;color:#161204;background:#e3b94a;padding:5px 9px;border-radius:6px")
@@ -508,7 +529,7 @@ export default function Home() {
               <span style={css('width:30px;height:1px;background:rgba(255,255,255,.25)')} />
             </div>
             <h2 className="ag-h2" style={css("font:800 clamp(40px,4.8vw,60px)/1.03 'Sora';letter-spacing:-.03em;margin:0 0 14px;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.6)")}>Pick your game</h2>
-            <p style={css("font:400 16px/1.6 'Sora';color:#aab2bb;max-width:500px;margin:0 auto;text-shadow:0 1px 14px rgba(0,0,0,.6)")}>Sport-specific analytics — every metric and model tuned to the game you play, not adapted from another one.</p>
+            <p style={css("font:400 16px/1.6 'Sora';color:#aab2bb;max-width:500px;margin:0 auto;text-shadow:0 1px 14px rgba(0,0,0,.6)")}>Sport-specific analytics — every metric and model tuned to the game you play. Pinpoint your percentage deficiencies, track your monthly evolution, and turn every session into measurable progress.</p>
           </div>
 
           {/* sport cards */}
@@ -549,9 +570,6 @@ export default function Home() {
       {/* ===================== ELITE ATHLETE PROFILES ===================== */}
       <EliteProfiles />
 
-      {/* ===================== GHOST PLAY ===================== */}
-      <GhostPlay />
-
       {/* ===================== AI RECOMMENDATIONS ===================== */}
       <Recommendations />
 
@@ -565,9 +583,52 @@ export default function Home() {
       <About />
 
       {/* footer */}
-      <footer className="ag-rv ag-rv-up ag-pad" style={css('position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:24px 48px;border-top:1px solid rgba(255,255,255,.06);background:#0a0b0d')}>
-        <span style={css("font:400 13px/1 'JetBrains Mono',monospace;color:#7d8691")}>© 2026 Lvl-Up. All rights reserved.</span>
-        <span style={css("font:400 13px/1 'Sora';color:#7d8691")}>Advanced analytics for every athlete.</span>
+      <footer style={css('position:relative;z-index:10;background:#0a0b0d;border-top:1px solid rgba(255,255,255,.06);padding:64px 48px 26px')}>
+        <div style={css('max-width:1240px;margin:0 auto')}>
+          {/* brand block */}
+          <div style={css('display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin-bottom:44px')}>
+            <span style={css("width:46px;height:46px;border-radius:12px;background:#d6f637;display:flex;align-items:center;justify-content:center;color:#0b0d10;font:800 25px/1 'Sora'")}>L</span>
+            <span style={css("font:800 24px/1 'Sora';letter-spacing:-.01em;color:#fff")}>Lvl-Up Sports</span>
+            <span style={css("font:500 14px/1.5 'Sora';color:#9aa3ad")}>Your AI-powered Coaching Assistant</span>
+          </div>
+
+          {/* one app per audience */}
+          <div style={css('display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-bottom:52px')}>
+            {FOOT_ROLES.map((r) => (
+              <div key={r.title} style={css('border:1px solid rgba(255,255,255,.09);border-radius:18px;background:linear-gradient(165deg,#101216,#0c0e11);padding:22px')}>
+                <h3 style={css("margin:0 0 6px;font:800 19px/1.1 'Sora';color:#fff")}>{r.title}</h3>
+                <p style={css("margin:0 0 16px;font:500 13px/1.45 'Sora';color:#8d96a0")}>{r.line}</p>
+                <div style={css('display:flex;flex-direction:column;gap:8px;align-items:flex-start')}>
+                  <a className="ft-store" href="#" aria-label={`${r.title} app on the App Store`}><AppleIcon />App Store</a>
+                  <a className="ft-store" href="#" aria-label={`${r.title} app on Google Play`}><PlayIcon />Google Play</a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* explore / legal / reach us */}
+          <div style={css('display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;padding-top:38px;border-top:1px solid rgba(255,255,255,.06);margin-bottom:38px')}>
+            <div>
+              <h4 className="ft-h4">Explore</h4>
+              {FOOT_EXPLORE.map((l) => <a key={l} className="ft-link" href="#">{l}</a>)}
+            </div>
+            <div>
+              <h4 className="ft-h4">Legal</h4>
+              {FOOT_LEGAL.map((l) => <a key={l} className="ft-link" href="#">{l}</a>)}
+            </div>
+            <div>
+              <h4 className="ft-h4">Reach Us</h4>
+              <a className="ft-link" href="mailto:contact@lvlupsports.com">contact@lvlupsports.com</a>
+              <a className="ft-link" href="tel:+919025867882">+91 90258 67882 · Call &amp; WhatsApp</a>
+              <a className="ft-link" href="https://maps.google.com/?q=Lvl-Up+Sports" target="_blank" rel="noreferrer">Find us on Google Maps</a>
+            </div>
+          </div>
+
+          <div style={css('display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:22px;border-top:1px solid rgba(255,255,255,.06)')}>
+            <span style={css("font:400 13px/1 'JetBrains Mono',monospace;color:#7d8691")}>© 2026 Lvl-Up Sports. All rights reserved.</span>
+            <span style={css("font:400 13px/1 'Sora';color:#7d8691")}>Advanced analytics for every athlete.</span>
+          </div>
+        </div>
       </footer>
 
       {/* floating section navigator (overlay only) — Nav Lab holds the

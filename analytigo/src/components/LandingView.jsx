@@ -18,12 +18,8 @@ export default function LandingView({ navRef, videoRef, openDashboard }) {
           <source src="/assets/landing-bg.mp4" type="video/mp4" />
         </video>
       </div>
-      {/* NAV */}
-      <nav ref={navRef} style={css('position:fixed;top:0;left:0;right:0;z-index:70;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;background:linear-gradient(180deg,rgba(8,9,11,.55) 0%,rgba(8,9,11,.32) 38%,rgba(8,9,11,.1) 70%,transparent 100%);border:none;transition:background .25s,padding .25s,backdrop-filter .25s')}>
-        <Link to="/#sports" aria-label="Lvl-Up home — return to Pick Your Game" onClick={goHome} style={css('display:flex;align-items:center;gap:11px;cursor:pointer')}>
-          <span style={css("width:30px;height:30px;border-radius:8px;background:#e8232e;display:flex;align-items:center;justify-content:center;color:#fff;font:800 17px/1 'Sora'")}>L</span>
-          <span style={css("font:700 20px/1 'Sora';letter-spacing:-.01em")}>Lvl-Up</span>
-        </Link>
+      {/* NAV — Home only, no brand block */}
+      <nav ref={navRef} style={css('position:fixed;top:0;left:0;right:0;z-index:70;display:flex;align-items:center;justify-content:flex-end;padding:20px 48px;background:linear-gradient(180deg,rgba(8,9,11,.55) 0%,rgba(8,9,11,.32) 38%,rgba(8,9,11,.1) 70%,transparent 100%);border:none;transition:background .25s,padding .25s,backdrop-filter .25s')}>
         <Link to="/#sports" className="sp-home" aria-label="Return to Pick Your Game" onClick={goHome}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v9h4v-5h5v5h4v-9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
           Home
@@ -44,10 +40,6 @@ export default function LandingView({ navRef, videoRef, openDashboard }) {
 
         {/* hero content bottom-left */}
         <div className="ag-pad lh-rise" style={{ ...css('position:relative;z-index:4;max-width:600px;padding:0 48px 72px'), animationDelay: '.95s' }}>
-          <div style={css('display:inline-flex;align-items:center;gap:9px;padding:7px 14px;border-radius:999px;border:1px solid rgba(232,35,46,.35);background:rgba(232,35,46,.08);margin-bottom:26px')}>
-            <span style={css('width:7px;height:7px;border-radius:50%;background:#e8232e;box-shadow:0 0 10px #e8232e')} />
-            <span style={css("font:500 12px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#e8232e")}>AI-POWERED PICKLEBALL ANALYTICS</span>
-          </div>
           <h1 className="ag-h1" style={css("font:800 50px/1.06 'Sora';letter-spacing:-.025em;margin:0 0 16px;text-wrap:balance")}>
             Unlock <span style={css('color:#e8232e')}>Elite</span> Pickleball Analytics
           </h1>
@@ -63,10 +55,6 @@ export default function LandingView({ navRef, videoRef, openDashboard }) {
               Watch Trailer
             </button>
           </div>
-        </div>
-        <div style={css('position:absolute;left:50%;bottom:28px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:9px;z-index:4')}>
-          <span style={css("font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.22em;color:rgba(255,255,255,.42)")}>SCROLL</span>
-          <span style={css('width:1px;height:34px;background:linear-gradient(#e8232e,transparent)')} />
         </div>
       </header>
     </div>

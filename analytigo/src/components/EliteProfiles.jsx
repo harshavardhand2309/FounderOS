@@ -391,7 +391,7 @@ export default function EliteProfiles() {
           <span style={css("font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.18em;color:#eaeaee")}>ATHLETE INTELLIGENCE</span>
         </div>
         <h2 style={{ ...css("font:800 clamp(40px,4.6vw,60px)/1.04 'Sora';letter-spacing:-.03em;margin:0 0 14px;text-wrap:balance"), ...reveal2(stage >= 1, 0.12) }}>Elite Athlete Profiles</h2>
-        <p style={{ ...css("font:400 18px/1.6 'Sora';color:#ffffff;max-width:640px;margin:0 auto;text-shadow:0 1px 2px rgba(0,0,0,.6),0 0 18px rgba(0,0,0,.35)"), ...reveal2(stage >= 2, 0.05) }}>Explore player performance, analytics, rankings, trends, and achievements across every sport — filterable by region: country, state, city, ZIP code, and radius. Then put your rank to the test: Ghost Play benchmarks you against challengers in your area.</p>
+        <p style={{ ...css("font:400 18px/1.6 'Sora';color:#ffffff;max-width:640px;margin:0 auto;text-shadow:0 1px 2px rgba(0,0,0,.6),0 0 18px rgba(0,0,0,.35)"), ...reveal2(stage >= 2, 0.05) }}>Every player has a profile — performance, rankings, trends, and achievements, filterable from country level down to your local town. Then see where you stand: Local Benchmarks ranks you against challengers near you.</p>
       </div>
 
       <div className="ep-stage" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onCancel}>
