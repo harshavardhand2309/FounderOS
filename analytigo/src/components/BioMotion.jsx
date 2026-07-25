@@ -17,12 +17,11 @@ const HEAD = ['BIO MOTION', 'ANALYSIS']
 const HEAD_WINS = [[0.04, 0.2], [0.14, 0.3]]
 
 const SENTENCES = [
-  'Real-time pose estimation maps every joint, angle, and movement vector as you play.',
-  'Movement efficiency and biomechanics, measured with professional-grade precision.',
-  'Spot injury risk before it becomes injury — and refine your mechanics like the pros do.',
-  'Then set your motion side by side with any player’s — compare your technique with training partners, rivals, or the game’s best.',
+  'Real-time pose estimation maps every joint, angle, and vector as you play.',
+  'Pro-grade biomechanics that flag injury risk before it costs you.',
+  'Compare your motion, side by side, with any player’s.',
 ]
-const DESC_WINS = [[0.3, 0.42], [0.4, 0.52], [0.5, 0.62], [0.6, 0.72]]
+const DESC_WINS = [[0.32, 0.44], [0.42, 0.54], [0.52, 0.64]]
 
 // three floating cards, all on the RIGHT half so they never touch the copy column;
 // their joint anchors sit on right-of-centre athletes so no dot hides behind the text

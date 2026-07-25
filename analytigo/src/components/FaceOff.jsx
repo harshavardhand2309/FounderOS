@@ -191,14 +191,14 @@ export default function FaceOff() {
 
         {/* Stage 3 — full comparison interface */}
         <div className="fo-final" ref={finalRef} style={done ? { opacity: 1 } : { opacity: 0 }}>
-          <div style={css('position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 48px')}>
-            <div style={css('text-align:center;margin-bottom:38px')}>
-              <div style={css('display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;border:1px solid rgba(208,170,84,.45);background:rgba(208,170,84,.13);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);margin-bottom:22px')}>
+          <div className="fo-final-in" style={css('position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 48px')}>
+            <div className="fo-head" style={css('text-align:center;margin-bottom:26px')}>
+              <div className="fo-eyebrow-pill" style={css('display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:999px;border:1px solid rgba(208,170,84,.45);background:rgba(208,170,84,.13);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);margin-bottom:16px')}>
                 <span style={css('width:7px;height:7px;border-radius:50%;background:#d0aa54;box-shadow:0 0 10px #d0aa54')} />
                 <span style={css("font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#e8cf8f")}>HEAD-TO-HEAD INTELLIGENCE</span>
               </div>
-              <h2 className="ag-h2" style={css("font:800 56px/1.02 'Sora';letter-spacing:-.03em;margin:0 0 18px;color:#f6f0e2;text-shadow:0 4px 30px rgba(0,0,0,.6),0 0 34px rgba(208,170,84,.28)")}>Face Off</h2>
-              <p style={css("font:400 16.5px/1.7 'Sora';color:#ece5d6;max-width:520px;margin:0 auto 22px;text-shadow:0 1px 14px rgba(0,0,0,.65)")}>
+              <h2 className="ag-h2 fo-h2" style={css("font:800 clamp(32px,3.6vw,50px)/1.02 'Sora';letter-spacing:-.03em;margin:0 0 12px;color:#f6f0e2;text-shadow:0 4px 30px rgba(0,0,0,.6),0 0 34px rgba(208,170,84,.28)")}>Face Off</h2>
+              <p className="fo-desc" style={css("font:400 15.5px/1.55 'Sora';color:#ece5d6;max-width:520px;margin:0 auto 16px;text-shadow:0 1px 14px rgba(0,0,0,.65)")}>
                 Put any two competitors side by side — strengths, weaknesses, and live metrics, from tour professionals to the player across town.
               </p>
               <div style={css('display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px')}>
@@ -210,7 +210,7 @@ export default function FaceOff() {
             </div>
 
             <div className="fo-panel" style={css('max-width:920px;margin:0 auto')}>
-              <div style={css('display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:26px')}>
+              <div className="fo-heads" style={css('display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:18px')}>
                 <Head p={A} align="right" />
                 <div style={css('padding:0 26px')}>
                   <div className="fo-vs">VS</div>

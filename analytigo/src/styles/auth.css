@@ -306,6 +306,70 @@
   color: #7c828a;
 }
 
+/* verification step */
+.au-otp {
+  display: flex;
+  gap: 8px;
+}
+.au-otp-box {
+  width: 100%;
+  height: 52px;
+  text-align: center;
+  border-radius: 11px;
+  border: 1px solid #d6d8d2;
+  background: #fff;
+  color: #0b0d10;
+  font: 700 20px/1 'Sora';
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.au-otp-box:focus {
+  outline: none;
+  border-color: #0b0d10;
+  box-shadow: 0 0 0 3px rgba(214, 246, 55, 0.55);
+}
+.au-notice {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #f1f3ea;
+  border: 1px solid #dfe3cf;
+  color: #4a5028;
+  font: 500 13px/1.45 'Sora';
+}
+.au-resend {
+  border: 0;
+  background: transparent;
+  color: #4f8a0c;
+  font: 600 13px/1 'Sora';
+  cursor: pointer;
+  padding: 6px;
+}
+.au-resend:hover {
+  text-decoration: underline;
+}
+.au-success {
+  text-align: center;
+  padding: 12px 0;
+}
+.au-success-tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #d6f637;
+  color: #0b0d10;
+  font: 800 30px/1 'Sora';
+  margin-bottom: 18px;
+}
+.au-submit-link {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  margin-top: 20px;
+}
+
 @media (max-width: 900px) {
   .au-root {
     grid-template-columns: 1fr;
