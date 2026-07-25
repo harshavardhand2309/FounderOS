@@ -518,7 +518,7 @@ export default function Home() {
 
       {/* ===================== SPORT SELECTOR ===================== */}
       <section id="sports" ref={trackRef} className="ag-pin-track" style={css(`position:relative;z-index:10;height:${unlocked ? 100 : 420}vh`)}>
-        <div className="ag-pin-stage" style={css(`position:${unlocked ? 'static' : 'sticky'};top:0;height:100vh;overflow:hidden;display:flex;align-items:center;padding:0 48px;background:linear-gradient(180deg,rgba(6,7,10,.68) 0%,rgba(6,7,10,.56) 42%,rgba(6,7,10,.82) 100%),url('/assets/pickgame-bg3.jpg') center/cover no-repeat`)}>
+        <div className="ag-pin-stage" style={css(`position:${unlocked ? 'static' : 'sticky'};top:0;height:100vh;overflow:hidden;display:flex;align-items:center;padding:0 48px;background:linear-gradient(180deg,rgba(6,7,10,.68) 0%,rgba(6,7,10,.56) 42%,rgba(6,7,10,.82) 100%),url('/assets/pickgame-bg4.jpg') center/cover no-repeat`)}>
         <div style={css('position:absolute;top:4%;left:50%;transform:translateX(-50%);width:64%;height:30%;background:radial-gradient(ellipse at center,rgba(6,7,10,.62),transparent 68%);pointer-events:none')} />
 
         <div style={css('position:relative;z-index:10;max-width:1240px;margin:0 auto;width:100%')}>
