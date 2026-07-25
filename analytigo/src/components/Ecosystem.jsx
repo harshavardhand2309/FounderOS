@@ -9,38 +9,36 @@ import './../styles/ecosystem.css'
 // (same collapse + re-anchor pattern as the other pinned tracks). On
 // mobile/tablet there is no pin — everything reveals as it scrolls into view.
 
+// six audience cards (even 3×2 grid), three headline benefits each so the type
+// can breathe. Schools & Universities are one education card.
 const CARDS = [
   {
     title: 'Players', tag: 'Train smarter. Rise faster.', glyph: 'player',
-    items: ['Performance Analytics', 'Rankings', 'AI Recommendations', 'Face Off Comparisons', 'Progress Tracking', 'Career Growth'],
+    items: ['Performance Analytics', 'Rankings & Benchmarks', 'AI Recommendations'],
   },
   {
     title: 'Coaches', tag: 'Lead every session with data.', glyph: 'whistle',
-    items: ['Team Management', 'Performance Reports', 'Training Recommendations', 'Session Planning', 'AI Coaching Insights'],
+    items: ['Team Management', 'Performance Reports', 'AI Coaching Insights'],
   },
   {
     title: 'Academies', tag: 'Develop the next generation.', glyph: 'academy',
-    items: ['Athlete Development', 'Talent Identification', 'Attendance & Progress', 'Training Analytics', 'Academy Management'],
+    items: ['Athlete Development', 'Talent Identification', 'Training Analytics'],
   },
   {
     title: 'Broadcast', tag: 'Narrate the game intelligently.', glyph: 'broadcast',
-    items: ['AI Commentary', 'Live Insights', 'Match Statistics', 'Tactical Analysis', 'Real-time Storytelling', 'Viewer Engagement'],
+    items: ['AI Commentary', 'Live Match Insights', 'Real-time Storytelling'],
   },
   {
     title: 'Sports Authority', tag: 'Govern sport with data.', glyph: 'authority',
-    items: ['Talent Pipeline Management', 'Standardized Benchmarks', 'Program Funding Insights', 'National Performance Tracking', 'Policy & Compliance Data'],
+    items: ['Talent Pipelines', 'National Benchmarks', 'Funding Insights'],
   },
   {
-    title: 'Sports Universities', tag: 'Win seasons. Advance science.', glyph: 'university',
-    items: ['Roster Performance Analytics', 'Scholarship Recruitment Data', 'Sports Science Research', 'Injury Risk Monitoring', 'Athlete Progression Tracking'],
-  },
-  {
-    title: 'Schools', tag: 'Spot talent early.', glyph: 'school',
-    items: ['Early Talent Identification', 'PE Performance Tracking', 'Inter-School Competition', 'Student Fitness Reports', 'Parent Progress Updates'],
+    title: 'Schools & Universities', tag: 'Discover and develop talent.', glyph: 'university',
+    items: ['Talent Identification', 'Recruitment & Scholarships', 'Sports Science Analytics'],
   },
 ]
 // scroll progress at which each card enters (desktop pin) — one per card
-const CARD_AT = [0.1, 0.22, 0.34, 0.46, 0.58, 0.7, 0.8]
+const CARD_AT = [0.12, 0.26, 0.4, 0.54, 0.68, 0.8]
 const SETTLE_MS = 500 // the last card must be on screen this long before unlock
 
 const Glyph = ({ g }) => {
@@ -163,7 +161,7 @@ export default function Ecosystem() {
       className="eco-track"
       id="ecosystem"
       ref={trackRef}
-      style={{ position: 'relative', height: done ? 'auto' : '440vh' }}
+      style={{ position: 'relative', height: done ? 'auto' : '360vh' }}
     >
       <div
         className={shown ? 'eco-section eco-on' : 'eco-section'}

@@ -575,13 +575,13 @@ export default function Home() {
                   cardStyle={s.live ? CARD_LIVE : CARD_SOON}
                   iconBox={s.live ? ICON_BOX_LIVE_SOFT : ICON_BOX_SOON}
                   icon={<SportGlyph name={s.glyph} c={s.live ? GOLD : '#aeb6bf'} />}
-                  badge={s.live ? <span style={LIVE_BADGE}>LIVE</span> : <span style={SOON_BADGE}>COMING SOON</span>}
+                  badge={s.live ? <span style={LIVE_BADGE}>LIVE</span> : <span style={SOON_BADGE}>COOKING</span>}
                   title={s.title}
                   desc={s.desc}
                   descColor={s.live ? '#b7bec6' : '#9aa3ad'}
                   cta={s.live
                     ? <span style={css("display:inline-flex;align-items:center;gap:7px;font:600 13px/1 'Sora';color:#e3b94a")}>Explore →</span>
-                    : <span style={css("display:inline-flex;align-items:center;gap:7px;font:600 12px/1 'Sora';color:#8b95a1")}>Coming soon</span>}
+                    : <span style={css("display:inline-flex;align-items:center;gap:7px;font:600 12px/1 'Sora';color:#8b95a1")}>Cooking&nbsp;<span aria-hidden="true">🍳</span></span>}
                 />
               </div>
             ))}
@@ -632,8 +632,8 @@ export default function Home() {
                 <h3 style={css("margin:0 0 6px;font:800 19px/1.1 'Sora';color:#4f8a0c")}>{r.title}</h3>
                 <p style={css("margin:0 0 16px;font:500 13px/1.45 'Sora';color:#5b626b")}>{r.line}</p>
                 <div style={css('display:flex;flex-direction:column;gap:8px;align-items:flex-start')}>
-                  <button type="button" className="ft-store" onClick={focusWaitlist} aria-label={`Notify me when the ${r.title} app is on the App Store`}><AppleIcon />App Store<span className="ft-soon">Soon</span></button>
-                  <button type="button" className="ft-store" onClick={focusWaitlist} aria-label={`Notify me when the ${r.title} app is on Google Play`}><PlayIcon />Google Play<span className="ft-soon">Soon</span></button>
+                  <button type="button" className="ft-store" onClick={focusWaitlist} aria-label={`Notify me when the ${r.title} app is on the App Store`}><AppleIcon />App Store</button>
+                  <button type="button" className="ft-store" onClick={focusWaitlist} aria-label={`Notify me when the ${r.title} app is on Google Play`}><PlayIcon />Google Play</button>
                 </div>
               </div>
             ))}
