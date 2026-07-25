@@ -41,9 +41,9 @@ export default function About() {
           <div className="ab-eyebrow ab-a" style={{ transitionDelay: '.05s' }}>
             <span className="ab-dot" />THE TEAM
           </div>
-          <h2 className="ab-h2"><span className="ab-hline"><span>Leadership Behind Lvl-Up</span></span></h2>
+          <h2 className="ab-h2"><span className="ab-hline"><span>The Team Behind the Intelligence.</span></span></h2>
           <p className="ab-desc ab-a" style={{ transitionDelay: '.32s' }}>
-            The people building the intelligence layer for modern sport — engineers, operators, and competitors obsessed with helping athletes reach their next level.
+            Engineers, operators, and competitors building the intelligence layer for modern racket sport — obsessed with one question: what gets an athlete to their next level, faster.
           </p>
         </div>
 

@@ -9,25 +9,22 @@ import { css } from '../utils/css.js'
 const METRICS = [
   { k: 'rating', label: 'Rating' },
   { k: 'winRate', label: 'Win Rate', suf: '%' },
-  { k: 'ranking', label: 'Ranking', rank: true },
   { k: 'power', label: 'Power' },
   { k: 'accuracy', label: 'Accuracy' },
   { k: 'consistency', label: 'Consistency' },
   { k: 'speed', label: 'Speed' },
   { k: 'coverage', label: 'Court Coverage' },
-  { k: 'rally', label: 'Rally Performance' },
-  { k: 'serve', label: 'Serve Performance' },
+  { k: 'performance', label: 'Performance' },
   { k: 'mental', label: 'Mental Strength' },
-  { k: 'matchiq', label: 'Match Intelligence' },
 ]
 
 const A = {
   name: 'Aadhitya', sport: 'Tennis', tag: 'CHALLENGER', accent: '#3fae86', rgb: '63,174,134',
-  rating: 95, winRate: 84, ranking: 3, power: 91, accuracy: 94, consistency: 92, speed: 88, coverage: 89, rally: 93, serve: 91, mental: 89, matchiq: 91,
+  rating: 95, winRate: 84, ranking: 3, power: 91, accuracy: 94, consistency: 92, speed: 88, coverage: 89, performance: 92, mental: 89,
 }
 const B = {
   name: 'Suresh', sport: 'Tennis', tag: 'WORLD NO. 30', accent: '#d0aa54', rgb: '208,170,84',
-  rating: 94, winRate: 83, ranking: 30, power: 93, accuracy: 90, consistency: 89, speed: 91, coverage: 92, rally: 90, serve: 92, mental: 92, matchiq: 90,
+  rating: 94, winRate: 83, ranking: 30, power: 93, accuracy: 90, consistency: 89, speed: 91, coverage: 92, performance: 91, mental: 92,
 }
 
 const SCOPES = ['Professional Athletes', 'Regional Players', 'Local Competitors']
@@ -197,8 +194,9 @@ export default function FaceOff() {
                 <span style={css('width:7px;height:7px;border-radius:50%;background:#d0aa54;box-shadow:0 0 10px #d0aa54')} />
                 <span style={css("font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.16em;color:#e8cf8f")}>HEAD-TO-HEAD INTELLIGENCE</span>
               </div>
-              <h2 className="ag-h2 fo-h2" style={css("font:800 clamp(32px,3.6vw,50px)/1.02 'Sora';letter-spacing:-.03em;margin:0 0 12px;color:#f6f0e2;text-shadow:0 4px 30px rgba(0,0,0,.6),0 0 34px rgba(208,170,84,.28)")}>Face Off</h2>
-              <p className="fo-desc" style={css("font:400 15.5px/1.55 'Sora';color:#ece5d6;max-width:520px;margin:0 auto 16px;text-shadow:0 1px 14px rgba(0,0,0,.65)")}>
+              <h2 className="ag-h2 fo-h2" style={css("font:800 clamp(32px,3.6vw,50px)/1.02 'Sora';letter-spacing:-.03em;margin:0 0 8px;color:#f6f0e2;text-shadow:0 4px 30px rgba(0,0,0,.6),0 0 34px rgba(208,170,84,.28)")}>Face Off</h2>
+              <p className="fo-subhead" style={css("font:600 clamp(14px,1.5vw,17px)/1.4 'Sora';letter-spacing:.01em;color:#f2e8cf;margin:0 0 12px;text-shadow:0 1px 12px rgba(0,0,0,.6)")}>Benchmark against any athlete, anywhere in the world.</p>
+              <p className="fo-desc" style={css("font:400 15px/1.5 'Sora';color:#d8d1c4;max-width:520px;margin:0 auto 16px;text-shadow:0 1px 14px rgba(0,0,0,.65)")}>
                 Put any two competitors side by side — strengths, weaknesses, and live metrics, from tour professionals to the player across town.
               </p>
               <div style={css('display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px')}>
@@ -218,7 +216,7 @@ export default function FaceOff() {
                 <Head p={B} align="left" />
               </div>
 
-              <div style={css('display:flex;flex-direction:column;gap:2px')}>
+              <div style={css('display:flex;flex-direction:column;gap:9px')}>
                 {METRICS.map((m, i) => {
                   const win = aWins(m)
                   return (
@@ -236,8 +234,6 @@ export default function FaceOff() {
                   )
                 })}
               </div>
-
-              <div style={css("text-align:center;margin-top:22px;font:500 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8b95a1")}>BENCHMARK AGAINST ANY ATHLETE · ANYWHERE IN THE WORLD</div>
             </div>
           </div>
         </div>

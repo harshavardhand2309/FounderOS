@@ -190,7 +190,6 @@ export default function BioMotion() {
 
         <div className="bm-inner">
           <div className="bm-copy">
-            <div className="bm-eyebrow"><span className="bm-eyedot" />AI TELEMETRY</div>
             <h2 className="bm-h2">
               {HEAD.map((l, i) => (
                 <span key={i} className="bm-line" ref={(el) => { lineRefs.current[i] = el }} style={{ opacity: 0 }}>{l}</span>

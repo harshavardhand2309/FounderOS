@@ -40,7 +40,6 @@ export default function Recommendations() {
     <section className={shown ? 'rec-section rec-on' : 'rec-section'} id="recommendations" ref={ref}>
       <div className="rec-bg" aria-hidden="true" />
       <div className="rec-head">
-        <div className="rec-eyebrow" style={{ animationDelay: '.05s' }}><span className="rec-eyedot" />AI ENGINE</div>
         <h2 className="rec-h2" aria-label="AI Recommendations">
           {HEADING_WORDS.map((w, i) => (
             <span className="rec-word" key={w}>

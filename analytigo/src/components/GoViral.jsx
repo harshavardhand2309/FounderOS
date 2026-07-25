@@ -119,12 +119,8 @@ export default function GoViral() {
         <div className="gv-inner">
           {/* pinned copy */}
           <div className="gv-copy">
-            <div className="gv-eyebrow">
-              <span className="gv-dot" />
-              <span>AI-POWERED CONTENT CREATION</span>
-            </div>
-            <h2 className="gv-h2">Every Highlight.<br />Ready to Go Viral.</h2>
-            <p className="gv-desc">Automatically turn your best moments into cinematic highlight reels, AI-edited montages, and platform-ready clips. Export in the perfect format for Instagram, TikTok, YouTube Shorts, X, and more — all in seconds.</p>
+            <h2 className="gv-h2">Your Best Points,<br />Post-Ready in Seconds.</h2>
+            <p className="gv-desc">AI finds your top moments and cuts them into share-ready reels — formatted for Facebook, Instagram Reels, Shorts, and X the instant the match ends.</p>
             <div className="gv-tags">
               {['AI Highlight Detection', 'Auto Montages', 'Social Ready', 'One-Tap Export'].map((t) => (
                 <span key={t} className="gv-tag">{t}</span>

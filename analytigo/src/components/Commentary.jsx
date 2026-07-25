@@ -65,12 +65,9 @@ export default function Commentary() {
 
       <div className={shown ? 'cm-inner cm-on' : 'cm-inner'}>
         <div className="cm-left">
-          <div className="cm-label cm-a" style={{ transitionDelay: '.05s' }}>
-            <span className="cm-dot" />AI • REAL-TIME COMMENTARY
-          </div>
-          <h2 className="cm-h2 cm-a" style={{ transitionDelay: '.18s' }}>Hear Every Match Like Never Before.</h2>
-          <p className="cm-desc cm-a" style={{ transitionDelay: '.34s' }}>
-            Experience live AI-generated commentary that understands every rally, every shot, and every turning point. Instantly receive professional-level insights, tactical breakdowns, momentum analysis, and natural commentary designed to make every match feel like a world-class broadcast.
+          <h2 className="cm-h2 cm-a" style={{ transitionDelay: '.1s' }}>Broadcast-Grade Commentary. Every Match.</h2>
+          <p className="cm-desc cm-a" style={{ transitionDelay: '.24s' }}>
+            AI narrates your match as it happens — play-by-play, tactical reads, and momentum shifts, with broadcast polish and no commentator required.
           </p>
           <div className="cm-wave cm-a" style={{ transitionDelay: '.46s' }} aria-hidden="true">
             {WAVE.map((h, i) => <span key={i} style={css(`height:${h}px;animation-delay:${(i * 0.06).toFixed(2)}s`)} />)}
