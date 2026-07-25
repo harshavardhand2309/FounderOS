@@ -1,24 +1,15 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { css } from '../utils/css.js'
+import { firebaseReady, socialLogin, signUp, confirmPhone, refreshEmailVerified, signInIdentifier } from '../utils/firebase.js'
 import '../styles/auth.css'
 
 // Sign In / Sign Up — one white-and-lime auth screen matching the hero.
-// Sign In accepts email OR phone. Sign Up collects name, email, phone, and a
-// role, then advances to a verification step (phone OTP + email code). The
-// send/verify and social sign-in calls are routed through auth stubs in
-// utils — swap those for a real provider (Firebase, Supabase, custom API)
-// without touching this component.
+// Backed by Firebase when VITE_FIREBASE_* is configured; otherwise it runs a
+// mock flow so the public demo stays clickable. Verification reflects Firebase
+// reality: a 6-digit PHONE OTP plus an EMAIL verification LINK (not a code).
 
 const ROLES = ['Player', 'Coach', 'Venue', 'Organiser']
-
-// --- auth stubs: replace the bodies with a real provider (see AUTH note) ---
-async function sendVerification() { /* provider: send phone OTP + email code */ return true }
-async function confirmVerification() { /* provider: verify the entered codes */ return true }
-async function socialSignIn(provider) {
-  // provider: Firebase signInWithPopup(googleProvider) / (appleProvider), etc.
-  return { ok: false, message: `${provider} sign-in connects once the auth backend is wired.` }
-}
 
 function CodeInput({ label, value, onChange }) {
   const refs = useRef([])
@@ -58,32 +49,76 @@ export default function Auth({ mode = 'signin' }) {
   const [show, setShow] = useState(false)
   const [step, setStep] = useState('form') // 'form' | 'verify' | 'done'
   const [notice, setNotice] = useState('')
+  const [busy, setBusy] = useState(false)
   const [contact, setContact] = useState({ email: '', phone: '' })
   const [phoneCode, setPhoneCode] = useState('')
-  const [emailCode, setEmailCode] = useState('')
+  const [emailOk, setEmailOk] = useState(false)
+  const confirmRef = useRef(null) // Firebase phone confirmation handle
 
   const onSignup = async (e) => {
     e.preventDefault()
     const f = e.target
-    setContact({ email: f.email.value, phone: f.phone.value })
-    await sendVerification()
-    setStep('verify')
+    const data = { name: f.name.value, email: f.email.value, phone: f.phone.value.replace(/\s/g, ''), password: f.password.value, role }
+    setContact({ email: data.email, phone: f.phone.value })
     setNotice('')
+    if (!firebaseReady) { setStep('verify'); return } // mock
+    setBusy(true)
+    try {
+      const { confirmation } = await signUp(data, 'au-recaptcha')
+      confirmRef.current = confirmation
+      setStep('verify')
+    } catch (err) {
+      setNotice(err?.message || 'Could not create the account. Please try again.')
+    } finally { setBusy(false) }
   }
+
+  const onSignin = async (e) => {
+    e.preventDefault()
+    const f = e.target
+    setNotice('')
+    if (!firebaseReady) { setStep('done'); return } // mock
+    setBusy(true)
+    try {
+      const r = await signInIdentifier(f.identifier.value, f.password.value, 'au-recaptcha')
+      if (r.needsOtp) { confirmRef.current = { confirmationResult: r.confirmationResult }; setContact({ phone: f.identifier.value, email: '' }); setStep('verify') }
+      else setStep('done')
+    } catch (err) {
+      setNotice(err?.message || 'Sign-in failed. Check your details and try again.')
+    } finally { setBusy(false) }
+  }
+
   const onVerify = async (e) => {
     e.preventDefault()
-    if (phoneCode.length < 6 || emailCode.length < 6) { setNotice('Enter both 6-digit codes to continue.'); return }
-    await confirmVerification()
-    setStep('done')
+    setNotice('')
+    if (!firebaseReady) { if (phoneCode.length < 6) { setNotice('Enter the 6-digit code to continue.'); return } setStep('done'); return }
+    setBusy(true)
+    try {
+      const c = confirmRef.current
+      if (c?.confirmationResult) await c.confirmationResult.confirm(phoneCode) // sign-in OTP
+      else if (c) await confirmPhone(c, phoneCode) // sign-up: link phone
+      setStep('done')
+    } catch (err) {
+      setNotice(err?.message || 'That code did not match. Please re-enter it.')
+    } finally { setBusy(false) }
   }
+
+  const onCheckEmail = async () => {
+    if (!firebaseReady) { setEmailOk(true); return }
+    setEmailOk(await refreshEmailVerified())
+    if (!emailOk) setNotice('Not verified yet — click the link in your email, then try again.')
+  }
+
   const onSocial = async (provider) => {
-    const r = await socialSignIn(provider)
-    if (!r.ok) setNotice(r.message)
+    setNotice('')
+    if (!firebaseReady) { setNotice(`${provider} sign-in connects once the Firebase keys are added.`); return }
+    setBusy(true)
+    try { await socialLogin(provider); setStep('done') }
+    catch (err) { setNotice(err?.message || `${provider} sign-in was cancelled.`) }
+    finally { setBusy(false) }
   }
 
   return (
     <div className="au-root">
-      {/* left brand rail */}
       <aside className="au-brand">
         <Link to="/" className="au-logo" aria-label="Lvl-Up Sports home">
           <span className="au-logo-mark">L</span>
@@ -107,7 +142,6 @@ export default function Auth({ mode = 'signin' }) {
         <span className="au-brand-foot">Your AI-powered Coaching Assistant</span>
       </aside>
 
-      {/* right form panel */}
       <main className="au-panel">
         <div className="au-card">
           <div className="au-switch" role="tablist" aria-label="Auth mode">
@@ -115,39 +149,43 @@ export default function Auth({ mode = 'signin' }) {
             <Link to="/signup" role="tab" aria-selected={isSignup} className={isSignup ? 'au-tab on' : 'au-tab'}>Sign Up</Link>
           </div>
 
-          {/* -------- verification step (sign up) -------- */}
           {step === 'verify' && (
             <>
               <h2 className="au-title">Verify it's you</h2>
-              <p className="au-lead">We sent a 6-digit code to <strong>{contact.phone || 'your phone'}</strong> and a link/code to <strong>{contact.email || 'your email'}</strong>.</p>
+              <p className="au-lead">
+                We sent a 6-digit code to <strong>{contact.phone || 'your phone'}</strong>
+                {contact.email && <> and a verification link to <strong>{contact.email}</strong></>}.
+              </p>
               <form className="au-form" onSubmit={onVerify}>
                 <CodeInput label="Phone OTP" value={phoneCode} onChange={setPhoneCode} />
-                <CodeInput label="Email code" value={emailCode} onChange={setEmailCode} />
+                {contact.email && (
+                  <div className="au-emailverify">
+                    <span>{emailOk ? '✓ Email verified' : 'Open your email and click the verification link.'}</span>
+                    {!emailOk && <button type="button" className="au-resend" onClick={onCheckEmail}>I've verified</button>}
+                  </div>
+                )}
                 {notice && <p className="au-notice">{notice}</p>}
-                <button type="submit" className="au-submit">Verify &amp; continue</button>
-                <button type="button" className="au-resend" onClick={() => sendVerification()}>Resend codes</button>
+                <button type="submit" className="au-submit" disabled={busy}>{busy ? 'Verifying…' : 'Verify & continue'}</button>
                 <button type="button" className="au-resend" onClick={() => { setStep('form'); setNotice('') }}>← Back</button>
               </form>
             </>
           )}
 
-          {/* -------- success -------- */}
           {step === 'done' && (
             <div className="au-success">
               <span className="au-success-tick" aria-hidden="true">✓</span>
-              <h2 className="au-title">You're verified</h2>
-              <p className="au-lead">Your account is ready. Welcome to Lvl-Up Sports.</p>
+              <h2 className="au-title">You're all set</h2>
+              <p className="au-lead">Welcome to Lvl-Up Sports.</p>
               <Link to="/" className="au-submit au-submit-link">Go to dashboard</Link>
             </div>
           )}
 
-          {/* -------- form step -------- */}
           {step === 'form' && (
             <>
               <h2 className="au-title">{isSignup ? 'Create your account' : 'Sign in to your account'}</h2>
               <p className="au-lead">{isSignup ? 'It takes less than a minute.' : 'Enter your details to continue.'}</p>
 
-              <form className="au-form" onSubmit={isSignup ? onSignup : (e) => e.preventDefault()}>
+              <form className="au-form" onSubmit={isSignup ? onSignup : onSignin}>
                 {isSignup && (
                   <label className="au-field">
                     <span className="au-label">Full name</span>
@@ -176,7 +214,7 @@ export default function Auth({ mode = 'signin' }) {
                 <label className="au-field">
                   <span className="au-label">Password</span>
                   <span className="au-pass">
-                    <input className="au-input" type={show ? 'text' : 'password'} name="password" autoComplete={isSignup ? 'new-password' : 'current-password'} placeholder="••••••••" required />
+                    <input className="au-input" type={show ? 'text' : 'password'} name="password" autoComplete={isSignup ? 'new-password' : 'current-password'} placeholder="••••••••" required minLength={6} />
                     <button type="button" className="au-eye" onClick={() => setShow((s) => !s)} aria-label={show ? 'Hide password' : 'Show password'}>{show ? 'Hide' : 'Show'}</button>
                   </span>
                 </label>
@@ -201,12 +239,12 @@ export default function Auth({ mode = 'signin' }) {
 
                 {notice && <p className="au-notice">{notice}</p>}
 
-                <button type="submit" className="au-submit">{isSignup ? 'Create account' : 'Sign in'}</button>
+                <button type="submit" className="au-submit" disabled={busy}>{busy ? 'Please wait…' : (isSignup ? 'Create account' : 'Sign in')}</button>
 
                 <div className="au-or"><span>or continue with</span></div>
                 <div className="au-oauth">
-                  <button type="button" className="au-oauth-btn" onClick={() => onSocial('Google')}>Google</button>
-                  <button type="button" className="au-oauth-btn" onClick={() => onSocial('Apple')}>Apple</button>
+                  <button type="button" className="au-oauth-btn" onClick={() => onSocial('Google')} disabled={busy}>Google</button>
+                  <button type="button" className="au-oauth-btn" onClick={() => onSocial('Apple')} disabled={busy}>Apple</button>
                 </div>
               </form>
 
@@ -222,6 +260,9 @@ export default function Auth({ mode = 'signin' }) {
               )}
             </>
           )}
+
+          {/* invisible reCAPTCHA mount point for Firebase phone auth */}
+          <div id="au-recaptcha" />
         </div>
       </main>
     </div>

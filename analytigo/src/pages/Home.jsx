@@ -11,6 +11,38 @@ import Ecosystem from '../components/Ecosystem.jsx'
 import HeroShowcase from '../components/HeroShowcase.jsx'
 import NavLab from '../components/nav/NavLab.jsx'
 import About from '../components/About.jsx'
+import { joinWaitlist } from '../utils/firebase.js'
+
+// footer waitlist capture — stores to Firestore when Firebase is configured,
+// otherwise confirms locally so the demo still responds
+function WaitlistForm() {
+  const [email, setEmail] = useState('')
+  const [state, setState] = useState('idle') // idle | busy | done | error
+  const submit = async (e) => {
+    e.preventDefault()
+    if (!email) return
+    setState('busy')
+    try { await joinWaitlist(email, 'footer'); setState('done') }
+    catch { setState('error') }
+  }
+  if (state === 'done') {
+    return <p className="ft-wl-done">✓ You're on the list — we'll email you when the apps launch.</p>
+  }
+  return (
+    <form className="ft-wl" onSubmit={submit}>
+      <label className="ft-wl-label" htmlFor="ft-wl-input">The apps are launching soon — get notified first.</label>
+      <div className="ft-wl-row">
+        <input id="ft-wl-input" className="ft-wl-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
+        <button className="ft-wl-btn" type="submit" disabled={state === 'busy'}>{state === 'busy' ? 'Joining…' : 'Join waitlist'}</button>
+      </div>
+      {state === 'error' && <span className="ft-wl-err">Something went wrong — please try again.</span>}
+    </form>
+  )
+}
+const focusWaitlist = () => {
+  const el = document.getElementById('ft-wl-input')
+  if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => el.focus(), 300) }
+}
 
 // Lvl-Up Home — a cinematic, interaction-gated experience:
 //  1. On load, only the full-screen montage plays, with a "click to begin" prompt.
@@ -590,17 +622,18 @@ export default function Home() {
             <span style={css("width:52px;height:52px;border-radius:13px;background:#0b0d10;display:flex;align-items:center;justify-content:center;color:#d6f637;font:800 28px/1 'Sora'")}>L</span>
             <h2 style={css("margin:0;font:800 clamp(40px,5vw,68px)/1 'Sora';letter-spacing:-.035em;text-transform:uppercase;color:#0b0d10")}>Lvl-Up <span style={css('display:inline-block;background:#d6f637;padding:.02em .16em;border-radius:.08em')}>Sports</span></h2>
             <span style={css("font:600 17px/1.5 'Sora';color:#3a3f45;letter-spacing:.01em")}>Your AI-powered Coaching Assistant</span>
+            <WaitlistForm />
           </div>
 
-          {/* one app per audience */}
+          {/* one app per audience — stores launch soon, so buttons open the waitlist */}
           <div style={css('display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-bottom:52px')}>
             {FOOT_ROLES.map((r) => (
               <div key={r.title} style={css('border:1px solid rgba(0,0,0,.1);border-radius:18px;background:#ffffff;box-shadow:0 10px 30px rgba(0,0,0,.05);padding:22px')}>
-                <h3 style={css("margin:0 0 6px;font:800 19px/1.1 'Sora';color:#0b0d10")}>{r.title}</h3>
+                <h3 style={css("margin:0 0 6px;font:800 19px/1.1 'Sora';color:#4f8a0c")}>{r.title}</h3>
                 <p style={css("margin:0 0 16px;font:500 13px/1.45 'Sora';color:#5b626b")}>{r.line}</p>
                 <div style={css('display:flex;flex-direction:column;gap:8px;align-items:flex-start')}>
-                  <a className="ft-store" href="#" aria-label={`${r.title} app on the App Store`}><AppleIcon />App Store</a>
-                  <a className="ft-store" href="#" aria-label={`${r.title} app on Google Play`}><PlayIcon />Google Play</a>
+                  <button type="button" className="ft-store" onClick={focusWaitlist} aria-label={`Notify me when the ${r.title} app is on the App Store`}><AppleIcon />App Store<span className="ft-soon">Soon</span></button>
+                  <button type="button" className="ft-store" onClick={focusWaitlist} aria-label={`Notify me when the ${r.title} app is on Google Play`}><PlayIcon />Google Play<span className="ft-soon">Soon</span></button>
                 </div>
               </div>
             ))}

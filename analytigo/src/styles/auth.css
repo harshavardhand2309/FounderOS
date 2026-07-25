@@ -369,6 +369,26 @@
   text-decoration: none;
   margin-top: 20px;
 }
+.au-emailverify {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 11px;
+  border: 1px solid #d6d8d2;
+  background: #fbfbf9;
+  font: 500 13px/1.4 'Sora';
+  color: #3a3f45;
+}
+.au-submit:disabled,
+.au-oauth-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+#au-recaptcha {
+  margin-top: 4px;
+}
 
 @media (max-width: 900px) {
   .au-root {
