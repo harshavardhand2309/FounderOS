@@ -8,7 +8,6 @@ import { css } from '../utils/css.js'
 
 const CLIPS = [
   { platform: 'Instagram Reel', glyph: 'ig', ratio: '9:16 Reel', res: '1080×1920', dur: '15s', fmt: 'Download MP4' },
-  { platform: 'TikTok Clip', glyph: 'tt', ratio: '9:16 Clip', res: '1080×1920', dur: '12s', fmt: 'Download MP4' },
   { platform: 'YouTube Short', glyph: 'yt', ratio: '9:16 Short', res: '1080×1920', dur: '30s', fmt: 'Download MP4' },
   { platform: 'Story Format', glyph: 'st', ratio: '9:16 Story', res: '1080×1920', dur: '10s', fmt: 'Download MP4' },
   { platform: 'Highlight Montage', glyph: 'hl', ratio: '9:16 Montage', res: '1080×1920', dur: '45s', fmt: 'Download MP4' },
@@ -26,7 +25,6 @@ const clamp01 = (x) => Math.max(0, Math.min(1, x))
 const Glyph = ({ g }) => {
   const c = '#dbe8ff'
   if (g === 'ig') return (<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke={c} strokeWidth="1.7" /><circle cx="12" cy="12" r="4" stroke={c} strokeWidth="1.7" /><circle cx="17.2" cy="6.8" r="1.1" fill={c} /></svg>)
-  if (g === 'tt') return (<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M13 4v9.5a3.5 3.5 0 11-3.2-3.49" stroke={c} strokeWidth="1.7" strokeLinecap="round" /><path d="M13 4c.4 2.4 2 4 4.4 4.3" stroke={c} strokeWidth="1.7" strokeLinecap="round" /></svg>)
   if (g === 'yt') return (<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="3.5" stroke={c} strokeWidth="1.7" /><path d="M11 9.5l3.5 2.5L11 14.5z" fill={c} /></svg>)
   if (g === 'st') return (<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="18" rx="3" stroke={c} strokeWidth="1.7" /><path d="M9.5 19h5" stroke={c} strokeWidth="1.7" strokeLinecap="round" /></svg>)
   return (<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 16l4-6 3 4 3-7 6 9" stroke={c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>)
