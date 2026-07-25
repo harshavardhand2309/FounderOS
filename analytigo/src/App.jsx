@@ -2,8 +2,10 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import Landing from './pages/Landing.jsx'
 import Tennis from './pages/Tennis.jsx'
+import { Suspense, lazy } from 'react'
 import Auth from './pages/Auth.jsx'
-import LoadLab from './pages/LoadLab.jsx'
+// preview-only route — kept out of the main bundle
+const LoadLab = lazy(() => import('./pages/LoadLab.jsx'))
 
 export default function App() {
   return (
@@ -16,7 +18,7 @@ export default function App() {
       <Route path="/signin" element={<Auth mode="signin" />} />
       <Route path="/signup" element={<Auth mode="signup" />} />
       {/* preview harness for the four loading screens — not linked from the site */}
-      <Route path="/loadlab" element={<LoadLab />} />
+      <Route path="/loadlab" element={<Suspense fallback={null}><LoadLab /></Suspense>} />
     </Routes>
   )
 }

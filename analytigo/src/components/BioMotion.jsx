@@ -66,9 +66,23 @@ export default function BioMotion() {
   const doneRef = useRef(false)
   const [done, setDone] = useState(false)
 
-  // measure connector path lengths so we can dash-reveal them
+  // Measure connector path lengths so we can dash-reveal them. Below 1080px the
+  // whole figure is `display:none`, and getTotalLength() throws on a non-rendered
+  // element — unguarded that exception escapes the layout effect and takes the
+  // entire page down, so the measurement is skipped when the figure isn't laid out.
   useLayoutEffect(() => {
-    connRefs.current.forEach((el) => { if (el) { const L = el.getTotalLength(); el._len = L; el.style.strokeDasharray = L; el.style.strokeDashoffset = L } })
+    connRefs.current.forEach((el) => {
+      if (!el) return
+      let L
+      try {
+        L = el.getTotalLength()
+      } catch {
+        return // not rendered at this breakpoint — nothing to dash-reveal
+      }
+      el._len = L
+      el.style.strokeDasharray = L
+      el.style.strokeDashoffset = L
+    })
   }, [])
 
   useEffect(() => {

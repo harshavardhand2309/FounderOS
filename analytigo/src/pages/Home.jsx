@@ -10,6 +10,8 @@ import Recommendations from '../components/Recommendations.jsx'
 import Ecosystem from '../components/Ecosystem.jsx'
 import HeroShowcase from '../components/HeroShowcase.jsx'
 import NavLab from '../components/nav/NavLab.jsx'
+import Loader from '../components/loader/Loader.jsx'
+import T2CourtDraw from '../components/loader/T2CourtDraw.jsx'
 import About from '../components/About.jsx'
 import { joinWaitlist } from '../utils/firebase.js'
 
@@ -227,7 +229,7 @@ const LIVE_BADGE = css("font:600 9px/1 'JetBrains Mono',monospace;letter-spacing
 const CARD_LIVE = 'display:flex;flex-direction:column;justify-content:space-between;min-height:206px;padding:20px;border-radius:18px;background:linear-gradient(160deg,#16191d,#0f1216);border:1px solid rgba(227,185,74,.38);box-shadow:0 20px 48px rgba(0,0,0,.42);transition:transform .4s cubic-bezier(.16,.84,.44,1),border-color .4s,box-shadow .4s'
 const CARD_SOON = 'display:flex;flex-direction:column;justify-content:space-between;min-height:206px;padding:20px;border-radius:18px;background:linear-gradient(160deg,#14171b,#0e1013);border:1px solid rgba(255,255,255,.09);box-shadow:0 18px 44px rgba(0,0,0,.4);transition:transform .4s cubic-bezier(.16,.84,.44,1),border-color .4s,box-shadow .4s'
 
-export default function Home() {
+export default function Home({ skipLoader = false }) {
   const videoRef = useRef(null)
   const videoWrapRef = useRef(null)
   const heroRef = useRef(null)
@@ -241,6 +243,11 @@ export default function Home() {
   // returning from a sport page → skip the intro and land straight on Pick Your Game
   const returningToSports = () => { try { return sessionStorage.getItem('lvlup:goto') === 'sports' } catch { return false } }
   const [started, setStarted] = useState(returningToSports)
+  // The loading screen owns the entry: it replaces the old "click to begin" gate
+  // (two sequential gates is one too many) and hands off by starting the hero as
+  // its curtain lifts, so the reveal plays *through* the exit rather than after it.
+  // Skipped when arriving back from a sport page, and in the loader lab.
+  const [loading, setLoading] = useState(() => !skipLoader && !returningToSports())
   // one-time pin: once all four cards have fully revealed, the section unlocks and
   // behaves like a normal (un-pinned) block — no reverse animation, no re-pinning.
   const [unlocked, setUnlocked] = useState(returningToSports)
@@ -276,9 +283,10 @@ export default function Home() {
     return () => io.disconnect()
   }, [])
 
-  // intro: lock scroll and wait for the first interaction (click / scroll / key / tap)
+  // intro: lock scroll and wait for the first interaction (click / scroll / key / tap).
+  // Dormant while the loader is up — it hands off on its own.
   useEffect(() => {
-    if (started) return
+    if (started || loading) return
     document.documentElement.style.overflow = 'hidden'
     document.body.style.overflow = 'hidden'
     const begin = () => {
@@ -301,7 +309,7 @@ export default function Home() {
       window.removeEventListener('keydown', begin)
       window.removeEventListener('pointerdown', begin)
     }
-  }, [started])
+  }, [started, loading])
 
   // on reveal: restore scroll, snap to the very top, and run the stat count-ups
   useEffect(() => {
@@ -662,6 +670,14 @@ export default function Home() {
       {/* floating section navigator (overlay only) — Nav Lab holds the
           switchable design variants until one is finalized */}
       <NavLab />
+
+      {loading && (
+        <Loader
+          component={T2CourtDraw}
+          onExit={() => { setStarted(true); window.scrollTo(0, 0) }}
+          onDone={() => setLoading(false)}
+        />
+      )}
     </div>
   )
 }

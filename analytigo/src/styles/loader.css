@@ -212,6 +212,11 @@ body.ld-lock { overflow: hidden !important; }
 .t2-half-r { right: 0; }
 .t2-root.is-exit .t2-half-l { transform: translateX(-100%); }
 .t2-root.is-exit .t2-half-r { transform: translateX(100%); }
+/* The hero behind is also white, so a plain split would be invisible. Each half
+   takes a lime edge exactly where the net stood, so the net appears to tear in
+   two and carry itself off-screen — the gesture reads without breaking colour. */
+.t2-root.is-exit .t2-half-l { box-shadow: inset -4px 0 0 #4f8a0c; }
+.t2-root.is-exit .t2-half-r { box-shadow: inset 4px 0 0 #4f8a0c; }
 .t2-inner {
   position: absolute;
   inset: 0;
@@ -246,8 +251,8 @@ body.ld-lock { overflow: hidden !important; }
 }
 .t2-court {
   width: 100%;
-  max-width: 1180px;
-  max-height: 68vh;
+  max-width: 1120px;
+  max-height: 62vh;
   margin: auto;
   display: block;
 }

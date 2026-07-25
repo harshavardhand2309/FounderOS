@@ -50,19 +50,22 @@ const preloadOne = (src) =>
 
 export function useLoadProgress({
   assets = [],
-  minMs = 1700, // never flash past — the brand moment needs a beat
-  maxMs = 5200, // never trap — hard ceiling regardless of network
-  holdMs = 460, // pause on 100% before the reveal starts
-  exitMs = 1100, // must match the template's exit transition
+  minMs = 2300, // the four-court morph needs this long to read
+  maxMs = 4200, // never trap — hard ceiling regardless of network
+  holdMs = 360, // pause on 100% before the reveal starts
+  exitMs = 1150, // must outlast the template's exit transition (1.05s)
   simulate = false, // preview mode: ignore the network, run a scripted ramp
   simulateMs: simulateMsIn,
-  onDone,
+  onExit, // fires as the reveal starts, so the page beneath can lead in
+  onDone, // fires once the loader is finished and unmounting
 } = {}) {
   const [p, setP] = useState(0)
   const [phase, setPhase] = useState('load')
   const doneRef = useRef(false)
   const onDoneRef = useRef(onDone)
   onDoneRef.current = onDone
+  const onExitRef = useRef(onExit)
+  onExitRef.current = onExit
 
   const simulateMs = simulateMsIn || 2700
 
@@ -77,19 +80,23 @@ export function useLoadProgress({
 
     // --- real progress: assets + document readiness -------------------------
     if (!simulate) {
-      const total = assets.length + 1 // +1 for document 'load'
+      // Signals that mean "the first screen can be painted correctly" — NOT the
+      // window 'load' event, which waits on every subresource including the hero
+      // video and would peg the loader to its hard cap on every single visit.
+      const total = assets.length + 2 // + DOM parsed + webfonts
       let hit = 0
       const bump = () => {
         hit += 1
         targetRef.current = Math.max(targetRef.current, 0.08 + 0.92 * (hit / total))
       }
       assets.forEach((src) => preloadOne(src).then(bump))
-      if (document.readyState === 'complete') bump()
-      else window.addEventListener('load', bump, { once: true })
+      if (document.readyState !== 'loading') bump()
+      else document.addEventListener('DOMContentLoaded', bump, { once: true })
       try {
-        if (document.fonts?.ready) document.fonts.ready.then(() => {})
+        if (document.fonts?.ready) document.fonts.ready.then(bump).catch(bump)
+        else bump()
       } catch {
-        /* fonts API is optional */
+        bump() // fonts API is optional — never let it hold the gate
       }
     }
 
@@ -100,6 +107,7 @@ export function useLoadProgress({
       setPhase('full')
       after(reduced ? 120 : holdMs, () => {
         setPhase('exit')
+        onExitRef.current?.()
         after(reduced ? 220 : exitMs, () => {
           setPhase('done')
           onDoneRef.current?.()
@@ -118,9 +126,13 @@ export function useLoadProgress({
       window.addEventListener('pointerdown', skip)
     }
 
+    let lastNow = performance.now()
     const tick = () => {
       raf = requestAnimationFrame(tick)
-      const el = performance.now() - t0
+      const now = performance.now()
+      const dt = Math.min(200, now - lastNow) // clamp so a long stall can't jump the bar
+      lastNow = now
+      const el = now - t0
       // slow-to-fast ramp: a decelerating bar is perceived as the slowest of all
       // pacing curves, so the fill accelerates into completion instead
       if (simulate) targetRef.current = clamp01(Math.pow(el / simulateMs, 1.45))
@@ -128,8 +140,19 @@ export function useLoadProgress({
       // ease toward the target, but keep a slow time-based floor so the number
       // always advances even while a big asset is still in flight. In preview
       // mode the ramp is already time-driven, so neither floor nor cap applies.
-      shown += (targetRef.current - shown) * 0.12
-      if (!simulate) shown = Math.max(shown, Math.min(el / maxMs, 0.985))
+      // Frame-rate independent smoothing. A fixed per-frame factor would crawl
+      // whenever the page's own first render starves rAF — exactly when the
+      // loader is on screen — so the rate is derived from elapsed time instead.
+      const k = 1 - Math.pow(1 - 0.12, dt / 16.67)
+      shown += (targetRef.current - shown) * k
+      if (!simulate) {
+        // Bound the displayed value by a real schedule: it can never finish
+        // sooner than minMs (assets on a warm cache resolve in ~100ms, and
+        // without this the morph would blast past and then sit at 100%), and
+        // never stall below the maxMs floor while a slow asset is in flight.
+        shown = Math.min(shown, el / minMs)
+        shown = Math.max(shown, Math.min(el / maxMs, 0.985))
+      }
       shown = clamp01(shown)
       setP(shown)
 
