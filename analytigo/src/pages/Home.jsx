@@ -180,13 +180,13 @@ function SportGlyph({ name, c }) {
   const p = { stroke: c, strokeWidth: 1.6, fill: 'none', strokeLinecap: 'round', strokeLinejoin: 'round' }
   const svg = (children) => <svg width="28" height="28" viewBox="0 0 24 24" fill="none">{children}</svg>
   switch (name) {
-    case 'tennis': return svg(<><circle cx="12" cy="12" r="9" {...p} /><path d="M5.5 6.5C9 9 9 15 5.5 17.5M18.5 6.5C15 9 15 15 18.5 17.5" {...p} /></>)
-    case 'pickle': return svg(<><circle cx="12" cy="12" r="9" {...p} /><circle cx="9" cy="9.5" r="1" fill={c} /><circle cx="13.5" cy="9" r="1" fill={c} /><circle cx="10.5" cy="13.5" r="1" fill={c} /><circle cx="15" cy="13" r="1" fill={c} /></>)
+    case 'tennis': return svg(<><ellipse cx="10.5" cy="8" rx="5" ry="6" {...p} /><path d="M7 5.4v5.2M10.5 3.6v8.8M14 5.4v5.2M6.7 7h7.6M6.7 10h7.6" stroke={c} strokeWidth="0.7" fill="none" strokeLinecap="round" /><path d="M10.5 14 8.8 20.8" {...p} /><circle cx="17.4" cy="16.6" r="2.2" {...p} /></>)
+    case 'pickle': return svg(<><path d="M10 2.6c3.2 0 5.4 2.3 5.4 5.5S13.2 13.4 10 13.4 4.6 11.3 4.6 8.1 6.8 2.6 10 2.6Z" {...p} /><path d="M10 13.4 8.7 20.8" {...p} /><circle cx="17.4" cy="15.4" r="2.4" {...p} /><circle cx="17.4" cy="15.4" r="0.5" fill={c} /><circle cx="16.3" cy="14.4" r="0.4" fill={c} /><circle cx="18.5" cy="14.4" r="0.4" fill={c} /></>)
     case 'basket': return svg(<><circle cx="12" cy="12" r="9" {...p} /><path d="M3 12h18M12 3v18M5.5 5.5c4 3 9 3 13 0M5.5 18.5c4-3 9-3 13 0" {...p} strokeWidth="1.3" /></>)
     case 'volley': return svg(<><circle cx="12" cy="12" r="9" {...p} /><path d="M12 3c-3 5-3 10 0 18M4 8c5 2 11 1 15-3M5 18c3-4 9-6 15-4" {...p} strokeWidth="1.3" /></>)
-    case 'badminton': return svg(<><circle cx="16.5" cy="7.5" r="2.3" {...p} /><path d="M14.8 9.2 5 19M12.4 8.2 4 16.6M15.4 10.6 7.4 18.6M4 16.6l3.4 3.4" {...p} strokeWidth="1.3" /></>)
+    case 'badminton': return svg(<><circle cx="12" cy="17.4" r="2.4" {...p} /><path d="M9.9 16.1 6.4 5.8M12 15 12 4.4M14.1 16.1 17.6 5.8" {...p} /><path d="M6.4 5.8c3.5 2 7.7 2 11.2 0" {...p} strokeWidth="1.2" /><path d="M8 10.4c2.6 1.2 5.4 1.2 8 0" {...p} strokeWidth="0.9" /></>)
     case 'padel': return svg(<><path d="M12 3c4.4 0 7 3 7 6.6 0 3.4-3 5.4-7 5.4S5 13 5 9.6C5 6 7.6 3 12 3Z" {...p} /><path d="M12 15v6" {...p} /><circle cx="10" cy="8" r="0.9" fill={c} /><circle cx="14" cy="8" r="0.9" fill={c} /><circle cx="12" cy="11" r="0.9" fill={c} /></>)
-    case 'squash': return svg(<><ellipse cx="10.5" cy="8" rx="5.5" ry="6.4" {...p} transform="rotate(28 10.5 8)" /><path d="M13.6 12.8 20 21" {...p} /><circle cx="18.5" cy="16.5" r="1.5" {...p} /></>)
+    case 'squash': return svg(<><path d="M11 2.7c3 0 5.2 2.2 5.2 5.3 0 3.2-2.3 5.3-5.2 5.3S5.8 11.2 5.8 8c0-3.1 2.2-5.3 5.2-5.3Z" {...p} /><path d="M9.5 6.4 12.5 9.6M12.5 6.4 9.5 9.6" stroke={c} strokeWidth="0.7" /><path d="M11 13.3 9.4 20.8" {...p} /><circle cx="16.9" cy="17" r="1.6" {...p} /></>)
     case 'cricket': return svg(<><path d="M7 17 16 4.5c.5-.7 1.6-.7 2.1 0l.4.6c.5.7.3 1.6-.4 2L7.8 17.8" {...p} /><path d="M4.5 20.5 7 17" {...p} /><circle cx="6.5" cy="8" r="2" {...p} /></>)
     default: return svg(<circle cx="12" cy="12" r="9" {...p} />)
   }
@@ -581,7 +581,7 @@ export default function Home() {
                   descColor={s.live ? '#b7bec6' : '#9aa3ad'}
                   cta={s.live
                     ? <span style={css("display:inline-flex;align-items:center;gap:7px;font:600 13px/1 'Sora';color:#e3b94a")}>Explore →</span>
-                    : <span style={css("display:inline-flex;align-items:center;gap:7px;font:600 12px/1 'Sora';color:#8b95a1")}>Cooking&nbsp;<span aria-hidden="true">🍳</span></span>}
+                    : null}
                 />
               </div>
             ))}

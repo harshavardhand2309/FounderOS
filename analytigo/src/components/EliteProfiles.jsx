@@ -386,10 +386,6 @@ export default function EliteProfiles() {
           headline rises in as it scrolls into view, then the explanation.
           Original white treatment. */}
       <div style={css('position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 48px;text-align:center')}>
-        <div style={{ ...css('display:inline-flex;align-items:center;gap:10px;margin-bottom:16px'), ...reveal2(stage >= 1) }}>
-          <span style={css('width:7px;height:7px;border-radius:50%;background:#ffffff;box-shadow:0 0 10px #ffffff')} />
-          <span style={css("font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.18em;color:#eaeaee")}>ATHLETE INTELLIGENCE</span>
-        </div>
         <h2 style={{ ...css("font:800 clamp(40px,4.6vw,60px)/1.04 'Sora';letter-spacing:-.03em;margin:0 0 14px;text-wrap:balance"), ...reveal2(stage >= 1, 0.12) }}>Elite Athlete Profiles</h2>
         <p style={{ ...css("font:400 18px/1.6 'Sora';color:#ffffff;max-width:640px;margin:0 auto;text-shadow:0 1px 2px rgba(0,0,0,.6),0 0 18px rgba(0,0,0,.35)"), ...reveal2(stage >= 2, 0.05) }}>Every player has a profile — performance, rankings, trends, and achievements, filterable from country level down to your local town.</p>
         {/* second, visually distinct point — pure type, no chip */}
