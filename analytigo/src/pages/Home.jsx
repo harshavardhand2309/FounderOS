@@ -487,8 +487,8 @@ export default function Home() {
             <span style={css("font:700 20px/1 'Sora';letter-spacing:-.01em;color:#0b0d10")}>Lvl-Up</span>
           </Link>
           <div style={css('display:flex;align-items:center;gap:16px')}>
-            <a className="h-signin" style={css("font:600 14px/1 'Sora';color:#33383f;cursor:pointer")}>Sign In</a>
-            <button className="h-lift" style={css("font:600 14px/1 'Sora';color:#fff;background:#0b0d10;border:none;padding:11px 20px;border-radius:10px;cursor:pointer;transition:transform .15s;box-shadow:0 8px 26px rgba(0,0,0,.25)")}>Get Started</button>
+            <Link to="/signin" className="h-signin" style={css("font:600 14px/1 'Sora';color:#33383f;cursor:pointer")}>Sign In</Link>
+            <Link to="/signup" className="h-lift" style={css("display:inline-flex;font:600 14px/1 'Sora';color:#fff;background:#0b0d10;border:none;padding:11px 20px;border-radius:10px;cursor:pointer;transition:transform .15s;box-shadow:0 8px 26px rgba(0,0,0,.25)")}>Get Started</Link>
           </div>
         </nav>
 
@@ -582,22 +582,22 @@ export default function Home() {
       {/* ===================== ABOUT / LEADERSHIP ===================== */}
       <About />
 
-      {/* footer */}
-      <footer style={css('position:relative;z-index:10;background:#0a0b0d;border-top:1px solid rgba(255,255,255,.06);padding:64px 48px 26px')}>
+      {/* footer — white theme, matching the hero (black type, lime accent) */}
+      <footer style={css('position:relative;z-index:10;background:#f6f6f4;padding:66px 48px 30px')}>
         <div style={css('max-width:1240px;margin:0 auto')}>
           {/* brand block */}
           <div style={css('display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin-bottom:46px')}>
-            <span style={css("width:52px;height:52px;border-radius:13px;background:#d6f637;display:flex;align-items:center;justify-content:center;color:#0b0d10;font:800 28px/1 'Sora'")}>L</span>
-            <h2 style={css("margin:0;font:800 clamp(34px,4vw,48px)/1.02 'Sora';letter-spacing:-.03em;color:#fff")}>Lvl-Up <span style={css('color:#d6f637')}>Sports</span></h2>
-            <span style={css("font:600 17px/1.5 'Sora';color:#b9c1ca;letter-spacing:.01em")}>Your AI-powered Coaching Assistant</span>
+            <span style={css("width:52px;height:52px;border-radius:13px;background:#0b0d10;display:flex;align-items:center;justify-content:center;color:#d6f637;font:800 28px/1 'Sora'")}>L</span>
+            <h2 style={css("margin:0;font:800 clamp(40px,5vw,68px)/1 'Sora';letter-spacing:-.035em;text-transform:uppercase;color:#0b0d10")}>Lvl-Up <span style={css('display:inline-block;background:#d6f637;padding:.02em .16em;border-radius:.08em')}>Sports</span></h2>
+            <span style={css("font:600 17px/1.5 'Sora';color:#3a3f45;letter-spacing:.01em")}>Your AI-powered Coaching Assistant</span>
           </div>
 
           {/* one app per audience */}
           <div style={css('display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-bottom:52px')}>
             {FOOT_ROLES.map((r) => (
-              <div key={r.title} style={css('border:1px solid rgba(255,255,255,.09);border-radius:18px;background:linear-gradient(165deg,#101216,#0c0e11);padding:22px')}>
-                <h3 style={css("margin:0 0 6px;font:800 19px/1.1 'Sora';color:#d6f637")}>{r.title}</h3>
-                <p style={css("margin:0 0 16px;font:500 13px/1.45 'Sora';color:#8d96a0")}>{r.line}</p>
+              <div key={r.title} style={css('border:1px solid rgba(0,0,0,.1);border-radius:18px;background:#ffffff;box-shadow:0 10px 30px rgba(0,0,0,.05);padding:22px')}>
+                <h3 style={css("margin:0 0 6px;font:800 19px/1.1 'Sora';color:#0b0d10")}>{r.title}</h3>
+                <p style={css("margin:0 0 16px;font:500 13px/1.45 'Sora';color:#5b626b")}>{r.line}</p>
                 <div style={css('display:flex;flex-direction:column;gap:8px;align-items:flex-start')}>
                   <a className="ft-store" href="#" aria-label={`${r.title} app on the App Store`}><AppleIcon />App Store</a>
                   <a className="ft-store" href="#" aria-label={`${r.title} app on Google Play`}><PlayIcon />Google Play</a>
@@ -607,7 +607,7 @@ export default function Home() {
           </div>
 
           {/* explore / legal / reach us */}
-          <div style={css('display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;padding-top:38px;border-top:1px solid rgba(255,255,255,.06);margin-bottom:38px')}>
+          <div style={css('display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;padding-top:38px;border-top:1px solid rgba(0,0,0,.1)')}>
             <div>
               <h4 className="ft-h4">Explore</h4>
               {FOOT_EXPLORE.map((l) => <a key={l} className="ft-link" href="#">{l}</a>)}
@@ -618,7 +618,7 @@ export default function Home() {
             </div>
             <div>
               <h4 className="ft-h4">Reach Us</h4>
-              <a className="ft-link" href="mailto:contact@lvlupsports.com">contact@lvlupsports.com</a>
+              <a className="ft-link" href="mailto:contact@thelvlupsports.com">contact@thelvlupsports.com</a>
               <a className="ft-link" href="tel:+919025867882">+91 90258 67882 · Call &amp; WhatsApp</a>
               <a className="ft-link" href="https://maps.google.com/?q=Lvl-Up+Sports" target="_blank" rel="noreferrer">Find us on Google Maps</a>
             </div>

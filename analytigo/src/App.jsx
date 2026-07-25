@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import Landing from './pages/Landing.jsx'
 import Tennis from './pages/Tennis.jsx'
+import Auth from './pages/Auth.jsx'
 
 export default function App() {
   return (
@@ -11,6 +12,8 @@ export default function App() {
       {/* keep old links working */}
       <Route path="/landing" element={<Navigate to="/pickleball" replace />} />
       <Route path="/tennis" element={<Tennis />} />
+      <Route path="/signin" element={<Auth mode="signin" />} />
+      <Route path="/signup" element={<Auth mode="signup" />} />
     </Routes>
   )
 }

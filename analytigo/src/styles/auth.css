@@ -1,0 +1,320 @@
+/* Sign In / Sign Up — white + lime theme. Scoped to .au-*. */
+.au-root {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  background: #f6f6f4;
+  color: #0b0d10;
+  font-family: 'Sora', sans-serif;
+}
+
+/* ---- left brand rail ---- */
+.au-brand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px 56px 44px;
+  background: radial-gradient(120% 90% at 20% 10%, #ffffff, #eef0ea 70%);
+  overflow: hidden;
+}
+.au-brand::after {
+  content: '';
+  position: absolute;
+  right: -120px;
+  bottom: -120px;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(214, 246, 55, 0.55), transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+.au-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  position: relative;
+  z-index: 1;
+}
+.au-logo-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: #0b0d10;
+  color: #d6f637;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 800 19px/1 'Sora';
+}
+.au-logo-word {
+  font: 700 21px/1 'Sora';
+  letter-spacing: -0.01em;
+  color: #0b0d10;
+}
+.au-brand-mid {
+  position: relative;
+  z-index: 1;
+  max-width: 460px;
+}
+.au-brand-h1 {
+  font: 800 clamp(34px, 3.6vw, 52px)/1.04 'Sora';
+  letter-spacing: -0.03em;
+  margin: 0 0 16px;
+}
+.au-hl {
+  display: inline-block;
+  background: #d6f637;
+  padding: 0 0.14em;
+  border-radius: 0.08em;
+}
+.au-brand-sub {
+  font: 400 17px/1.6 'Sora';
+  color: #4a4f56;
+  margin: 0 0 26px;
+}
+.au-brand-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.au-brand-list li {
+  position: relative;
+  padding-left: 26px;
+  font: 500 15px/1.4 'Sora';
+  color: #23272e;
+}
+.au-brand-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #d6f637;
+  box-shadow: inset 0 0 0 4px #0b0d10;
+}
+.au-brand-foot {
+  position: relative;
+  z-index: 1;
+  font: 600 13px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.04em;
+  color: #6b7178;
+}
+
+/* ---- right form panel ---- */
+.au-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+.au-card {
+  width: 100%;
+  max-width: 420px;
+}
+.au-switch {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 12px;
+  background: #e8e9e4;
+  margin-bottom: 26px;
+}
+.au-tab {
+  padding: 9px 22px;
+  border-radius: 9px;
+  font: 700 14px/1 'Sora';
+  color: #5b626b;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.au-tab.on {
+  background: #0b0d10;
+  color: #fff;
+}
+.au-title {
+  font: 800 27px/1.1 'Sora';
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+}
+.au-lead {
+  font: 400 15px/1.5 'Sora';
+  color: #5b626b;
+  margin: 0 0 26px;
+}
+.au-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.au-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.au-label {
+  font: 600 13px/1 'Sora';
+  color: #23272e;
+}
+.au-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 15px;
+  border-radius: 11px;
+  border: 1px solid #d6d8d2;
+  background: #ffffff;
+  color: #0b0d10;
+  font: 500 15px/1.2 'Sora';
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.au-input::placeholder {
+  color: #9aa0a7;
+}
+.au-input:focus {
+  outline: none;
+  border-color: #0b0d10;
+  box-shadow: 0 0 0 3px rgba(214, 246, 55, 0.55);
+}
+.au-pass {
+  position: relative;
+  display: block;
+}
+.au-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: #5b626b;
+  font: 700 12px/1 'Sora';
+  cursor: pointer;
+  padding: 6px;
+}
+.au-roles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.au-role {
+  padding: 10px 6px;
+  border-radius: 10px;
+  border: 1px solid #d6d8d2;
+  background: #fff;
+  color: #3a3f45;
+  font: 600 13px/1 'Sora';
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.au-role.on {
+  border-color: #0b0d10;
+  background: #d6f637;
+  color: #0b0d10;
+}
+.au-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.au-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 13px/1 'Sora';
+  color: #3a3f45;
+  cursor: pointer;
+}
+.au-link {
+  color: #4f8a0c;
+  font: 600 13px/1 'Sora';
+}
+.au-link.strong {
+  font-weight: 800;
+}
+.au-link:hover {
+  text-decoration: underline;
+}
+.au-submit {
+  margin-top: 4px;
+  padding: 15px;
+  border-radius: 12px;
+  border: 0;
+  background: #0b0d10;
+  color: #fff;
+  font: 700 15px/1 'Sora';
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+.au-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+.au-or {
+  position: relative;
+  text-align: center;
+  margin: 6px 0 2px;
+}
+.au-or::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: #dcded7;
+}
+.au-or span {
+  position: relative;
+  background: #f6f6f4;
+  padding: 0 12px;
+  font: 500 12px/1 'Sora';
+  color: #7c828a;
+}
+.au-oauth {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.au-oauth-btn {
+  padding: 12px;
+  border-radius: 11px;
+  border: 1px solid #d6d8d2;
+  background: #fff;
+  color: #23272e;
+  font: 600 14px/1 'Sora';
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.au-oauth-btn:hover {
+  border-color: #0b0d10;
+  background: #fafaf8;
+}
+.au-foot {
+  margin: 24px 0 0;
+  text-align: center;
+  font: 500 14px/1.4 'Sora';
+  color: #4a4f56;
+}
+.au-terms {
+  margin: 14px 0 0;
+  text-align: center;
+  font: 400 12px/1.5 'Sora';
+  color: #7c828a;
+}
+
+@media (max-width: 900px) {
+  .au-root {
+    grid-template-columns: 1fr;
+  }
+  .au-brand {
+    display: none;
+  }
+  .au-panel {
+    padding: 32px 20px;
+    min-height: 100vh;
+  }
+}

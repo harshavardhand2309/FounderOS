@@ -31,39 +31,40 @@ a {
   color: inherit;
 }
 
-/* footer */
+/* footer — white theme */
 .ft-store {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   font: 600 13px/1 'Sora', sans-serif;
-  color: #e6e9ee;
+  color: #ffffff;
   padding: 9px 16px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.04);
-  transition: border-color 0.2s ease, background 0.2s ease;
+  border: 1px solid #0b0d10;
+  background: #0b0d10;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 .ft-store:hover {
-  border-color: rgba(214, 246, 55, 0.55);
-  background: rgba(214, 246, 55, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
 .ft-h4 {
   margin: 0 0 14px;
-  font: 700 12px/1 'JetBrains Mono', monospace;
+  font: 800 12px/1 'JetBrains Mono', monospace;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #ffffff;
+  color: #5aa613;
 }
 .ft-link {
   display: block;
   font: 500 14px/1.4 'Sora', sans-serif;
-  color: #c3c9d1;
+  color: #23272e;
   margin-bottom: 10px;
   transition: color 0.2s ease;
 }
 .ft-link:hover {
-  color: #fff;
+  color: #000;
+  text-decoration: underline;
 }
 
 button {
