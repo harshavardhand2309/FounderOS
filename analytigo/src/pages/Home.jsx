@@ -208,8 +208,8 @@ const FOOT_ROLES = [
   { title: 'Organisers', line: 'Draws, scheduling, scoring, and live streams.' },
   { title: 'Coaches', line: 'Session plans backed by player data.' },
 ]
-const FOOT_EXPLORE = ['Cams', 'Analytics', 'Tools', 'Contact Us']
-const FOOT_LEGAL = ['Terms of Service', 'Privacy Policy', 'Return & Refund Policy']
+const FOOT_EXPLORE = [['Cams', '/cams'], ['Analytics', '/analytics'], ['Tools', '/tools'], ['Contact Us', '/contact']]
+const FOOT_LEGAL = [['Terms of Service', '/terms'], ['Privacy Policy', '/privacy'], ['Return & Refund Policy', '/refunds']]
 
 const AppleIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -646,11 +646,11 @@ export default function Home({ skipLoader = false }) {
           <div style={css('display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;padding-top:38px;border-top:1px solid rgba(0,0,0,.1)')}>
             <div>
               <h4 className="ft-h4">Explore</h4>
-              {FOOT_EXPLORE.map((l) => <a key={l} className="ft-link" href="#">{l}</a>)}
+              {FOOT_EXPLORE.map(([l, to]) => <Link key={l} className="ft-link" to={to}>{l}</Link>)}
             </div>
             <div>
               <h4 className="ft-h4">Legal</h4>
-              {FOOT_LEGAL.map((l) => <a key={l} className="ft-link" href="#">{l}</a>)}
+              {FOOT_LEGAL.map(([l, to]) => <Link key={l} className="ft-link" to={to}>{l}</Link>)}
             </div>
             <div>
               <h4 className="ft-h4">Reach Us</h4>
