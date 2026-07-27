@@ -6,11 +6,13 @@ import { css } from '../utils/css.js'
 // one (coverflow focus + glow + blur + parallax). Pins until the strip has played
 // through, then unlocks for good. Blue / white / black palette, scoped to .gv-*.
 
+// One highlight reel per sport, in playing order. Only the card in focus plays,
+// so four videos never decode at once.
 const CLIPS = [
-  { platform: 'Instagram Reel', glyph: 'ig', ratio: '9:16 Reel', res: '1080×1920', dur: '15s', fmt: 'Download MP4' },
-  { platform: 'YouTube Short', glyph: 'yt', ratio: '9:16 Short', res: '1080×1920', dur: '30s', fmt: 'Download MP4' },
-  { platform: 'Story Format', glyph: 'st', ratio: '9:16 Story', res: '1080×1920', dur: '10s', fmt: 'Download MP4' },
-  { platform: 'Highlight Montage', glyph: 'hl', ratio: '9:16 Montage', res: '1080×1920', dur: '45s', fmt: 'Download MP4' },
+  { platform: 'Tennis', poster: '/assets/sport-tennis.jpg', glyph: 'ig', src: '/assets/highlight-Tennis.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
+  { platform: 'Pickleball', poster: '/assets/sport-pickleball-edit.png', glyph: 'yt', src: '/assets/Highlight-Pickleball.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
+  { platform: 'Badminton', poster: '/assets/sport-badminton.jpg', glyph: 'st', src: '/assets/Highlight-Badminton.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
+  { platform: 'Padel', poster: '/assets/sports-paddle.png', glyph: 'hl', src: '/assets/highlight-padle.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
 ]
 
 const WAVE = [6, 11, 7, 14, 9, 16, 8, 13, 6, 12, 9, 15, 7, 10]
@@ -63,7 +65,23 @@ export default function GoViral() {
         card.style.opacity = (0.4 + 0.6 * k).toFixed(2)
         card.style.filter = `blur(${((1 - k) * 3).toFixed(2)}px)`
         card.style.zIndex = String(50 + Math.round(k * 50))
-        card.classList.toggle('gv-card-active', k > 0.7)
+        const wasActive = card.classList.contains('gv-card-active')
+        const isActive = k > 0.7
+        card.classList.toggle('gv-card-active', isActive)
+        if (isActive !== wasActive) {
+          const v = card.querySelector('video')
+          if (v) {
+            if (isActive) {
+              // React does not reliably set the muted *property*, and an unmuted
+              // autoplay is refused outright — so force it before playing.
+              v.muted = true
+              v.defaultMuted = true
+              const pr = v.play()
+              if (pr && pr.catch) pr.catch(() => {})
+            }
+            else v.pause()
+          }
+        }
       })
     }
     applyRef.current = apply
@@ -136,6 +154,16 @@ export default function GoViral() {
               {CLIPS.map((c, i) => (
                 <div className="gv-card" key={c.platform} ref={(el) => { cardRefs.current[i] = el }}>
                   <div className="gv-card-media">
+                    <video
+                      className="gv-video"
+                      src={c.src}
+                      poster={c.poster}
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      aria-label={`${c.platform} highlight reel`}
+                    />
                     <span className="gv-chip"><Glyph g={c.glyph} />{c.platform}</span>
                     <span className="gv-dur">{c.dur}</span>
                     <div className="gv-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 4l13 8-13 8V4z" fill="#fff" /></svg></div>
