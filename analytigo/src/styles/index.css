@@ -2571,9 +2571,10 @@ button {
 }
 .rec-title {
   margin: 0 0 16px;
-  max-width: 620px;
-  font: 800 clamp(28px, 3.1vw, 46px)/1.1 'Sora', sans-serif;
-  letter-spacing: -0.02em;
+  max-width: 640px;
+  font: 800 clamp(24px, 2.6vw, 38px)/1.18 'Sora', sans-serif;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
   color: #fff;
   text-shadow: 0 2px 34px rgba(0, 0, 0, 0.5);
 }

@@ -15,18 +15,18 @@ const SLIDES = [
     id: 'equipment',
     num: '01',
     tab: 'Equipment',
-    kicker: 'PRECISION EQUIPMENT',
+    kicker: 'RACQUET · STRING · SETUP',
     bg: '/assets/rec-equipment.jpg',
     focal: '50% 45%',
-    headline: 'The racquet you own is fighting the way you swing.',
+    headline: 'The best racquet for you is written in your gameplay.',
     body:
-      'Swing speed, contact point and spin rate from your recorded matches feed a spec the model has actually measured — not a shop-wall guess. It tells you what to change, what it should do for your ball, and when to retest.',
+      'Swing speed, contact point and spin from your recorded matches tell the model what your game actually needs. It suggests the racquet, the string and tension, and the customisations that fit the way you play — and what each change should do for your ball.',
     card: {
-      title: 'Recommended spec change',
+      title: 'Suggested setup for your game',
       rows: [
-        { k: 'String tension', v: '25 kg → 23 kg' },
-        { k: 'Predicted spin', v: '+9%' },
-        { k: 'Depth on heavy topspin', v: '+12 cm' },
+        { k: 'Racquet', v: '100 sq in · 300 g' },
+        { k: 'String & tension', v: 'Poly 1.25 · 23 kg' },
+        { k: 'Grip & balance', v: 'L3 · head-light' },
       ],
       conf: 87,
       basis: '812 rallies · last 6 sessions',
@@ -81,9 +81,9 @@ const SLIDES = [
     kicker: 'MATCH SIMULATION',
     bg: '/assets/rec-simulation.jpg',
     focal: '50% 40%',
-    headline: 'Play Saturday’s final a hundred times tonight.',
+    headline: 'See your next match before you play it.',
     body:
-      'Your game model against theirs. The simulator replays the matchup across game plans and tells you which one actually moves your win probability — before you spend a real match finding out.',
+      'We build a model of your game and your opponent’s, then play the matchup out a hundred times virtually. You see how the match is likely to go — and which game plan lifts your chances — before you step on court for the real one.',
     card: {
       title: 'Win probability by game plan',
       rows: [
