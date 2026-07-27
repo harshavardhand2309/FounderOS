@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
 import PageShell from '../components/PageShell.jsx'
+import PageMedia from '../components/PageMedia.jsx'
 
 const BUCKETS = [
   { k: 'Shot quality', d: 'Placement, depth, pace and error type — what you actually hit, not what you remember hitting.' },
   { k: 'Court positioning', d: 'Where you recover to, how much ground you cover, and the space you leave open.' },
   { k: 'Rally patterns', d: 'How points are built and lost: length, the shot before the error, and which patterns win you the most.' },
-  { k: 'Movement & load', d: 'Joint angles, asymmetry and workload across a session — indicators, not diagnoses.' },
+  { k: 'Technique', d: 'Consistency of your stroke shape across a session, and how well movement carries into the shot.' },
 ]
 const AUDIENCE = [
   { k: 'Players', d: 'See the one pattern costing you the most points this month, and whether last month\'s fix held.' },
@@ -28,6 +29,14 @@ export default function Analytics() {
       </div>
 
       <div className="pg-wrap">
+        <PageMedia
+          src="/assets/tennis-card.mp4"
+          poster="/assets/card-tennis.jpg"
+          alt="Lvl-Up Sports analytics film"
+          tag="Analytics"
+          caption="Every point is segmented into shots before anything is counted — which is what lets an error be traced back to the shot that created the pressure, not just the one that missed."
+        />
+
         <section className="pg-sec" aria-labelledby="what-h">
           <h2 className="pg-sec-h2" id="what-h">What we measure</h2>
           <p className="pg-sec-lede">
@@ -86,10 +95,25 @@ export default function Analytics() {
           <h2 className="pg-sec-h2" id="data-h">Your data</h2>
           <p className="pg-sec-lede">
             Your footage is yours. We process it to produce your analysis, and we only use it to
-            improve our models if you separately opt in — it is off unless you turn it on. Movement
-            and load indicators are informational and are not medical advice.
+            improve our models if you separately opt in — it is off unless you turn it on.
           </p>
           <p><Link to="/privacy">Read the Privacy Policy →</Link></p>
+        </section>
+
+        <section className="pg-sec pg-research" aria-labelledby="research-h">
+          <h3 className="pg-research-h" id="research-h">Research: movement and technique</h3>
+          <p>
+            We are developing movement analysis from the same footage — measuring technique
+            consistency and movement efficiency across a session, so a player can see whether a
+            change they made in practice held up under match pressure.
+          </p>
+          <p>
+            This is research in progress, not a released feature, and the outputs are performance
+            estimates rather than any assessment of health, fitness or physical condition.
+          </p>
+          <p>
+            If you coach and would like to shape what we build, <Link to="/contact">write to us</Link>.
+          </p>
         </section>
 
         <div className="pg-cta">

@@ -11,11 +11,12 @@ export const EXPLORE_LINKS = [
   { label: 'Tools', to: '/tools' },
   { label: 'Contact Us', to: '/contact' },
 ]
-export const LEGAL_LINKS = [
+export const POLICY_LINKS = [
   { label: 'Terms of Service', to: '/terms' },
   { label: 'Privacy Policy', to: '/privacy' },
   { label: 'Return & Refund Policy', to: '/refunds' },
 ]
+export const LEGAL_LINKS = [...POLICY_LINKS, { label: 'Delete Account', to: '/delete-account' }]
 
 export default function PageShell({ title, children }) {
   // stand-alone pages always open at the top

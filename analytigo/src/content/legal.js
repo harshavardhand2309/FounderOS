@@ -1,29 +1,28 @@
 // Policy content for the three legal pages.
 //
-// These are WORKING DRAFTS, not lawyer-reviewed documents. They are shaped to
-// Indian law as it stands for a company of this type — the DPDP Act 2023 and
+// Shaped to Indian law as it stands for a company of this type — the DPDP Act 2023 and
 // DPDP Rules 2025, the IT Act 2000 and SPDI Rules 2011 (in force until they are
 // omitted), the IT Intermediary Guidelines Rules 2021, the Consumer Protection
 // Act 2019 with the E-Commerce Rules 2020, and the CCPA dark-pattern guidelines.
-// Anything in [SQUARE BRACKETS] must be filled in before publication.
+// Company registration details are stated as in-progress until they are issued.
 
-const ENTITY = '[LEGAL ENTITY NAME]'
-const CITY = '[JURISDICTION CITY]'
+const ENTITY = 'Lvl-Up Sports'
+const CITY = 'the place of our registered office in India'
 const EMAIL = 'contact@thelvlupsports.com'
 
 export const TERMS = {
   title: 'Terms of Service',
   path: '/terms',
   lede: 'The agreement between you and Lvl-Up Sports when you use our website, apps and analytics.',
-  effective: '[EFFECTIVE DATE]',
-  updated: '[LAST UPDATED]',
-  version: '1.0 (draft)',
+  effective: '1 August 2026',
+  updated: '27 July 2026',
+  version: '1.0',
   sections: [
     {
       id: 'who-we-are', title: 'Who we are',
       body: [
-        `Lvl-Up Sports is operated by ${ENTITY}, a company registered in India with its registered office at [REGISTERED OFFICE ADDRESS] (CIN [CIN], GSTIN [GSTIN]). In these terms, "we", "us" and "our" mean ${ENTITY}, and "you" means the person using the service.`,
-        `You can reach us at <a href="mailto:${EMAIL}">${EMAIL}</a> or [PHONE].`,
+        `Lvl-Up Sports is operated by ${ENTITY}, an Indian business. Our incorporation is being completed and our GST registration is in progress; the registered entity name, registered office address, CIN and GSTIN will be published on this page as soon as they are issued. In these terms, "we", "us" and "our" mean ${ENTITY}, and "you" means the person using the service.`,
+        `You can reach us at <a href="mailto:${EMAIL}">${EMAIL}</a> or +91 90258 67882.`,
       ],
     },
     {
@@ -55,8 +54,8 @@ export const TERMS = {
       short: 'Our analytics are computed estimates produced by software. They are not medical advice and they are not guaranteed to be accurate.',
       body: [
         'The Service records and analyses sport footage and produces statistics, motion analysis, comparisons and highlights. Outputs are generated automatically by computer vision and machine-learning models.',
-        'Those outputs are <strong>estimates</strong>. Accuracy varies with camera placement, lighting, court type, occlusion and the quality of the footage. We do not warrant that any metric, line call, speed, angle or risk indicator is accurate, complete or fit for any particular purpose.',
-        '<strong>Nothing in the Service is medical, physiotherapy, diagnostic or injury-prevention advice.</strong> Movement and injury-risk indicators are informational only. Always consult a qualified medical professional before acting on anything the Service reports about your body, and never delay seeking medical advice because of something you read here.',
+        'Those outputs are <strong>estimates</strong>. Accuracy varies with camera placement, lighting, court type, occlusion and the quality of the footage. We do not warrant that any metric, line call, speed or angle is accurate, complete or fit for any particular purpose.',
+        '<strong>The Service is a performance tool, not medical advice.</strong> Everything it reports is a performance estimate — technique consistency, movement efficiency, shot and rally statistics — and none of it is an assessment of health, fitness or physical condition. Consult a qualified professional about anything concerning your body, and never delay doing so because of something you read here.',
         'Features described as beta, preview or "cooking" may change or be withdrawn.',
       ],
     },
@@ -112,7 +111,7 @@ export const TERMS = {
         'Subscriptions renew automatically at the end of each billing period at the then-current price until you cancel. Where we collect recurring card payments in India, the payment mandate is set up with additional factor authentication and you will receive a pre-debit notification at least 24 hours before each charge, with the option to decline that charge, in line with Reserve Bank of India requirements.',
         'If a free trial requires payment details, we will tell you clearly before the trial starts, tell you when it ends, and you may cancel before it converts.',
         '<strong>Cancelling is straightforward.</strong> You can cancel from your account settings in no more steps than it took to subscribe. If you bought through the Apple App Store or Google Play, you cancel in that store\'s subscription settings — we cannot cancel a store subscription for you.',
-        'We may change prices with at least [NOTICE PERIOD] notice before the change applies to your next renewal.',
+        "We may change prices with at least 30 days' notice before the change applies to your next renewal.",
       ],
     },
     {
@@ -141,7 +140,7 @@ export const TERMS = {
       short: 'Our liability is capped, but nothing here removes your rights as a consumer, or our liability for death, personal injury or fraud.',
       body: [
         'To the fullest extent permitted by law, we are not liable for indirect, incidental, special, punitive or consequential loss, or for loss of profit, revenue, data, goodwill or opportunity, however caused.',
-        'Our total aggregate liability arising out of or in connection with the Service is limited to the greater of the amounts you paid us in the twelve months before the event giving rise to the claim, or [FLOOR AMOUNT].',
+        'Our total aggregate liability arising out of or in connection with the Service is limited to the greater of the amounts you paid us in the twelve months before the event giving rise to the claim, or ₹10,000.',
         '<strong>Nothing in these terms excludes or limits our liability for death or personal injury caused by our negligence, for fraud or fraudulent misrepresentation, or for any liability that cannot lawfully be excluded — including your remedies as a consumer under the Consumer Protection Act, 2019.</strong>',
       ],
     },
@@ -155,13 +154,13 @@ export const TERMS = {
       id: 'termination', title: 'Suspension and termination',
       body: [
         'You may stop using the Service and delete your account at any time. We may suspend or terminate access if you materially breach these terms, if required by law, or if continuing would create a security or safety risk — and otherwise on reasonable notice.',
-        'Before deletion takes effect you will have a window of [EXPORT WINDOW] to export your data. After that, we delete or de-identify your personal data as described in the <a href="/privacy">Privacy Policy</a>, other than what we must keep by law.',
+        'Before deletion takes effect you will have 30 days to export your data. After that, we delete or de-identify your personal data as described in the <a href="/privacy">Privacy Policy</a>, other than what we must keep by law.',
       ],
     },
     {
       id: 'changes', title: 'Changes to the Service and these terms',
       body: [
-        'We may update these terms. If a change is material we will give notice — by email or in the app — at least [CHANGE NOTICE PERIOD] before it takes effect, together with a short summary of what changed, so you can stop using the Service if you disagree.',
+        'We may update these terms. If a change is material we will give notice — by email or in the app — at least 30 days before it takes effect, together with a short summary of what changed, so you can stop using the Service if you disagree.',
         'The effective date at the top of this page always shows the version in force.',
       ],
     },
@@ -179,11 +178,11 @@ export const TERMS = {
       body: [
         'In accordance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, the Consumer Protection (E-Commerce) Rules, 2020 and applicable data protection law, our Grievance Officer is:',
         { ul: [
-          'Name: [GRIEVANCE OFFICER NAME]',
-          'Designation: [DESIGNATION]',
+          'Name: to be published shortly — until then every complaint is handled by the founding team',
+          'Designation: Grievance Officer',
           `Email: <a href="mailto:${EMAIL}">${EMAIL}</a>`,
-          'Phone: [PHONE]',
-          'Address: [REGISTERED OFFICE ADDRESS], India',
+          'Phone: +91 90258 67882',
+          'Address: our registered office (address published once incorporation completes), India',
         ] },
         'We acknowledge complaints within 24 hours, issue a ticket reference, and aim to resolve them within 15 days.',
       ],
@@ -195,15 +194,15 @@ export const PRIVACY = {
   title: 'Privacy Policy',
   path: '/privacy',
   lede: 'What personal data Lvl-Up Sports collects, why, how long we keep it, and the rights you have over it.',
-  effective: '[EFFECTIVE DATE]',
-  updated: '[LAST UPDATED]',
-  version: '1.0 (draft)',
+  effective: '1 August 2026',
+  updated: '27 July 2026',
+  version: '1.0',
   sections: [
     {
       id: 'who', title: 'Who we are and how to reach us',
       body: [
-        `${ENTITY} ("we") is the Data Fiduciary for the personal data described here. Registered office: [REGISTERED OFFICE ADDRESS], India. CIN [CIN].`,
-        `Questions about privacy: <a href="mailto:${EMAIL}">${EMAIL}</a>, marked for the attention of [DPO / PRIVACY CONTACT NAME].`,
+        `${ENTITY} ("we") is the Data Fiduciary for the personal data described here. Our incorporation is being completed; the registered entity name, registered office address and CIN will be published here as soon as they are issued.`,
+        `Questions about privacy: <a href="mailto:${EMAIL}">${EMAIL}</a>, marked for the attention of the Grievance Officer.`,
       ],
     },
     {
@@ -226,18 +225,18 @@ export const PRIVACY = {
         { h: 'We capture or generate' },
         { ul: [
           '<strong>Video footage</strong> of matches and practice, from your device or from cameras at a partner venue.',
-          '<strong>Pose and movement data</strong> — the positions of body joints over time, derived from that footage.',
-          '<strong>Derived metrics</strong> — shot statistics, court coverage, rally patterns, movement quality and load indicators.',
+          '<strong>Movement data</strong> — the positions of body points over time, derived from that footage.',
+          '<strong>Derived metrics</strong> — shot statistics, court coverage, rally patterns and technique consistency.',
           '<strong>Technical data</strong> — device type, app version, IP address, and logs needed to run and secure the Service.',
         ] },
-        'We do not store card numbers. Payments are handled by [PAYMENT GATEWAY NAME]; we receive only a transaction reference and its status.',
+        'We do not store card numbers. Payments are handled by our payment gateway; we receive only a transaction reference and its status.',
       ],
     },
     {
       id: 'video-and-body-data', title: 'Video, pose and body data',
       short: 'Footage of you and the movement data taken from it are the most sensitive things we hold. We treat them that way.',
       body: [
-        'Video that shows a recognisable person, and the pose and biomechanical data derived from it, deserve a higher standard of care than ordinary account data. We treat them as sensitive personal data and apply the strictest handling we operate, regardless of how they are classified from time to time under Indian law.',
+        'Video that shows a recognisable person, and the movement data derived from it, deserve a higher standard of care than ordinary account data. We treat them as sensitive personal data and apply the strictest handling we operate, regardless of how they are classified from time to time under Indian law.',
         'Where it is technically possible, we minimise what is retained — extracting movement data and reducing or discarding raw footage rather than keeping everything indefinitely. Retention periods are set out in the retention section below.',
         'Where cameras operate at a partner venue, that venue displays notice of recording at the court. We and the venue agree in writing which of us is responsible for what. Capture is aimed at the playing area rather than spectator areas.',
         'If you appear in footage and did not agree to it, you can ask us to remove it — see <a href="/terms#appearing-in-footage">the Terms</a>. You do not need an account to ask.',
@@ -296,7 +295,7 @@ export const PRIVACY = {
     {
       id: 'transfers', title: 'Where your data is held',
       body: [
-        'Your data is primarily hosted in [DATA HOSTING LOCATION / CLOUD REGION]. Some of our service providers may process data outside India. Where that happens we do so subject to the conditions in the Digital Personal Data Protection Act, 2023 and any restrictions the Government notifies, and we require comparable protection by contract.',
+        'Your data is hosted in India. Some of our service providers may process data outside India. Where that happens we do so subject to the conditions in the Digital Personal Data Protection Act, 2023 and any restrictions the Government notifies, and we require comparable protection by contract.',
       ],
     },
     {
@@ -304,11 +303,11 @@ export const PRIVACY = {
       body: [
         'We keep personal data only as long as the purpose it was collected for is still being served, and then delete or de-identify it.',
         { ul: [
-          'Raw video footage — [RETENTION: RAW VIDEO]',
-          'Pose and derived metrics — [RETENTION: DERIVED DATA]',
-          'Account data — for as long as your account is open, then [RETENTION AFTER CLOSURE]',
+          'Raw video footage — 90 days',
+          'Movement and derived metrics — kept while your account is open',
+          'Account data — while your account is open, then 180 days after closure as Indian IT rules require',
           'Waitlist email — until you ask us to remove it, or until launch communications end',
-          'Security and access logs — [RETENTION: LOGS]',
+          'Security and access logs — 12 months',
           'Payment and tax records — as long as tax law requires',
         ] },
         'Where we are about to erase data because a retention period has run out, we give you advance notice so you can act if you want to keep it.',
@@ -333,7 +332,7 @@ export const PRIVACY = {
           '<strong>Nomination</strong> — nominate another person to exercise these rights on your behalf if you die or become incapable of exercising them yourself.',
           '<strong>Withdraw consent</strong> — at any time, as easily as you gave it.',
         ] },
-        `To exercise any of these, write to <a href="mailto:${EMAIL}">${EMAIL}</a> from the email address on your account, telling us which right you want to use. We may ask for enough information to confirm it is you. We respond within [RIGHTS RESPONSE TIME].`,
+        `To exercise any of these, write to <a href="mailto:${EMAIL}">${EMAIL}</a> from the email address on your account, telling us which right you want to use. We may ask for enough information to confirm it is you. We respond within 30 days.`,
         'If we cannot resolve your complaint, you may complain to the Data Protection Board of India. We ask that you raise it with us first, as the law expects our own grievance process to be used before the Board is approached.',
       ],
     },
@@ -341,14 +340,24 @@ export const PRIVACY = {
       id: 'deletion', title: 'Deleting your account',
       body: [
         'You can delete your account and its associated data from your account settings, or by writing to us at ' + `<a href="mailto:${EMAIL}">${EMAIL}</a>.`,
-        'A public deletion request page is available at [ACCOUNT DELETION URL] so you can make a request without reinstalling the app.',
+        'A public deletion page is available at <a href="/delete-account">/delete-account</a>, so you can make a request without signing in or reinstalling the app.',
         'After deletion we retain only what the law requires — for example payment and tax records — and we tell you what those are on request.',
       ],
     },
     {
       id: 'cookies', title: 'Cookies',
       body: [
-        'We use a small number of cookies and similar technologies to keep you signed in, remember preferences and understand how the site is used. You can control these in your browser. [COOKIE DETAIL / LINK TO COOKIE POLICY]',
+        'We keep this deliberately small. Today we set only strictly necessary cookies, which is why you are not being asked to dismiss a cookie banner.',
+        { h: 'Strictly necessary — always on, no consent needed' },
+        { ul: [
+          '<strong>lvlup_session</strong> — keeps you signed in. Expires with the session.',
+          '<strong>lvlup_csrf</strong> — security; prevents forged form submissions. Expires with the session.',
+          '<strong>lvlup_consent</strong> — remembers your cookie choice. 6 months.',
+        ] },
+        { h: 'Preferences — only if you allow them' },
+        { ul: ['<strong>lvlup_prefs</strong> — remembers your sport, units and display settings. 12 months.'] },
+        'We do not use advertising or cross-site tracking cookies, and we never set analytics cookies for a user we know to be under 18. If we add analytics later we will ask first, and declining will be as easy as accepting.',
+        'You can clear cookies at any time in your browser.',
       ],
     },
     {
@@ -370,9 +379,9 @@ export const REFUNDS = {
   title: 'Return & Refund Policy',
   path: '/refunds',
   lede: 'How cancellations and refunds work for Lvl-Up Sports subscriptions, including purchases made through the app stores.',
-  effective: '[EFFECTIVE DATE]',
-  updated: '[LAST UPDATED]',
-  version: '1.0 (draft)',
+  effective: '1 August 2026',
+  updated: '27 July 2026',
+  version: '1.0',
   sections: [
     {
       id: 'scope-refunds', title: 'What this policy covers',
@@ -409,9 +418,9 @@ export const REFUNDS = {
     },
     {
       id: 'window', title: 'Refund window',
-      short: 'We offer a [REFUND WINDOW]-day refund on a first subscription. That is something we choose to give you, not a legal cooling-off period.',
+      short: 'We offer a 7-day refund on a first subscription. That is something we choose to give you, not a legal cooling-off period.',
       body: [
-        'If you are unhappy with a new subscription, tell us within [REFUND WINDOW] days of the first charge and we will refund it.',
+        'If you are unhappy with a new subscription, tell us within 7 days of the first charge and we will refund it.',
         'India does not have a statutory cooling-off period for digital services. This window is a contractual commitment we make voluntarily, and it sits on top of your legal rights rather than replacing them.',
       ],
     },
@@ -438,13 +447,13 @@ export const REFUNDS = {
       id: 'how-to-request', title: 'How to ask for a refund',
       body: [
         `Email <a href="mailto:${EMAIL}">${EMAIL}</a> from the address on your account with your name, the plan, the approximate date of the charge and what went wrong.`,
-        'We acknowledge every request within 48 hours with a ticket reference you can use to track it, and we aim to decide within [REFUND DECISION TIME] and in any case within one month.',
+        'We acknowledge every request within 48 hours with a ticket reference you can use to track it, and we aim to decide within 7 working days and in any case within one month.',
       ],
     },
     {
       id: 'how-paid', title: 'How and when you get the money',
       body: [
-        'Approved refunds go back to the original payment method. Once we process a refund it typically takes [REFUND PROCESSING TIME] working days to appear, depending on your bank or card issuer. We do not reimburse foreign exchange differences or bank charges outside our control.',
+        'Approved refunds go back to the original payment method. Once we process a refund it typically takes 7 to 10 working days to appear, depending on your bank or card issuer. We do not reimburse foreign exchange differences or bank charges outside our control.',
       ],
     },
     {
@@ -472,7 +481,7 @@ export const REFUNDS = {
     {
       id: 'escalation', title: 'If you are still not happy',
       body: [
-        'Contact our Grievance Officer, [GRIEVANCE OFFICER NAME], at ' + `<a href="mailto:${EMAIL}">${EMAIL}</a> or [PHONE]. We acknowledge within 24 hours and aim to resolve within 15 days, and in any event within one month.`,
+        'Contact our Grievance Officer at ' + `<a href="mailto:${EMAIL}">${EMAIL}</a> or +91 90258 67882. We acknowledge within 24 hours and aim to resolve within 15 days, and in any event within one month.`,
         'You may also contact the National Consumer Helpline on 1915, or approach the appropriate Consumer Commission — including where you live or work.',
       ],
     },

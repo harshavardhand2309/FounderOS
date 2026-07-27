@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageShell from '../components/PageShell.jsx'
+import PageMedia from '../components/PageMedia.jsx'
 import { submitContact, firebaseReady } from '../utils/firebase.js'
 
 // Contact — kept to four visible fields by default (inquiry type, name, email,
@@ -177,6 +178,13 @@ export default function Contact() {
               <h3>When we're around</h3>
               <p>Monday to Saturday, 9:00–19:00 IST. Messages sent outside those hours are picked up the next working morning.</p>
             </div>
+            <PageMedia
+              src="/assets/sports-paddle.png"
+              alt="A padel court of the kind we fit"
+              tag="On site"
+              caption="A walkthrough takes about an hour and settles mounting, lighting and network before anything is ordered."
+              tall
+            />
             <div className="pg-card">
               <span className="pg-card-eyebrow">What happens next</span>
               <h3>Three steps</h3>

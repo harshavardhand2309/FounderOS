@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import PageShell from '../components/PageShell.jsx'
+import PageMedia from '../components/PageMedia.jsx'
 
 // Tools — an index of the utilities around the core product. Anything not built
 // yet is labelled honestly rather than presented as available.
@@ -28,6 +29,14 @@ export default function Tools() {
       </div>
 
       <div className="pg-wrap">
+        <PageMedia
+          src="/assets/home-intro.mp4"
+          poster="/assets/home-intro-poster.jpg"
+          alt="Lvl-Up Sports film"
+          tag="Tools"
+          caption="The tools all work on the same footage the cameras already captured — nothing needs uploading twice."
+        />
+
         <section className="pg-sec" aria-labelledby="tools-h">
           <h2 className="pg-sec-h2" id="tools-h">What's here</h2>
           <p className="pg-sec-lede">

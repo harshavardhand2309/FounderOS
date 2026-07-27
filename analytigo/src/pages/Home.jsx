@@ -4,7 +4,6 @@ import { css } from '../utils/css.js'
 import EliteProfiles from '../components/EliteProfiles.jsx'
 import FaceOff from '../components/FaceOff.jsx'
 import GoViral from '../components/GoViral.jsx'
-import BioMotion from '../components/BioMotion.jsx'
 import Commentary from '../components/Commentary.jsx'
 import Recommendations from '../components/Recommendations.jsx'
 import Ecosystem from '../components/Ecosystem.jsx'
@@ -209,7 +208,7 @@ const FOOT_ROLES = [
   { title: 'Coaches', line: 'Session plans backed by player data.' },
 ]
 const FOOT_EXPLORE = [['Cams', '/cams'], ['Analytics', '/analytics'], ['Tools', '/tools'], ['Contact Us', '/contact']]
-const FOOT_LEGAL = [['Terms of Service', '/terms'], ['Privacy Policy', '/privacy'], ['Return & Refund Policy', '/refunds']]
+const FOOT_LEGAL = [['Terms of Service', '/terms'], ['Privacy Policy', '/privacy'], ['Return & Refund Policy', '/refunds'], ['Delete Account', '/delete-account']]
 
 const AppleIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -594,7 +593,6 @@ export default function Home({ skipLoader = false }) {
       </section>
 
       {/* ===================== BIO MOTION ANALYSIS ===================== */}
-      <BioMotion />
 
       {/* ===================== FACE OFF ===================== */}
       <FaceOff />

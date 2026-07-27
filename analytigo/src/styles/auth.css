@@ -402,3 +402,45 @@
     min-height: 100vh;
   }
 }
+
+/* ---- sign-up consent notice (DPDP) ----
+   Must stand on its own at the point of sign-up: readable without opening a
+   link, with the two consents separate and model training starting unticked. */
+.au-consent {
+  border: 1px solid rgba(11, 13, 16, 0.14);
+  border-radius: 14px;
+  background: #fbfcf7;
+  padding: 18px 20px;
+  margin: 6px 0 4px;
+}
+.au-consent h3 { margin: 0 0 14px; font: 700 15px/1.3 'Sora', sans-serif; color: #0b0d10; }
+.au-consent-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px 22px; }
+.au-consent-cols b {
+  display: block;
+  font: 700 10.5px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #3f6e09;
+  margin-bottom: 7px;
+}
+.au-consent-cols ul { margin: 0; padding-left: 1.05em; }
+.au-consent-cols li { font: 400 13px/1.5 'Sora', sans-serif; color: #3a4046; margin-bottom: 3px; }
+.au-consent-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  font: 400 13.5px/1.5 'Sora', sans-serif;
+  color: #23282d;
+  cursor: pointer;
+}
+.au-consent-check input { margin-top: 3px; width: 17px; height: 17px; flex: none; accent-color: #4f8a0c; }
+.au-consent-check a { color: #3f6e09; }
+.au-consent-foot {
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(11, 13, 16, 0.1);
+  font: 400 12.5px/1.55 'Sora', sans-serif;
+  color: #5a6067;
+}
+.au-consent-foot a { color: #3f6e09; }

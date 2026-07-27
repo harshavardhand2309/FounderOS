@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom'
 import PageShell from '../components/PageShell.jsx'
+import PageMedia from '../components/PageMedia.jsx'
 
-// Cams — the venue/camera overview. Hard numbers a buyer would rely on
-// (mount heights, bandwidth, IP ratings, prices) are deliberately left as
-// bracketed placeholders rather than invented.
+// Cams — the venue/camera overview. Figures here come from the hardware work;
+// anything not yet settled (starting price, exact lux threshold) is described
+// rather than invented, and the CCTV certification claim stays off the page
+// until the certificate for the exact model is in hand.
 
 const CAPTURE = [
   { s: 'Tennis', t: 'Serve placement and speed, rally length, shot type, court coverage and depth.' },
   { s: 'Pickleball', t: 'Kitchen play, third-shot patterns, dink rallies and shot placement.' },
-  { s: 'Badminton', t: 'Smash speed, clear depth, net play and footwork recovery.' },
-  { s: 'Padel', t: 'Wall play, lob depth, net position and point construction.' },
 ]
 const STEPS = [
   { h: 'Mount', p: 'A one-off install on a wall, fence, pole or tripod, positioned to see the whole court.' },
@@ -19,11 +19,16 @@ const STEPS = [
 ]
 const FAQ = [
   ['Who owns the footage?', 'You do. We process it to produce your analysis, and we only use it to improve our models if you separately opt in. See the Terms and the Privacy Policy.'],
-  ['What about players who did not agree to be filmed?', 'Venues display notice at the court, capture is aimed at the playing area, and anyone who appears in footage can ask us to remove it without needing an account.'],
-  ['Does it work under floodlights or indoors?', 'Yes, within limits — very low light and heavy shadow reduce tracking accuracy. We will tell you honestly what your specific court can support before you commit.'],
-  ['Can one camera cover two courts?', 'It depends on the geometry of your venue. That is one of the things a site walkthrough settles.'],
-  ['What happens to junior players?', 'Under-18 players are only included through a parent, guardian or academy with verifiable consent, and we never profile or advertise to them.'],
-  ['What internet does it need?', 'A stable upload connection at the venue. The exact figure depends on resolution and how many courts you run — [BANDWIDTH REQUIREMENT].'],
+  ['What about players who did not agree to be filmed?', 'Venues display notice at every court entrance and camera position, capture is aimed at the playing area only, and anyone who appears in footage can ask us to remove it without needing an account.'],
+  ['Can one camera cover two courts?', 'Usually no — one camera per court is what we install, because a ball is only a few pixels across at that distance and covering two courts halves the detail. If your courts are unusually close we will look at it during the walkthrough, but plan for one per court.'],
+  ['What happens to junior players?', 'A player under 18 can only be added by a parent or guardian, who verifies their identity first. We do not track or profile junior players, we never show them advertising, and we never use their footage to train our models.'],
+  ['How long is footage kept?', 'Raw video is kept for 90 days. Statistics stay for as long as the player\u2019s account is open.'],
+  ['Who sees what?', 'Players see their own analysis. You see how much the system is being used across your courts — not other members\u2019 personal statistics.'],
+  ['Does installation close the court?', 'No. Installation takes one to two days per venue and we work around your bookings.'],
+  ['What if it breaks?', 'Faults are our problem, not yours. Tell us and we respond within two working days. If a court is out of service for more than a week, we credit that court\u2019s fee.'],
+  ['What about ball strikes and weather?', 'The cameras are weatherproof and mounted clear of play. Normal wear and stray ball strikes are covered by us.'],
+  ['What internet does it need?', 'A standard business broadband line covers several courts. Each camera uses about 8 Mbps while play is happening, and uploads run in the background.'],
+  ['How do we get out?', 'Monthly rolling after any initial term. Thirty days\u2019 notice, we remove the equipment, and there is no exit fee.'],
 ]
 
 export default function Cams() {
@@ -41,6 +46,14 @@ export default function Cams() {
       </div>
 
       <div className="pg-wrap">
+        <PageMedia
+          src="/assets/tennis-bg.mp4"
+          poster="/assets/tennis-bg-poster.jpg"
+          alt="Lvl-Up Sports brand film"
+          tag="Cams"
+          caption="One camera per court, in one fixed position — the same framing every session, which is what makes a player's numbers comparable week to week."
+        />
+
         <section className="pg-sec" aria-labelledby="setup-h">
           <h2 className="pg-sec-h2" id="setup-h">Two ways to set up</h2>
           <p className="pg-sec-lede">Most venues start with one court and grow. Both routes feed the same analytics.</p>
@@ -85,22 +98,44 @@ export default function Cams() {
           </div>
         </section>
 
+        <section className="pg-sec" aria-labelledby="cost-h">
+          <h2 className="pg-sec-h2" id="cost-h">What it costs a venue</h2>
+          <p className="pg-sec-lede">You don’t buy the hardware.</p>
+          <div className="pg-grid">
+            <div className="pg-card">
+              <span className="pg-card-eyebrow">No capital cost</span>
+              <h3>The cameras stay ours</h3>
+              <p>You pay a monthly subscription per venue, and the equipment, installation, maintenance and replacement are all included in it. There is nothing to depreciate, and if you stop, we take the equipment away.</p>
+            </div>
+            <div className="pg-card">
+              <span className="pg-card-eyebrow">Pricing</span>
+              <h3>Quoted after the walkthrough</h3>
+              <p>What you pay depends on how many courts you run and how many hours you want analysed. We publish a starting price once our pricing is finalised — until then we quote directly after seeing the site.</p>
+            </div>
+            <div className="pg-card">
+              <span className="pg-card-eyebrow">Getting out</span>
+              <h3>Monthly rolling</h3>
+              <p>Thirty days’ notice after any initial term. We remove the equipment and there is no exit fee.</p>
+            </div>
+          </div>
+        </section>
+
         <section className="pg-sec" aria-labelledby="req-h">
           <h2 className="pg-sec-h2" id="req-h">What a venue needs</h2>
           <p className="pg-sec-lede">
             We confirm all of this on a site walkthrough before anything is ordered — the answers
-            differ between an indoor badminton hall and an outdoor padel court.
+            differ between an indoor hall and an outdoor court.
           </p>
           <div className="pg-table-wrap">
             <table className="pg-table">
               <caption>Site requirements</caption>
               <tbody>
-                <tr><th scope="row">Mounting</th><td>Wall, fence, pole or tripod, at [MOUNT HEIGHT] with a clear view of the full court</td></tr>
-                <tr><th scope="row">Power</th><td>[POWER REQUIREMENT]</td></tr>
-                <tr><th scope="row">Network</th><td>[BANDWIDTH REQUIREMENT] upload per camera</td></tr>
-                <tr><th scope="row">Environment</th><td>Indoor or outdoor — [WEATHER RATING], operating range [TEMPERATURE RANGE]</td></tr>
-                <tr><th scope="row">Coverage</th><td>[COURTS PER UNIT] per unit, depending on venue geometry</td></tr>
-                <tr><th scope="row">Install</th><td>[INSTALL TYPE AND TYPICAL DURATION]</td></tr>
+                <tr><th scope="row">Mounting</th><td>Wall, fence, pole or tripod, with a clear view of the full court. We confirm the exact height on site.</td></tr>
+                <tr><th scope="row">Power &amp; network</th><td>Mains power at the mount, and a standard business broadband line. Each camera uses about 8 Mbps while play is happening; uploads run in the background.</td></tr>
+                <tr><th scope="row">Lighting</th><td><strong>Evening play needs an even, adequate light level across the court, which we measure at the walkthrough.</strong> Flickering floodlights are the one condition we cannot work around from the camera — some older fittings pulse in a way that disrupts tracking. We test for it, and if it fails, the fix is at the light fitting rather than at the camera. Daytime play has no lighting requirement.</td></tr>
+                <tr><th scope="row">Environment</th><td>Indoor or outdoor. The cameras are weatherproof and mounted clear of play.</td></tr>
+                <tr><th scope="row">Coverage</th><td>One camera per court. Covering two courts with one unit halves the detail, so we do not do it by default.</td></tr>
+                <tr><th scope="row">Install</th><td>One to two days per venue, worked around your bookings. The court does not close.</td></tr>
               </tbody>
             </table>
           </div>

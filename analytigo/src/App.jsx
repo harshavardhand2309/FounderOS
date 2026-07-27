@@ -9,6 +9,7 @@ import Analytics from './pages/Analytics.jsx'
 import Tools from './pages/Tools.jsx'
 import Contact from './pages/Contact.jsx'
 import Legal from './pages/Legal.jsx'
+import DeleteAccount from './pages/DeleteAccount.jsx'
 // preview-only route — kept out of the main bundle
 const LoadLab = lazy(() => import('./pages/LoadLab.jsx'))
 
@@ -31,6 +32,7 @@ export default function App() {
       <Route path="/terms" element={<Legal doc="terms" />} />
       <Route path="/privacy" element={<Legal doc="privacy" />} />
       <Route path="/refunds" element={<Legal doc="refunds" />} />
+      <Route path="/delete-account" element={<DeleteAccount />} />
       {/* preview harness for the four loading screens — not linked from the site */}
       <Route path="/loadlab" element={<Suspense fallback={null}><LoadLab /></Suspense>} />
     </Routes>

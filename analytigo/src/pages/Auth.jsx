@@ -53,6 +53,10 @@ export default function Auth({ mode = 'signin' }) {
   const [contact, setContact] = useState({ email: '', phone: '' })
   const [phoneCode, setPhoneCode] = useState('')
   const [emailOk, setEmailOk] = useState(false)
+  // Two separate consents. Model training must start unticked and must not be
+  // bundled with the main agreement — a pre-ticked or bundled consent is not consent.
+  const [agree, setAgree] = useState(false)
+  const [trainOptIn, setTrainOptIn] = useState(false)
   const confirmRef = useRef(null) // Firebase phone confirmation handle
 
   const onSignup = async (e) => {
@@ -61,11 +65,12 @@ export default function Auth({ mode = 'signin' }) {
     const data = { name: f.name.value, email: f.email.value, phone: f.phone.value.replace(/\s/g, ''), password: f.password.value, role }
     setContact({ email: data.email, phone: f.phone.value })
     setNotice('')
+    if (!agree) { setNotice('Please confirm you have read the Terms of Service and Privacy Policy.'); return }
     if (!firebaseReady) { setStep('verify'); return } // mock
     setBusy(true)
     try {
       const { user, confirmation } = await signUp(data, 'au-recaptcha')
-      await upsertUserProfile(user, { name: data.name, email: data.email, phone: data.phone, role, provider: 'password' })
+      await upsertUserProfile(user, { name: data.name, email: data.email, phone: data.phone, role, provider: 'password', modelTrainingOptIn: trainOptIn })
       confirmRef.current = confirmation
       setStep('verify')
     } catch (err) {
@@ -173,6 +178,7 @@ export default function Auth({ mode = 'signin' }) {
                     {!emailOk && <button type="button" className="au-resend" onClick={onCheckEmail}>I've verified</button>}
                   </div>
                 )}
+
                 {notice && <p className="au-notice">{notice}</p>}
                 <button type="submit" className="au-submit" disabled={busy}>{busy ? 'Verifying…' : 'Verify & continue'}</button>
                 <button type="button" className="au-resend" onClick={() => { setStep('form'); setNotice('') }}>← Back</button>
@@ -247,6 +253,61 @@ export default function Auth({ mode = 'signin' }) {
                 )}
 
                 {notice && <p className="au-notice">{notice}</p>}
+
+                {isSignup && (
+                  <div className="au-consent">
+                    <h3>Before you create your account</h3>
+                    <div className="au-consent-cols">
+                      <div>
+                        <b>What we collect</b>
+                        <ul>
+                          <li>Your name, email address, phone number and the role you choose</li>
+                          <li>Video of you playing, from venue cameras or your own device</li>
+                          <li>Movement data derived from that video</li>
+                          <li>Your match statistics</li>
+                          <li>Basic device and app information</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <b>What we do with it</b>
+                        <ul>
+                          <li>Produce your match analysis, statistics and highlights</li>
+                          <li>Run your account and answer your messages</li>
+                          <li>Keep the service secure</li>
+                          <li>Take payment where you are on a paid plan</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <b>Choices that stay yours</b>
+                        <ul>
+                          <li>Training our AI on your footage is <strong>off</strong> unless you switch it on</li>
+                          <li>You can withdraw consent at any time, as easily as you gave it</li>
+                          <li>You can download or delete your data whenever you want</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <b>How long we keep it</b>
+                        <ul>
+                          <li>Video — 90 days</li>
+                          <li>Statistics — while your account is open</li>
+                          <li>After you close your account — 180 days, then deleted</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <label className="au-consent-check">
+                      <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} required />
+                      <span>I have read this and agree to the <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>.</span>
+                    </label>
+                    <label className="au-consent-check">
+                      <input type="checkbox" checked={trainOptIn} onChange={(e) => setTrainOptIn(e.target.checked)} />
+                      <span>Optional — use my footage to help improve Lvl-Up's AI models. You can change this later in settings.</span>
+                    </label>
+                    <p className="au-consent-foot">
+                      Questions or complaints: Grievance Officer — <a href="mailto:contact@thelvlupsports.com">contact@thelvlupsports.com</a>,
+                      +91 90258 67882. You may also complain to the Data Protection Board of India.
+                    </p>
+                  </div>
+                )}
 
                 <button type="submit" className="au-submit" disabled={busy}>{busy ? 'Please wait…' : (isSignup ? 'Create account' : 'Sign in')}</button>
 

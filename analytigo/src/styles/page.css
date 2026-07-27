@@ -436,3 +436,72 @@
   .ct-cols { grid-template-columns: 1fr; }
   .ct-row { grid-template-columns: 1fr; }
 }
+
+/* research note — deliberately plain body type, no imagery, no metric tiles */
+.pg-research { border-top: 1px solid var(--line); padding-top: 26px; max-width: 68ch; }
+.pg-research-h { margin: 0 0 12px; font: 700 17px/1.35 'Sora', sans-serif; color: var(--ink); }
+.pg-research p { margin: 0 0 12px; font-size: 16.5px; line-height: 1.65; color: #43494f; }
+.pg-research a { color: var(--lime-text); }
+
+/* ------------------------------------------------------------- page media */
+.pg-media { margin: 0 0 clamp(8px, 2vw, 20px); }
+.pg-media-frame {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #0b0d10;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
+  aspect-ratio: 16 / 7;
+}
+.pg-media-tall .pg-media-frame { aspect-ratio: 4 / 3; }
+.pg-media-frame video,
+.pg-media-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.9s cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+.pg-media-frame:hover img { transform: scale(1.04); }
+.pg-media-tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  font: 700 10.5px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #16200a;
+  background: var(--lime);
+  border-radius: 999px;
+  padding: 7px 11px;
+}
+.pg-media-btn {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(10, 12, 16, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  border-radius: 999px;
+  padding: 9px 15px;
+  font: 600 12.5px/1 'Sora', sans-serif;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.pg-media-btn:hover { background: rgba(10, 12, 16, 0.85); border-color: var(--lime); }
+.pg-media figcaption {
+  margin-top: 11px;
+  font: 400 14.5px/1.6 'Sora', sans-serif;
+  color: #5a6067;
+  max-width: 66ch;
+}
+@media (max-width: 700px) {
+  .pg-media-frame { aspect-ratio: 4 / 3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pg-media-frame video, .pg-media-frame img { transition: none; }
+  .pg-media-frame:hover img { transform: none; }
+}

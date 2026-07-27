@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import PageShell, { LEGAL_LINKS } from './PageShell.jsx'
+import PageShell, { POLICY_LINKS } from './PageShell.jsx'
 
 // Renderer for the three policy documents. Sections come in as structured data
 // so all three share numbering, anchors, the sticky contents rail and the
@@ -53,7 +53,7 @@ export default function LegalDoc({ doc }) {
             <span className="pg-badge">Governing law · India</span>
           </div>
           <nav className="pg-switch" aria-label="Policies">
-            {LEGAL_LINKS.map((l) => (
+            {POLICY_LINKS.map((l) => (
               <Link key={l.to} to={l.to} className={l.to === doc.path ? 'on' : ''}>{l.label}</Link>
             ))}
           </nav>
@@ -85,11 +85,10 @@ export default function LegalDoc({ doc }) {
           </details>
 
           <div className="pg-note">
-            <strong>Draft for review.</strong> This document was prepared as a working draft and
-            has not been reviewed by a lawyer. Anything in square brackets is a placeholder that
-            must be completed, and the whole document should be checked by an Indian legal
-            adviser before it is relied on. Where a plain-English summary appears alongside a
-            clause, the summary is for convenience only — the full text governs.
+            Some company details are still being issued — our incorporation is being completed and
+            GST registration is in progress. Those details will appear on this page as soon as we
+            have them. Where a plain-English summary appears alongside a clause, the summary is for
+            convenience only — the full text governs.
           </div>
 
           {doc.sections.map((s, i) => (
@@ -107,9 +106,9 @@ export default function LegalDoc({ doc }) {
 
           <div className="pg-contact-card">
             <h3>Questions about this policy?</h3>
-            <p><strong>[LEGAL ENTITY NAME]</strong> — [REGISTERED OFFICE ADDRESS], India</p>
-            <p>CIN: [CIN] · GSTIN: [GSTIN]</p>
-            <p>Grievance Officer: [NAME], [DESIGNATION] — <a href="mailto:contact@thelvlupsports.com">contact@thelvlupsports.com</a>, [PHONE]</p>
+            <p><strong>Lvl-Up Sports</strong> — India</p>
+            <p>Registered entity name, registered office, CIN and GSTIN: being issued, published here once available.</p>
+            <p>Grievance Officer — <a href="mailto:contact@thelvlupsports.com">contact@thelvlupsports.com</a>, +91 90258 67882. We acknowledge within 24 hours and aim to resolve within 15 days.</p>
             <p>General enquiries: <Link to="/contact">Contact us</Link></p>
           </div>
         </div>
