@@ -9,6 +9,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 export const SECTIONS = [
   { sel: 'header', label: 'Hero' },
   { sel: '#sports', label: 'Your Sport' },
+  { sel: '.bm-section', label: 'Bio Motion' },
   { sel: '.fo-section', label: 'Face Off' },
   { sel: '.cm-section', label: 'AI Commentary' },
   { sel: '#profiles', label: 'Elite Athlete Profiles' },

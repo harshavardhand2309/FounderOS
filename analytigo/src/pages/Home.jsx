@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { css } from '../utils/css.js'
+import BioMotion from '../components/BioMotion.jsx'
 import EliteProfiles from '../components/EliteProfiles.jsx'
 import FaceOff from '../components/FaceOff.jsx'
 import GoViral from '../components/GoViral.jsx'
@@ -228,6 +229,12 @@ const LIVE_BADGE = css("font:600 9px/1 'JetBrains Mono',monospace;letter-spacing
 const CARD_LIVE = 'display:flex;flex-direction:column;justify-content:space-between;min-height:206px;padding:20px;border-radius:18px;background:linear-gradient(160deg,#16191d,#0f1216);border:1px solid rgba(227,185,74,.38);box-shadow:0 20px 48px rgba(0,0,0,.42);transition:transform .4s cubic-bezier(.16,.84,.44,1),border-color .4s,box-shadow .4s'
 const CARD_SOON = 'display:flex;flex-direction:column;justify-content:space-between;min-height:206px;padding:20px;border-radius:18px;background:linear-gradient(160deg,#14171b,#0e1013);border:1px solid rgba(255,255,255,.09);box-shadow:0 18px 44px rgba(0,0,0,.4);transition:transform .4s cubic-bezier(.16,.84,.44,1),border-color .4s,box-shadow .4s'
 
+// The boot loader plays once per document load. SPA navigations back to Home
+// (from Analytics, Cams, Careers, legal pages…) must not replay it — only a
+// real refresh or a fresh visit resets this module flag, which is exactly the
+// intended trigger.
+let bootLoaderPlayed = false
+
 export default function Home({ skipLoader = false }) {
   const videoRef = useRef(null)
   const videoWrapRef = useRef(null)
@@ -241,12 +248,18 @@ export default function Home({ skipLoader = false }) {
   const [heroHover, setHeroHover] = useState(false)
   // returning from a sport page → skip the intro and land straight on Pick Your Game
   const returningToSports = () => { try { return sessionStorage.getItem('lvlup:goto') === 'sports' } catch { return false } }
-  const [started, setStarted] = useState(returningToSports)
+  // If Home already mounted once this document load, land revealed — no loader,
+  // no interaction gate — so coming back from any other page is instant.
+  const [started, setStarted] = useState(() => bootLoaderPlayed || returningToSports())
   // The loading screen owns the entry: it replaces the old "click to begin" gate
   // (two sequential gates is one too many) and hands off by starting the hero as
   // its curtain lifts, so the reveal plays *through* the exit rather than after it.
-  // Skipped when arriving back from a sport page, and in the loader lab.
-  const [loading, setLoading] = useState(() => !skipLoader && !returningToSports())
+  // Skipped when arriving back from a sport page, on every SPA re-entry, and in
+  // the loader lab.
+  const [loading, setLoading] = useState(() => !skipLoader && !bootLoaderPlayed && !returningToSports())
+
+  // mark the boot as played only after this mount committed (StrictMode-safe)
+  useEffect(() => { bootLoaderPlayed = true }, [])
   // one-time pin: once all four cards have fully revealed, the section unlocks and
   // behaves like a normal (un-pinned) block — no reverse animation, no re-pinning.
   const [unlocked, setUnlocked] = useState(returningToSports)
@@ -593,6 +606,7 @@ export default function Home({ skipLoader = false }) {
       </section>
 
       {/* ===================== BIO MOTION ANALYSIS ===================== */}
+      <BioMotion />
 
       {/* ===================== FACE OFF ===================== */}
       <FaceOff />

@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { css } from '../utils/css.js'
 
-// Bio Motion Analysis — a scroll-pinned, telemetry-style AI biomechanics showcase.
+// Bio Motion Analysis — a scroll-pinned, telemetry-style AI motion showcase.
 // Scroll progress scrubs the reveal: parallax background, a staggered blur-to-sharp
 // headline, sentence-by-sentence copy, a few floating glass cards wired to joint
 // points, live pose overlays, and reveal-on-scroll performance graphs. Once the
@@ -18,7 +18,7 @@ const HEAD_WINS = [[0.04, 0.2], [0.14, 0.3]]
 
 const SENTENCES = [
   'Real-time pose estimation maps every joint, angle, and vector as you play.',
-  'Pro-grade biomechanics that flag injury risk before it costs you.',
+  'Pro-grade motion insight that shows where technique breaks down — before it costs you points.',
   'Compare your motion, side by side, with any player’s.',
 ]
 const DESC_WINS = [[0.32, 0.44], [0.42, 0.54], [0.52, 0.64]]
@@ -37,7 +37,7 @@ const JOINTS = [
 ]
 
 const GRAPHS = [
-  { label: 'Joint Load', val: 78, c: '#35f08a', win: [0.72, 0.8] },
+  { label: 'Footwork', val: 78, c: '#35f08a', win: [0.72, 0.8] },
   { label: 'Speed', val: 91, c: '#2fe0e0', win: [0.74, 0.82] },
   { label: 'Stability', val: 85, c: '#ff6a5a', win: [0.76, 0.84] },
   { label: 'Explosiveness', val: 88, c: '#f5b23c', win: [0.78, 0.86] },

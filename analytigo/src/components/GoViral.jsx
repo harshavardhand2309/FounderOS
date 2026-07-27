@@ -51,11 +51,19 @@ export default function GoViral() {
       const strip = stripRef.current
       if (!vp || !strip) return
       const vw = vp.clientWidth
-      const scrollable = Math.max(0, strip.scrollWidth - vw)
-      const startX = vw * 0.85 // cards begin pushed off to the right
-      const x = startX + (-scrollable - startX) * p
-      strip.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`
       const center = vw / 2
+      // End the run with the LAST card dead-centre, not with the strip flush to
+      // the viewport's right edge — flush-right leaves the final (padel) card
+      // outside the k>0.7 focus zone, so it never activates and its video never
+      // gets a play() call.
+      const cards = cardRefs.current
+      const last = cards[cards.length - 1]
+      const endX = last
+        ? center - (last.offsetLeft + last.offsetWidth / 2)
+        : -Math.max(0, strip.scrollWidth - vw)
+      const startX = vw * 0.85 // cards begin pushed off to the right
+      const x = startX + (endX - startX) * p
+      strip.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`
       cardRefs.current.forEach((card) => {
         if (!card) return
         const cc = card.offsetLeft + card.offsetWidth / 2 + x // centre relative to viewport
