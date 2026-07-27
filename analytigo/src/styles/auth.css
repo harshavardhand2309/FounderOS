@@ -41,12 +41,9 @@
   width: 34px;
   height: 34px;
   border-radius: 9px;
+  object-fit: cover;
+  display: block;
   background: #0b0d10;
-  color: #d6f637;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font: 800 19px/1 'Sora';
 }
 .au-logo-word {
   font: 700 21px/1 'Sora';

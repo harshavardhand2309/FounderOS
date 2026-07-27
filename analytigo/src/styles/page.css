@@ -53,10 +53,9 @@
 .pg-brand-mark {
   width: 34px; height: 34px; flex: none;
   border-radius: 9px;
+  object-fit: cover;
+  display: block;
   background: var(--ink);
-  color: var(--lime);
-  display: flex; align-items: center; justify-content: center;
-  font: 800 18px/1 'Sora', sans-serif;
 }
 .pg-brand-word { font: 800 19px/1 'Sora', sans-serif; letter-spacing: -0.02em; color: var(--ink); text-transform: uppercase; }
 .pg-brand-chip {

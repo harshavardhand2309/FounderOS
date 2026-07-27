@@ -535,7 +535,7 @@ export default function Home({ skipLoader = false }) {
         {/* nav (drops in from the top) */}
         <nav className="ag-rv ag-rv-top ag-pad" style={{ ...css('position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:24px 48px'), transitionDelay: '.05s' }}>
           <Link to="/" style={css('display:flex;align-items:center;gap:11px')}>
-            <span style={css("width:30px;height:30px;border-radius:8px;background:#0b0d10;display:flex;align-items:center;justify-content:center;color:#d6f637;font:800 17px/1 'Sora'")}>L</span>
+            <img src="/assets/logo.jpg" alt="" aria-hidden="true" style={css('width:34px;height:34px;border-radius:8px;object-fit:cover;display:block')} />
             <span style={css("font:700 20px/1 'Sora';letter-spacing:-.01em;color:#0b0d10")}>Lvl-Up</span>
           </Link>
           <div style={css('display:flex;align-items:center;gap:16px')}>
@@ -634,7 +634,7 @@ export default function Home({ skipLoader = false }) {
         <div style={css('max-width:1240px;margin:0 auto')}>
           {/* brand block */}
           <div style={css('display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin-bottom:46px')}>
-            <span style={css("width:52px;height:52px;border-radius:13px;background:#0b0d10;display:flex;align-items:center;justify-content:center;color:#d6f637;font:800 28px/1 'Sora'")}>L</span>
+            <img src="/assets/logo.jpg" alt="Lvl-Up Sports crest" style={css('width:64px;height:64px;border-radius:13px;object-fit:cover;display:block')} />
             <h2 style={css("margin:0;font:800 clamp(40px,5vw,68px)/1 'Sora';letter-spacing:-.035em;text-transform:uppercase;color:#0b0d10")}>Lvl-Up <span style={css('display:inline-block;background:#d6f637;padding:.02em .16em;border-radius:.08em')}>Sports</span></h2>
             <span style={css("font:600 17px/1.5 'Sora';color:#3a3f45;letter-spacing:.01em")}>Your AI-powered Coaching Assistant</span>
             <WaitlistForm />

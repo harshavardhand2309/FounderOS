@@ -33,7 +33,7 @@ export default function PageShell({ title, children }) {
 
       <header className="pg-top">
         <Link to="/" className="pg-brand" aria-label="Lvl-Up Sports home">
-          <span className="pg-brand-mark">L</span>
+          <img className="pg-brand-mark" src="/assets/logo.jpg" alt="" aria-hidden="true" />
           <span className="pg-brand-word">Lvl-Up<span className="pg-brand-chip">Sports</span></span>
         </Link>
         <nav className="pg-topnav" aria-label="Site sections">
