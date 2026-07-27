@@ -2451,57 +2451,29 @@ button {
 }
 
 /* ============================================================
-   AI Recommendations — tab-based full-image reveal. Scoped to .rec-*.
-   Images are self-contained (copy/stats baked in); only the heading
-   and 4 tabs are added UI. Crossfade between images, no crop.
+   AI Recommendations — cinematic evidence deck. Scoped to .rec-*.
+   One real photograph per recommendation type under a dark grade;
+   the editorial finding sits left, the model's evidence card right,
+   and a progress tab rail runs along the bottom of the stage.
    ============================================================ */
-/* Editorial "intelligence report" palette — deep charcoal, soft ivory, muted violet,
-   brushed silver, subtle lavender. Typography matches the site system (Sora 800 heading,
-   mono eyebrow). Entrance is a calm word-by-word editorial reveal. */
 .rec-section {
   position: relative;
-  --ap-accent: #c9bfe0; /* auto-play dots pick up the section's lavender */
-  background: radial-gradient(125% 95% at 50% 0%, #16141b 0%, #100e14 52%, #0b0a0e 100%);
+  background: radial-gradient(125% 95% at 50% 0%, #11140c 0%, #0d0f0a 52%, #090a08 100%);
   padding: 122px 48px 134px;
   overflow: hidden;
 }
-.rec-bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(70% 60% at 50% 8%, rgba(155, 139, 189, 0.12), transparent 62%),
-    radial-gradient(120% 120% at 50% 50%, transparent 58%, rgba(6, 5, 9, 0.6) 100%);
-}
-.rec-on .rec-bg { animation: recBgIn 1.3s ease backwards; }
 .rec-head {
   position: relative;
   z-index: 2;
   text-align: center;
   max-width: 1240px;
-  margin: 0 auto 56px;
-}
-.rec-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font: 600 12px/1 'JetBrains Mono', monospace;
-  letter-spacing: 0.3em;
-  color: #b7aecb;
-  margin-bottom: 22px;
-}
-.rec-on .rec-eyebrow { animation: recRise 0.6s cubic-bezier(0.16, 0.84, 0.44, 1) backwards; }
-.rec-eyedot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #9b8bbd;
-  box-shadow: 0 0 8px rgba(155, 139, 189, 0.55);
+  margin: 0 auto 52px;
 }
 .rec-h2 {
   margin: 0;
   font: 800 clamp(38px, 4.4vw, 60px)/1.06 'Sora', sans-serif;
   letter-spacing: -0.02em;
-  color: #f2eff6;
+  color: #f2f4ee;
 }
 .rec-word { display: inline-block; overflow: hidden; vertical-align: top; }
 .rec-word + .rec-word { margin-left: 0.28em; }
@@ -2509,151 +2481,263 @@ button {
 .rec-on .rec-word > span { animation: recWordUp 0.72s cubic-bezier(0.16, 0.84, 0.44, 1) backwards; }
 .rec-desc {
   margin: 22px auto 0;
-  max-width: 560px;
+  max-width: 600px;
   font: 400 16.5px/1.7 'Sora', sans-serif;
-  color: #b9b3c2;
+  color: #b6bcae;
 }
 .rec-on .rec-desc { animation: recRise 0.7s cubic-bezier(0.16, 0.84, 0.44, 1) backwards; }
 /* pre-entrance hidden state (avoids a flash before the section scrolls in) */
-.rec-section:not(.rec-on) .rec-eyebrow,
 .rec-section:not(.rec-on) .rec-desc,
-.rec-section:not(.rec-on) .rec-tab,
 .rec-section:not(.rec-on) .rec-stage { opacity: 0; }
 .rec-section:not(.rec-on) .rec-word > span { opacity: 0; transform: translateY(106%); }
-@keyframes recBgIn { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
 @keyframes recRise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 @keyframes recWordUp { from { opacity: 0; transform: translateY(106%); } to { opacity: 1; transform: none; } }
-@keyframes recStageIn { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
-.rec-tabs {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  max-width: 1240px;
-  margin: 0 auto 42px;
-}
-.rec-tab {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 15px 24px;
-  border-radius: 13px;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #b7bcc6;
-  transition: transform 0.25s cubic-bezier(0.16, 0.84, 0.44, 1),
-    background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
-  will-change: transform;
-}
-/* entrance uses `backwards` fill only, so the hover/active transform still works after */
-.rec-on .rec-tab { animation: recRise 0.6s cubic-bezier(0.16, 0.84, 0.44, 1) backwards; }
-.rec-tab-num {
-  font: 700 12px/1 'JetBrains Mono', monospace;
-  color: #7d8797;
-  transition: color 0.3s ease;
-}
-.rec-tab-label {
-  font: 600 13.5px/1 'Sora', sans-serif;
-  white-space: nowrap;
-}
-.rec-tab-underline {
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  bottom: 8px;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, #9b8bbd, #c9bfe0);
-  transform: scaleX(0);
-  transform-origin: left;
-  opacity: 0;
-  transition: transform 0.4s cubic-bezier(0.16, 0.84, 0.44, 1), opacity 0.3s ease;
-}
-.rec-tab:hover {
-  transform: translateY(-2px);
-  color: #eef1f5;
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.18);
-}
-.rec-tab:hover .rec-tab-num { color: #c4b6dc; }
-.rec-tab:hover .rec-tab-underline { opacity: 0.5; transform: scaleX(0.5); }
-.rec-tab:active { transform: translateY(-1px) scale(0.99); }
-.rec-tab.active {
-  transform: translateY(-2px);
-  color: #f6f4fa;
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(190, 178, 214, 0.4);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-.rec-tab.active .rec-tab-num { color: #c4b6dc; }
-.rec-tab.active .rec-tab-underline { opacity: 1; transform: scaleX(1); }
+@keyframes recStageIn { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: none; } }
 
+/* ---- the stage: photo, grade, slide content, tab rail ---- */
 .rec-stage {
   position: relative;
   z-index: 2;
-  max-width: 1240px;
+  max-width: 1400px;
   margin: 0 auto;
-  aspect-ratio: 1672 / 941;
-  border-radius: 20px;
+  min-height: clamp(600px, 76vh, 780px);
+  border-radius: 24px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 44px 110px rgba(0, 0, 0, 0.5);
-  background: #0a0a12;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 44px 110px rgba(0, 0, 0, 0.55);
+  background: #0a0c08;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 .rec-on .rec-stage { animation: recStageIn 0.95s cubic-bezier(0.16, 0.84, 0.44, 1) backwards; }
-.rec-img {
+.rec-bg-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* stage matches image aspect → fills cleanly, no crop */
+  object-fit: cover;
   opacity: 0;
-  transform: translateY(12px) scale(1.02);
-  transition: opacity 0.85s cubic-bezier(0.16, 0.84, 0.44, 1),
-    transform 1s cubic-bezier(0.16, 0.84, 0.44, 1);
+  filter: brightness(1.08) contrast(1.03) saturate(1.08);
+  transition: opacity 0.9s cubic-bezier(0.16, 0.84, 0.44, 1);
   will-change: opacity, transform;
   backface-visibility: hidden;
 }
-.rec-img.on {
+.rec-bg-img.on {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  animation: recKen 8s cubic-bezier(0.2, 0.6, 0.4, 1) both;
 }
-/* thin accent line that sweeps across on each tab change (keyed remount replays it) */
-.rec-sweep {
+@keyframes recKen { from { transform: scale(1.09); } to { transform: scale(1.005); } }
+/* dark cinematic grade — unifies four very different photos and carries the type */
+.rec-scrim {
   position: absolute;
-  top: 0;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(100deg, rgba(6, 8, 5, 0.82) 0%, rgba(6, 8, 5, 0.42) 40%, rgba(6, 8, 5, 0.1) 68%, rgba(6, 8, 5, 0.34) 100%),
+    linear-gradient(180deg, rgba(6, 8, 5, 0.3) 0%, rgba(6, 8, 5, 0.02) 30%, rgba(6, 8, 5, 0.04) 52%, rgba(6, 8, 5, 0.78) 100%);
+}
+
+.rec-slide {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 400px);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: end;
+  padding: clamp(140px, 18vh, 210px) clamp(28px, 4vw, 56px) clamp(30px, 4vh, 44px);
+}
+.rec-kicker,
+.rec-title,
+.rec-body,
+.rec-card { animation: recRise 0.7s cubic-bezier(0.16, 0.84, 0.44, 1) backwards; }
+.rec-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font: 600 11.5px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.26em;
+  color: #e3f7ab;
+  margin-bottom: 18px;
+}
+.rec-kicker i {
+  font: 700 11px/1 'JetBrains Mono', monospace;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  color: #0c0e08;
+  background: #c9f24a;
+  border-radius: 6px;
+  padding: 5px 8px 4px;
+}
+.rec-title {
+  margin: 0 0 16px;
+  max-width: 620px;
+  font: 800 clamp(28px, 3.1vw, 46px)/1.1 'Sora', sans-serif;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 2px 34px rgba(0, 0, 0, 0.5);
+}
+.rec-body {
+  margin: 0;
+  max-width: 560px;
+  font: 400 15.5px/1.7 'Sora', sans-serif;
+  color: rgba(255, 255, 255, 0.84);
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.45);
+}
+
+/* ---- model evidence card ---- */
+.rec-card {
+  background: rgba(10, 12, 8, 0.6);
+  backdrop-filter: blur(16px) saturate(1.05);
+  -webkit-backdrop-filter: blur(16px) saturate(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  padding: 20px 24px 22px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.rec-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font: 600 10.5px/1.4 'JetBrains Mono', monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+}
+.rec-card-h {
+  margin: 0 0 6px;
+  font: 700 16px/1.3 'Sora', sans-serif;
+  color: #fff;
+}
+.rec-rows { margin: 0; }
+.rec-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.13);
+}
+.rec-row dt { font: 400 13.5px/1.45 'Sora', sans-serif; color: rgba(255, 255, 255, 0.74); }
+.rec-row dd {
+  margin: 0;
+  font: 700 13.5px/1.4 'JetBrains Mono', monospace;
+  color: #c9f24a;
+  white-space: nowrap;
+}
+.rec-conf {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.rec-conf-k {
+  font: 600 10.5px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.55);
+}
+.rec-conf-bar {
+  flex: 1;
+  height: 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.16);
+  overflow: hidden;
+}
+.rec-conf-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #8fc23b, #c9f24a);
+  transform-origin: left;
+  animation: recConf 0.9s cubic-bezier(0.16, 0.84, 0.44, 1) 0.45s backwards;
+}
+@keyframes recConf { from { transform: scaleX(0); } }
+.rec-conf-v { font: 700 13px/1 'JetBrains Mono', monospace; color: #c9f24a; }
+
+/* ---- tab rail with live autoplay progress ---- */
+.rec-rail {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.rec-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 22px 20px;
+  border: none;
+  cursor: pointer;
+  background: rgba(8, 10, 6, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.64);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+.rec-on .rec-tab { animation: recRise 0.6s cubic-bezier(0.16, 0.84, 0.44, 1) backwards; }
+.rec-tab:hover { background: rgba(20, 24, 13, 0.8); color: #fff; }
+.rec-tab.active { background: rgba(25, 30, 14, 0.85); color: #fff; }
+.rec-tab-num { font: 700 11px/1 'JetBrains Mono', monospace; color: rgba(201, 242, 74, 0.78); }
+.rec-tab-label { font: 600 13.5px/1 'Sora', sans-serif; }
+.rec-prog {
+  position: absolute;
   left: 0;
   right: 0;
-  height: 2px;
-  z-index: 5;
+  bottom: 0;
+  height: 3px;
   pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(201, 191, 224, 0.9) 45%, rgba(230, 224, 244, 0.95) 55%, transparent);
-  transform: translateX(-100%);
-  animation: recSweep 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
-@keyframes recSweep {
-  0% { transform: translateX(-100%); opacity: 0; }
-  22% { opacity: 1; }
-  78% { opacity: 1; }
-  100% { transform: translateX(100%); opacity: 0; }
+.rec-prog-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #a4d84a, #c9f24a);
+  transform-origin: left;
+  animation: recProg linear both;
+}
+@keyframes recProg { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@media (max-width: 960px) {
+  .rec-slide {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 24px;
+    padding-top: 72px;
+  }
+  .rec-stage { min-height: 0; }
+  .rec-rail { grid-template-columns: repeat(2, 1fr); }
+  /* single-column copy covers the whole photo, so the grade goes flat and darker */
+  .rec-scrim {
+    background:
+      linear-gradient(180deg, rgba(6, 8, 5, 0.62) 0%, rgba(6, 8, 5, 0.68) 45%, rgba(6, 8, 5, 0.88) 100%);
+  }
 }
 @media (max-width: 720px) {
   .rec-section { padding: 72px 18px 84px; }
-  .rec-tab { padding: 12px 16px; }
-  .rec-tab-label { font-size: 12px; white-space: normal; }
+  .rec-slide { padding-left: 20px; padding-right: 20px; }
+  .rec-tab { padding: 14px 14px 16px; }
+  .rec-tab-label { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rec-section .rec-eyebrow,
   .rec-section .rec-desc,
-  .rec-section .rec-tab,
   .rec-section .rec-stage,
   .rec-section .rec-word > span,
-  .rec-section .rec-bg { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .rec-sweep { display: none; }
+  .rec-section .rec-tab,
+  .rec-section .rec-kicker,
+  .rec-section .rec-title,
+  .rec-section .rec-body,
+  .rec-section .rec-card,
+  .rec-section .rec-conf-bar > span,
+  .rec-section .rec-bg-img { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .rec-section .rec-bg-img:not(.on) { opacity: 0 !important; }
+  .rec-prog-fill { animation: none !important; transform: scaleX(1); }
 }
 
 /* ---- mobile responsiveness safety net ---- */
