@@ -2458,7 +2458,8 @@ button {
    ============================================================ */
 .rec-section {
   position: relative;
-  background: radial-gradient(125% 95% at 50% 0%, #11140c 0%, #0d0f0a 52%, #090a08 100%);
+  /* Pure Graphite — strictly neutral charcoal, user-picked from 8 options */
+  background: radial-gradient(125% 95% at 50% 0%, #191919 0%, #101010 52%, #0a0a0a 100%);
   padding: 122px 48px 134px;
   overflow: hidden;
 }
@@ -2473,7 +2474,7 @@ button {
   margin: 0;
   font: 800 clamp(38px, 4.4vw, 60px)/1.06 'Sora', sans-serif;
   letter-spacing: -0.02em;
-  color: #f2f4ee;
+  color: #f3f3f2;
 }
 .rec-word { display: inline-block; overflow: hidden; vertical-align: top; }
 .rec-word + .rec-word { margin-left: 0.28em; }
@@ -2483,7 +2484,7 @@ button {
   margin: 22px auto 0;
   max-width: 600px;
   font: 400 16.5px/1.7 'Sora', sans-serif;
-  color: #b6bcae;
+  color: #b4b6b2;
 }
 .rec-on .rec-desc { animation: recRise 0.7s cubic-bezier(0.16, 0.84, 0.44, 1) backwards; }
 /* pre-entrance hidden state (avoids a flash before the section scrolls in) */
