@@ -24,7 +24,8 @@ const SLIDES = [
     card: {
       title: 'Suggested setup for your game',
       rows: [
-        { k: 'Racquet', v: '100 sq in · 300 g' },
+        { k: 'Racquet', v: 'Babolat Pure Aero' },
+        { k: 'Spec', v: '100 sq in · 300 g' },
         { k: 'String & tension', v: 'Poly 1.25 · 23 kg' },
         { k: 'Grip & balance', v: 'L3 · head-light' },
       ],
