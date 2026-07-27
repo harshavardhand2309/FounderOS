@@ -566,7 +566,7 @@ export default function Home({ skipLoader = false }) {
         <div style={css('position:relative;z-index:10;max-width:1240px;margin:0 auto;width:100%')}>
           <div ref={headingRef} style={unlocked ? HEADING_DONE : { ...css('text-align:center;margin-bottom:34px'), ...HEADING_INIT }}>
             <h2 className="ag-h2" style={css("font:800 clamp(40px,4.8vw,60px)/1.03 'Sora';letter-spacing:-.03em;margin:0 0 14px;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.6)")}>Your Sport, Decoded.</h2>
-            <p style={css("font:400 16px/1.6 'Sora';color:#ffffff;max-width:620px;margin:0 auto;text-shadow:0 1px 14px rgba(0,0,0,.6)")}>Analytics tuned to your sport — spot weaknesses, track your evolution, and make every session count. Venue intelligence goes further: how you perform on each surface, in every condition, and when the points matter most.</p>
+            <p style={css("font:400 16px/1.6 'Sora';color:#ffffff;max-width:620px;margin:0 auto;text-shadow:0 1px 14px rgba(0,0,0,.6)")}>Analytics tuned to your sport — weaknesses exposed, progress tracked. Venue intelligence adds the context: every surface, every condition, and how you play under pressure.</p>
           </div>
 
           {/* sport cards */}
