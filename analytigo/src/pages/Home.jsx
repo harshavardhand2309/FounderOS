@@ -207,7 +207,7 @@ const FOOT_ROLES = [
   { title: 'Organisers', line: 'Draws, scheduling, scoring, and live streams.' },
   { title: 'Coaches', line: 'Session plans backed by player data.' },
 ]
-const FOOT_EXPLORE = [['Cams', '/cams'], ['Analytics', '/analytics'], ['Tools', '/tools'], ['Contact Us', '/contact']]
+const FOOT_EXPLORE = [['Cams', '/cams'], ['Analytics', '/analytics'], ['Tools', '/tools'], ['Careers', '/careers'], ['Contact Us', '/contact']]
 const FOOT_LEGAL = [['Terms of Service', '/terms'], ['Privacy Policy', '/privacy'], ['Return & Refund Policy', '/refunds'], ['Delete Account', '/delete-account']]
 
 const AppleIcon = () => (

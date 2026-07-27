@@ -31,13 +31,14 @@ export const firebaseReady = Boolean(cfg.apiKey && cfg.authDomain && cfg.project
 let _fb
 async function fb() {
   if (_fb) return _fb
-  const [appMod, authMod, fsMod] = await Promise.all([
+  const [appMod, authMod, fsMod, stMod] = await Promise.all([
     import('firebase/app'),
     import('firebase/auth'),
     import('firebase/firestore'),
+    import('firebase/storage'),
   ])
   const app = appMod.initializeApp(cfg)
-  _fb = { app, authMod, fsMod, auth: authMod.getAuth(app), db: fsMod.getFirestore(app) }
+  _fb = { app, authMod, fsMod, stMod, auth: authMod.getAuth(app), db: fsMod.getFirestore(app), storage: stMod.getStorage(app) }
   _fb.auth.useDeviceLanguage()
   return _fb
 }
@@ -165,6 +166,31 @@ export async function submitContact({ name, email, topic, message }) {
   const { db, fsMod } = await fb()
   await fsMod.addDoc(fsMod.collection(db, 'contact_messages'), {
     name, email, topic, message,
+    status: 'new',
+    createdAt: fsMod.serverTimestamp(),
+  })
+  return { ok: true }
+}
+
+// --- job applications ---
+// The CV goes to Storage and the rest to Firestore, with the file's download URL
+// stored alongside the answers so one document is everything a reviewer needs.
+export async function submitApplication({ role, roleId, name, email, phone, location, experience, links, cover, resume }) {
+  if (!firebaseReady) return { ok: true, local: true }
+  const { db, fsMod, storage, stMod } = await fb()
+  let resumeUrl = ''
+  let resumeName = ''
+  if (resume) {
+    resumeName = resume.name
+    const safe = resume.name.replace(/[^\w.\-]/g, '_').slice(-120)
+    const path = `resumes/${roleId}/${Date.now()}-${safe}`
+    const ref = stMod.ref(storage, path)
+    await stMod.uploadBytes(ref, resume, { contentType: resume.type || 'application/octet-stream' })
+    resumeUrl = await stMod.getDownloadURL(ref)
+  }
+  await fsMod.addDoc(fsMod.collection(db, 'job_applications'), {
+    role, roleId, name, email, phone, location, experience, links, cover,
+    resumeUrl, resumeName,
     status: 'new',
     createdAt: fsMod.serverTimestamp(),
   })

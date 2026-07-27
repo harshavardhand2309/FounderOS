@@ -10,6 +10,8 @@ import Tools from './pages/Tools.jsx'
 import Contact from './pages/Contact.jsx'
 import Legal from './pages/Legal.jsx'
 import DeleteAccount from './pages/DeleteAccount.jsx'
+import Careers from './pages/Careers.jsx'
+import JobDetail from './pages/JobDetail.jsx'
 // preview-only route — kept out of the main bundle
 const LoadLab = lazy(() => import('./pages/LoadLab.jsx'))
 
@@ -28,6 +30,8 @@ export default function App() {
       <Route path="/analytics" element={<Analytics />} />
       <Route path="/tools" element={<Tools />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/careers" element={<Careers />} />
+      <Route path="/careers/:id" element={<JobDetail />} />
       {/* Legal */}
       <Route path="/terms" element={<Legal doc="terms" />} />
       <Route path="/privacy" element={<Legal doc="privacy" />} />

@@ -47,11 +47,10 @@ export default function Cams() {
 
       <div className="pg-wrap">
         <PageMedia
-          src="/assets/tennis-bg.mp4"
-          poster="/assets/tennis-bg-poster.jpg"
-          alt="Lvl-Up Sports brand film"
-          tag="Cams"
-          caption="One camera per court, in one fixed position — the same framing every session, which is what makes a player's numbers comparable week to week."
+          src="/assets/cctv.jpg"
+          alt="Fixed cameras mounted on a pole, angled down over a playing area"
+          tag="Fixed install"
+          caption="One camera per court, mounted high and angled to see the whole playing area — the same framing every session, which is what makes a player's numbers comparable week to week."
         />
 
         <section className="pg-sec" aria-labelledby="setup-h">

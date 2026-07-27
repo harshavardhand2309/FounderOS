@@ -9,6 +9,7 @@ export const EXPLORE_LINKS = [
   { label: 'Cams', to: '/cams' },
   { label: 'Analytics', to: '/analytics' },
   { label: 'Tools', to: '/tools' },
+  { label: 'Careers', to: '/careers' },
   { label: 'Contact Us', to: '/contact' },
 ]
 export const POLICY_LINKS = [
