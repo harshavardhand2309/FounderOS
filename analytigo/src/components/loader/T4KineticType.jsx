@@ -6,7 +6,7 @@ import { css } from '../../utils/css.js'
 // breaks into five vertical panels that slide apart to reveal the hero.
 
 const ROWS = [
-  { text: 'TENNIS · PICKLEBALL · BADMINTON · SQUASH · ', dir: -1, outline: true },
+  { text: 'TENNIS · PICKLEBALL · BADMINTON · PADEL · ', dir: -1, outline: true },
   { text: 'PLAY SMARTER · OWN EVERY POINT · ', dir: 1, outline: false },
   { text: 'SERVE · RALLY · WINNER · MATCH POINT · ', dir: -1, outline: true },
 ]

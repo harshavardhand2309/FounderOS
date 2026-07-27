@@ -2045,6 +2045,13 @@ button {
   letter-spacing: -0.03em;
   text-transform: uppercase;
 }
+/* The headline sits above the optical centre. The copy block stays vertically
+   centred, so `position: relative` lifts only the headline out of its own box
+   and leaves the three points exactly where they were. Desktop only — below
+   1081px the block is in normal flow. */
+@media (min-width: 1081px) {
+  .bm-h2 { position: relative; top: -10vh; }
+}
 .bm-line {
   display: block;
   color: #fff;
@@ -2335,6 +2342,11 @@ button {
   letter-spacing: -0.03em;
   color: #fff;
   text-shadow: 0 2px 30px rgba(0, 0, 0, 0.6);
+}
+/* same treatment as the Bio Motion headline — lifted clear of the centred
+   column without moving the description below it */
+@media (min-width: 1081px) {
+  .cm-h2 { position: relative; top: -7vh; }
 }
 .cm-desc {
   margin: 0 0 26px;

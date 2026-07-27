@@ -19,7 +19,7 @@ const METRICS = [
 ]
 
 const A = {
-  name: 'Aadhitya', sport: 'Tennis', tag: 'CHALLENGER', accent: '#3fae86', rgb: '63,174,134',
+  name: 'Aadhitya', sport: 'Tennis', tag: 'WORLD NO. 25', accent: '#3fae86', rgb: '63,174,134',
   rating: 95, winRate: 84, ranking: 3, power: 91, accuracy: 94, consistency: 92, speed: 88, coverage: 89, performance: 92, mental: 89,
 }
 const B = {

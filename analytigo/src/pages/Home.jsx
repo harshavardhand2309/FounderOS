@@ -9,7 +9,7 @@ import Commentary from '../components/Commentary.jsx'
 import Recommendations from '../components/Recommendations.jsx'
 import Ecosystem from '../components/Ecosystem.jsx'
 import HeroShowcase from '../components/HeroShowcase.jsx'
-import NavLab from '../components/nav/NavLab.jsx'
+import SiteNav from '../components/nav/SiteNav.jsx'
 import Loader from '../components/loader/Loader.jsx'
 import T2CourtDraw from '../components/loader/T2CourtDraw.jsx'
 import About from '../components/About.jsx'
@@ -199,7 +199,9 @@ const SPORTS = [
   { title: 'Tennis', to: '/tennis', img: '/assets/sport-tennis.jpg', desc: 'Serve, return, and full rally intelligence.', glyph: 'tennis', live: true },
   { title: 'Pickleball', to: '/pickleball', img: '/assets/sport-pickleball-edit.png', desc: 'Shot tracking, kitchen play, and rally analytics.', glyph: 'pickle', live: true },
   { title: 'Badminton', img: '/assets/sport-badminton.jpg', desc: 'Smash speed, footwork, and rally control.', glyph: 'badminton', live: false },
-  { title: 'Squash', img: '/assets/sport-squash.jpg', desc: 'Length, angles, and relentless court control.', glyph: 'squash', live: false },
+  // no photo yet — /assets/sport-padel.jpg is actually beach volleyball, so this
+  // card uses the plain treatment until a real padel shot is supplied
+  { title: 'Padel', desc: 'Wall play, lob depth, and point construction.', glyph: 'padel', live: false },
 ]
 // footer: one app card per audience, each with store links
 const FOOT_ROLES = [
@@ -563,13 +565,8 @@ export default function Home({ skipLoader = false }) {
 
         <div style={css('position:relative;z-index:10;max-width:1240px;margin:0 auto;width:100%')}>
           <div ref={headingRef} style={unlocked ? HEADING_DONE : { ...css('text-align:center;margin-bottom:34px'), ...HEADING_INIT }}>
-            <div style={css('display:inline-flex;align-items:center;gap:10px;margin-bottom:14px')}>
-              <span style={css('width:30px;height:1px;background:rgba(255,255,255,.25)')} />
-              <span style={css("font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.18em;color:#e3b94a")}>CHOOSE YOUR SPORT</span>
-              <span style={css('width:30px;height:1px;background:rgba(255,255,255,.25)')} />
-            </div>
-            <h2 className="ag-h2" style={css("font:800 clamp(40px,4.8vw,60px)/1.03 'Sora';letter-spacing:-.03em;margin:0 0 14px;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.6)")}>Pick your game</h2>
-            <p style={css("font:400 16px/1.6 'Sora';color:#ffffff;max-width:500px;margin:0 auto;text-shadow:0 1px 14px rgba(0,0,0,.6)")}>Analytics tuned to your sport — spot weaknesses, track your evolution, and make every session count.</p>
+            <h2 className="ag-h2" style={css("font:800 clamp(40px,4.8vw,60px)/1.03 'Sora';letter-spacing:-.03em;margin:0 0 14px;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.6)")}>Your Sport, Decoded.</h2>
+            <p style={css("font:400 16px/1.6 'Sora';color:#ffffff;max-width:620px;margin:0 auto;text-shadow:0 1px 14px rgba(0,0,0,.6)")}>Analytics tuned to your sport — spot weaknesses, track your evolution, and make every session count. Venue intelligence goes further: how you perform on each surface, in every condition, and when the points matter most.</p>
           </div>
 
           {/* sport cards */}
@@ -667,9 +664,8 @@ export default function Home({ skipLoader = false }) {
         </div>
       </footer>
 
-      {/* floating section navigator (overlay only) — Nav Lab holds the
-          switchable design variants until one is finalized */}
-      <NavLab />
+      {/* floating section navigator (overlay only) */}
+      <SiteNav />
 
       {loading && (
         <Loader

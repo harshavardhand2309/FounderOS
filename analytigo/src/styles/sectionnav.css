@@ -253,3 +253,9 @@
   .sn-fab,
   .sn-root { transition: none !important; }
 }
+
+/* The Lens Globe is the desktop navigator, so the classic rail is retired and
+   only this component's mobile button + sheet remain in service. */
+@media (min-width: 901px) {
+  .sn-root { display: none; }
+}
