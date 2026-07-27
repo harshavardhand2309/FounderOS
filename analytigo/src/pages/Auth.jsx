@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { css } from '../utils/css.js'
-import { firebaseReady, socialLogin, signUp, confirmPhone, refreshEmailVerified, signInIdentifier } from '../utils/firebase.js'
+import { firebaseReady, socialLogin, signUp, confirmPhone, refreshEmailVerified, signInIdentifier, upsertUserProfile, recordSignIn } from '../utils/firebase.js'
 import '../styles/auth.css'
 
 // Sign In / Sign Up — one white-and-lime auth screen matching the hero.
@@ -64,7 +64,8 @@ export default function Auth({ mode = 'signin' }) {
     if (!firebaseReady) { setStep('verify'); return } // mock
     setBusy(true)
     try {
-      const { confirmation } = await signUp(data, 'au-recaptcha')
+      const { user, confirmation } = await signUp(data, 'au-recaptcha')
+      await upsertUserProfile(user, { name: data.name, email: data.email, phone: data.phone, role, provider: 'password' })
       confirmRef.current = confirmation
       setStep('verify')
     } catch (err) {
@@ -81,7 +82,7 @@ export default function Auth({ mode = 'signin' }) {
     try {
       const r = await signInIdentifier(f.identifier.value, f.password.value, 'au-recaptcha')
       if (r.needsOtp) { confirmRef.current = { confirmationResult: r.confirmationResult }; setContact({ phone: f.identifier.value, email: '' }); setStep('verify') }
-      else setStep('done')
+      else { await recordSignIn(r.user, 'password'); setStep('done') }
     } catch (err) {
       setNotice(err?.message || 'Sign-in failed. Check your details and try again.')
     } finally { setBusy(false) }
@@ -94,8 +95,11 @@ export default function Auth({ mode = 'signin' }) {
     setBusy(true)
     try {
       const c = confirmRef.current
-      if (c?.confirmationResult) await c.confirmationResult.confirm(phoneCode) // sign-in OTP
-      else if (c) await confirmPhone(c, phoneCode) // sign-up: link phone
+      if (c?.confirmationResult) {
+        const res = await c.confirmationResult.confirm(phoneCode) // sign-in OTP
+        await upsertUserProfile(res.user, { provider: 'phone' })
+        await recordSignIn(res.user, 'phone')
+      } else if (c) await confirmPhone(c, phoneCode) // sign-up: link phone
       setStep('done')
     } catch (err) {
       setNotice(err?.message || 'That code did not match. Please re-enter it.')
@@ -112,7 +116,12 @@ export default function Auth({ mode = 'signin' }) {
     setNotice('')
     if (!firebaseReady) { setNotice(`${provider} sign-in connects once the Firebase keys are added.`); return }
     setBusy(true)
-    try { await socialLogin(provider); setStep('done') }
+    try {
+      const user = await socialLogin(provider)
+      await upsertUserProfile(user, { role, provider: provider.toLowerCase() })
+      await recordSignIn(user, provider.toLowerCase())
+      setStep('done')
+    }
     catch (err) { setNotice(err?.message || `${provider} sign-in was cancelled.`) }
     finally { setBusy(false) }
   }

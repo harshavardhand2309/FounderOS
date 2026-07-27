@@ -99,13 +99,73 @@ export async function signInIdentifier(identifier, password, recaptchaContainerI
   return { user: res.user }
 }
 
+// ---------------------------------------------------------------- Firestore
+// Collections (see firestore.rules for the matching access rules):
+//   users/{uid}        — one profile per account, written on sign-up and login
+//   signin_events/{id} — append-only login log
+//   waitlist/{emailKey}— launch waitlist, keyed by email so re-submits merge
+//   contact_messages   — Contact Us form submissions
+
+// Firestore document IDs may not contain "/" and are capped at 1500 bytes.
+const emailKey = (email) => email.trim().toLowerCase().replace(/\//g, '_').slice(0, 300)
+
+// Create or update the profile document for a signed-in user. Called on sign-up
+// and on every social login, so a Google/Apple account gets a profile too.
+export async function upsertUserProfile(user, extra = {}) {
+  if (!firebaseReady || !user) return { ok: true, local: true }
+  const { db, fsMod } = await fb()
+  const ref = fsMod.doc(db, 'users', user.uid)
+  await fsMod.setDoc(ref, {
+    uid: user.uid,
+    name: extra.name || user.displayName || '',
+    email: user.email || extra.email || '',
+    phone: extra.phone || user.phoneNumber || '',
+    role: extra.role || 'Player',
+    provider: extra.provider || user.providerData?.[0]?.providerId || 'password',
+    emailVerified: !!user.emailVerified,
+    updatedAt: fsMod.serverTimestamp(),
+    // only set on first write — merge leaves an existing value untouched
+    createdAt: fsMod.serverTimestamp(),
+  }, { merge: true })
+  return { ok: true }
+}
+
+// Record a login: stamps the profile and appends to the audit log.
+export async function recordSignIn(user, method = 'password') {
+  if (!firebaseReady || !user) return { ok: true, local: true }
+  const { db, fsMod } = await fb()
+  await fsMod.setDoc(fsMod.doc(db, 'users', user.uid), {
+    lastSignInAt: fsMod.serverTimestamp(),
+    signInCount: fsMod.increment(1),
+  }, { merge: true })
+  await fsMod.addDoc(fsMod.collection(db, 'signin_events'), {
+    uid: user.uid,
+    method,
+    at: fsMod.serverTimestamp(),
+  })
+  return { ok: true }
+}
+
 // --- waitlist capture ---
 export async function joinWaitlist(email, source = 'footer') {
   if (!firebaseReady) return { ok: true, local: true }
   const { db, fsMod } = await fb()
-  await fsMod.addDoc(fsMod.collection(db, 'waitlist'), {
-    email,
+  // keyed by email so a repeat submit updates rather than duplicating the row
+  await fsMod.setDoc(fsMod.doc(db, 'waitlist', emailKey(email)), {
+    email: email.trim().toLowerCase(),
     source,
+    createdAt: fsMod.serverTimestamp(),
+  }, { merge: true })
+  return { ok: true }
+}
+
+// --- Contact Us form ---
+export async function submitContact({ name, email, topic, message }) {
+  if (!firebaseReady) return { ok: true, local: true }
+  const { db, fsMod } = await fb()
+  await fsMod.addDoc(fsMod.collection(db, 'contact_messages'), {
+    name, email, topic, message,
+    status: 'new',
     createdAt: fsMod.serverTimestamp(),
   })
   return { ok: true }

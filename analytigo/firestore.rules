@@ -1,0 +1,50 @@
+rules_version = '2';
+
+// Firestore security rules for Lvl-Up Sports.
+//
+// Deploy with:  firebase deploy --only firestore:rules
+// (or paste into Firebase console → Firestore Database → Rules → Publish)
+//
+// Principle: the public site may WRITE leads (waitlist, contact) but may never
+// READ them back, so nobody can scrape the list. Account data is readable only
+// by its owner. Everything not matched below is denied by default.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isEmail(v) {
+      return v is string && v.size() <= 254 && v.matches('.+@.+\\..+');
+    }
+
+    // Launch waitlist — anyone may join, nobody may list it from the client.
+    match /waitlist/{docId} {
+      allow create, update: if isEmail(request.resource.data.email)
+                            && request.resource.data.keys().hasOnly(
+                                 ['email', 'source', 'createdAt']);
+      allow read, delete: if false;
+    }
+
+    // Contact Us submissions — write-only from the client.
+    match /contact_messages/{docId} {
+      allow create: if isEmail(request.resource.data.email)
+                    && request.resource.data.message is string
+                    && request.resource.data.message.size() > 0
+                    && request.resource.data.message.size() <= 5000
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() <= 200;
+      allow read, update, delete: if false;
+    }
+
+    // Account profiles — owner only.
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Login audit log — a user may append their own entries and read nothing.
+    match /signin_events/{docId} {
+      allow create: if request.auth != null
+                    && request.auth.uid == request.resource.data.uid;
+      allow read, update, delete: if false;
+    }
+  }
+}

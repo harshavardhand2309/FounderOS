@@ -199,9 +199,7 @@ const SPORTS = [
   { title: 'Tennis', to: '/tennis', img: '/assets/sport-tennis.jpg', desc: 'Serve, return, and full rally intelligence.', glyph: 'tennis', live: true },
   { title: 'Pickleball', to: '/pickleball', img: '/assets/sport-pickleball-edit.png', desc: 'Shot tracking, kitchen play, and rally analytics.', glyph: 'pickle', live: true },
   { title: 'Badminton', img: '/assets/sport-badminton.jpg', desc: 'Smash speed, footwork, and rally control.', glyph: 'badminton', live: false },
-  // no photo yet — /assets/sport-padel.jpg is actually beach volleyball, so this
-  // card uses the plain treatment until a real padel shot is supplied
-  { title: 'Padel', desc: 'Wall play, lob depth, and point construction.', glyph: 'padel', live: false },
+  { title: 'Padel', img: '/assets/sports-paddle.png', desc: 'Wall play, lob depth, and point construction.', glyph: 'padel', live: false },
 ]
 // footer: one app card per audience, each with store links
 const FOOT_ROLES = [
