@@ -19,7 +19,7 @@ const SECTIONS = [
   { sel: '.gv-section', label: 'Go Viral Instantly' },
   { sel: '.eco-section', label: 'Ecosystem' },
   { sel: '#about', label: 'About' },
-  { sel: 'footer', label: 'Footer' },
+  { sel: 'footer', label: 'Connect' },
 ]
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x))
 const absTop = (el) => el.getBoundingClientRect().top + window.scrollY

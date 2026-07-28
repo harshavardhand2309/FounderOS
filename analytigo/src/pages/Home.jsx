@@ -204,8 +204,7 @@ const SPORTS = [
 // footer: one app card per audience, each with store links
 const FOOT_ROLES = [
   { title: 'Player', line: 'Track your game, compare, and climb the ranks.' },
-  { title: 'Venues', line: 'Courts, cameras, and bookings in one place.' },
-  { title: 'Organisers', line: 'Draws, scheduling, scoring, and live streams.' },
+  { title: 'Venues & Organisers', line: 'Courts, cameras and bookings — plus draws, scheduling, scoring and live streams, in one app.' },
   { title: 'Coaches', line: 'Session plans backed by player data.' },
 ]
 const FOOT_EXPLORE = [['Cams', '/cams'], ['Analytics', '/analytics'], ['Tools', '/tools'], ['Careers', '/careers'], ['Contact Us', '/contact']]
