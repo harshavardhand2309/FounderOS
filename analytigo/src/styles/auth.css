@@ -194,7 +194,8 @@
 }
 .au-roles {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* three roles, one per app — the third label is the longest, so let it breathe */
+  grid-template-columns: 1fr 1fr 1.5fr;
   gap: 8px;
 }
 .au-role {

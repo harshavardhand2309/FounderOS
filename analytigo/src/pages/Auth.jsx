@@ -9,7 +9,9 @@ import '../styles/auth.css'
 // mock flow so the public demo stays clickable. Verification reflects Firebase
 // reality: a 6-digit PHONE OTP plus an EMAIL verification LINK (not a code).
 
-const ROLES = ['Player', 'Coach', 'Venue', 'Organiser']
+// Three roles, one per app. Venue operators and tournament organisers share an
+// app (usually the same person), so they share a role too.
+const ROLES = ['Player', 'Coach', 'Venue & Organiser']
 
 function CodeInput({ label, value, onChange }) {
   const refs = useRef([])
