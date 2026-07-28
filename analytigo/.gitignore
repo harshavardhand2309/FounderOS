@@ -15,3 +15,12 @@ npm-debug.log*
 .idea
 .DS_Store
 *.local
+
+# local env — Firebase config lives here, never commit it
+.env
+.env.*
+!.env.example
+
+# firebase tooling
+.firebase/
+firebase-debug.log

@@ -1,0 +1,443 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Dashboard stylesheet — ported from Sportsanalytics `src/app/globals.css`.
+
+   Two rules govern everything in this file, because the dashboard is grafted
+   into a 5,300-line hand-written CSS site that it must not disturb:
+
+   1. NO GLOBAL PREFLIGHT. Tailwind's reset strips list markers and heading
+      sizes, which would break the legal pages (/terms, /privacy, /refunds)
+      and /careers — they are the only places on the site that rely on browser
+      defaults. Instead the parts of preflight the dashboard actually needs are
+      re-created below, scoped to `.lv-dash`.
+
+   2. UTILITIES ARE IMPORTED UNLAYERED. The site's own CSS is unlayered, and in
+      the cascade unlayered rules beat every @layer rule regardless of
+      specificity. Utilities inside `@layer utilities` would therefore lose to
+      plain element selectors like `a { color: inherit }`. Unlayered, a utility
+      class (0,1,0) beats an element selector (0,0,1) normally.
+
+   Keyframes are global with no scoping mechanism, so every one defined here is
+   prefixed `lvd-` — the site already defines its own `shimmer`, and the last
+   definition in source order would silently win.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@layer theme;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css";
+
+/* Only scan the dashboard tree. Without this Tailwind walks the whole project
+   and generates utilities for arbitrary strings in the marketing site. */
+@source "./";
+
+@theme {
+    --font-display: 'Outfit', 'Sora', sans-serif;
+    --font-body: 'Inter', 'Sora', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --font-bebas: 'Bebas Neue', 'Sora', sans-serif;
+    --font-oswald: 'Oswald', 'Sora', sans-serif;
+
+    --color-bg-primary: #0f172a;
+    --color-bg-secondary: #000000;
+    --color-accent-primary: #FFD700;
+    --color-accent-secondary: #FFFFFF;
+    --color-text-primary: #f5f7fa;
+    --color-text-muted: #9aa3ad;
+    --color-glass-surface: rgba(255, 255, 255, 0.04);
+
+    --animate-fade-in: lvd-fade-in 0.5s ease-out;
+    --animate-slide-up: lvd-slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Scoped preflight ──────────────────────────────────────────────────────
+   The subset of Tailwind's reset the dashboard depends on. Everything is
+   confined to `.lv-dash`, so the rest of the site is untouched. */
+
+.lv-dash,
+.lv-dash *,
+.lv-dash *::before,
+.lv-dash *::after {
+    box-sizing: border-box;
+    /* `border-2` sets width only; without a style the border is invisible. */
+    border-width: 0;
+    border-style: solid;
+    border-color: currentColor;
+}
+
+.lv-dash {
+    font-family: var(--font-body);
+    color: #f5f7fa;
+    -webkit-font-smoothing: antialiased;
+}
+
+.lv-dash h1,
+.lv-dash h2,
+.lv-dash h3,
+.lv-dash h4,
+.lv-dash h5,
+.lv-dash h6 {
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0;
+}
+
+.lv-dash p,
+.lv-dash figure,
+.lv-dash blockquote,
+.lv-dash pre,
+.lv-dash dl,
+.lv-dash dd,
+.lv-dash hr {
+    margin: 0;
+}
+
+.lv-dash ul,
+.lv-dash ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.lv-dash button,
+.lv-dash input,
+.lv-dash select,
+.lv-dash textarea {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    background-image: none;
+}
+
+.lv-dash button {
+    cursor: pointer;
+    text-align: inherit;
+    -webkit-appearance: button;
+    appearance: button;
+}
+
+.lv-dash button:disabled {
+    cursor: default;
+}
+
+.lv-dash img,
+.lv-dash svg,
+.lv-dash video,
+.lv-dash canvas {
+    display: block;
+    vertical-align: middle;
+}
+
+.lv-dash img,
+.lv-dash video {
+    max-width: 100%;
+    height: auto;
+}
+
+.lv-dash table {
+    border-collapse: collapse;
+    text-indent: 0;
+}
+
+/* The site paints dark scrollbars globally; inside the dashboard let the
+   component-level scrollbar styling below take over cleanly. */
+.lv-dash ::selection {
+    background: rgba(6, 182, 212, 0.35);
+    color: #fff;
+}
+
+/* ── Ported utility classes (were `@layer utilities` in globals.css) ───────
+   Plain CSS, no Tailwind syntax. Unlayered so they beat the site's rules. */
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 8px 32px 0 rgba(0, 0, 0, 0.37),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    transition: all 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+
+.card-3d-wrapper {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+}
+
+.card-3d-content {
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+}
+
+.glass-panel-hover:hover .card-3d-content {
+    transform: translateY(-10px) translateZ(20px) rotateX(2deg);
+}
+
+.hover-glow-gold:hover {
+    box-shadow: 0 20px 50px -10px rgba(251, 191, 36, 0.3);
+    border-color: rgba(251, 191, 36, 0.5);
+}
+
+.hover-glow-cyan:hover {
+    box-shadow: 0 20px 50px -10px rgba(6, 182, 212, 0.3);
+    border-color: rgba(6, 182, 212, 0.5);
+}
+
+.hover-glow-red:hover {
+    box-shadow: 0 20px 50px -10px rgba(239, 68, 68, 0.3);
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+.hover-glow-emerald:hover {
+    box-shadow: 0 20px 50px -10px rgba(16, 185, 129, 0.3);
+    border-color: rgba(16, 185, 129, 0.5);
+}
+
+.hover-glow-purple:hover {
+    box-shadow: 0 20px 50px -10px rgba(139, 92, 246, 0.3);
+    border-color: rgba(139, 92, 246, 0.5);
+}
+
+.text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899);
+}
+
+.text-gradient-gold {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* ── Keyframes (all prefixed to avoid the site's 55 global animation names) ── */
+
+@keyframes lvd-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes lvd-slide-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes lvd-infinite-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+.animate-infinite-scroll {
+    animation: lvd-infinite-scroll 30s linear infinite;
+}
+
+.animate-infinite-scroll:hover {
+    animation-play-state: paused;
+}
+
+/* ProcessingView uses this class; it was never defined upstream, so the
+   counter-rotating inner ring silently did nothing. */
+@keyframes lvd-spin-reverse {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+.animate-spin-reverse {
+    animation: lvd-spin-reverse 1s linear infinite;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PREMIUM INTERACTIVE PANEL SYSTEM
+   ═══════════════════════════════════════════════════════ */
+
+.interactive-panel {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transition: all 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+
+.interactive-panel:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 16px 48px rgba(0, 0, 0, 0.4),
+        0 0 60px -20px var(--panel-glow, rgba(6, 182, 212, 0.3)),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.interactive-panel-expanded {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 80px -30px var(--panel-glow, rgba(6, 182, 212, 0.2));
+}
+
+.interactive-panel-border {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.interactive-panel:hover .interactive-panel-border {
+    opacity: 1;
+}
+
+.interactive-panel-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg,
+            var(--panel-glow, rgba(6, 182, 212, 0.4)),
+            transparent 40%,
+            transparent 60%,
+            var(--panel-glow, rgba(6, 182, 212, 0.2)));
+    background-size: 200% 200%;
+    animation: lvd-border-gradient-shift 4s ease infinite;
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+@keyframes lvd-border-gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.preview-chip {
+    position: relative;
+    overflow: hidden;
+}
+
+.preview-chip::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.04) 50%,
+            transparent 100%);
+    transform: translateX(-100%);
+    animation: lvd-shimmer 3s ease-in-out infinite;
+}
+
+@keyframes lvd-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+
+.intel-card {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+
+.intel-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.intel-card-glow {
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    border-radius: 50%;
+    opacity: 0.04;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.intel-card:hover .intel-card-glow {
+    opacity: 0.08;
+}
+
+.metric-row-interactive {
+    padding: 6px 10px;
+    margin: -2px -10px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+.metric-row-interactive:hover {
+    background: rgba(255, 255, 255, 0.04);
+    transform: scale(1.01);
+}
+
+.noise-texture::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.015;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+}
+
+@keyframes lvd-bg-gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.animated-bg-gradient {
+    background-size: 400% 400%;
+    animation: lvd-bg-gradient-shift 15s ease infinite;
+}
+
+/* Lifted out of Court3D.tsx, where it was a Next-only <style jsx global>. */
+.custom-scrollbar-green::-webkit-scrollbar {
+    width: 10px;
+}
+
+.custom-scrollbar-green::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.custom-scrollbar-green::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.6), rgba(5, 150, 105, 0.6));
+    border-radius: 10px;
+    border: 2px solid rgba(16, 185, 129, 0.3);
+}
+
+.custom-scrollbar-green::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.8), rgba(5, 150, 105, 0.8));
+}

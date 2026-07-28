@@ -47,7 +47,10 @@ export default function LandingView({ navRef, videoRef, openDashboard }) {
             Transform every match into actionable insights with AI-powered pickleball analytics, paddle performance, shot placement, kitchen play analysis, rally analytics, and court positioning.
           </p>
           <div style={css('display:flex;align-items:center;gap:16px;flex-wrap:wrap')}>
-            <button onClick={openDashboard} className="h-lift" style={css("display:inline-flex;align-items:center;gap:10px;font:700 16px/1 'Sora';color:#fff;background:#e8232e;border:none;padding:18px 30px;border-radius:13px;cursor:pointer;transition:transform .15s")}>View Analytics →</button>
+            <button onClick={openDashboard} className="h-lift" style={css("display:inline-flex;align-items:center;gap:12px;font:700 16px/1 'Sora';color:#fff;background:#e8232e;border:none;padding:18px 30px;border-radius:13px;cursor:pointer;transition:transform .15s")}>
+              View Analytics
+              <span style={css("font:800 10px/1 'Sora';letter-spacing:.14em;text-transform:uppercase;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:5px 9px")}>Cooking</span>
+            </button>
             <button className="h-glass" style={css("display:inline-flex;align-items:center;gap:14px;font:600 15px/1 'Sora';color:#eef1f3;padding:11px 22px 11px 12px;border-radius:13px;background:rgba(255,255,255,.07);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.16);cursor:pointer;transition:background .15s")}>
               <span style={css('width:38px;height:38px;border-radius:50%;background:#e8232e;display:flex;align-items:center;justify-content:center;animation:glowPulse 2.4s infinite')}>
                 <span style={css('width:0;height:0;border-style:solid;border-width:7px 0 7px 11px;border-color:transparent transparent transparent #fff;margin-left:3px')} />

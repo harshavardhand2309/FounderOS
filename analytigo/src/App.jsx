@@ -23,6 +23,11 @@ export default function App() {
       {/* keep old links working */}
       <Route path="/landing" element={<Navigate to="/pickleball" replace />} />
       <Route path="/tennis" element={<Tennis />} />
+      {/* Analytics opens over the Tennis page rather than navigating away, but
+          still gets a real URL so it is linkable and Back works. */}
+      <Route path="/tennis/analytics" element={<Tennis />} />
+      {/* the old external dashboard link */}
+      <Route path="/tennis/upload" element={<Navigate to="/tennis/analytics" replace />} />
       <Route path="/signin" element={<Auth mode="signin" />} />
       <Route path="/signup" element={<Auth mode="signup" />} />
       {/* Explore */}
