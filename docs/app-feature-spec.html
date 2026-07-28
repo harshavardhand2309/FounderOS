@@ -1,0 +1,1361 @@
+<title>Lvl-Up Sports — App Feature Specification</title>
+<style>
+  :root {
+    --paper: #f4f6ef;
+    --surface: #ffffff;
+    --surface-2: #ecefe4;
+    --ink: #14160f;
+    --ink-soft: #3c4235;
+    --muted: #61675a;
+    --line: #dbdfd0;
+    --line-soft: #e7eade;
+    --lime: #c9f24a;
+    --lime-deep: #3f6e09;
+    --lime-mid: #6f9c1c;
+    --flag: #8a5300;
+    --flag-bg: #fbf1de;
+    --shadow: 0 1px 2px rgba(20, 22, 15, .05), 0 8px 24px rgba(20, 22, 15, .04);
+
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --serif: Charter, "Bitstream Charter", "Iowan Old Style", "Source Serif Pro", Georgia, serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0e100a;
+      --surface: #16190f;
+      --surface-2: #1c2014;
+      --ink: #eef1e6;
+      --ink-soft: #c6cbba;
+      --muted: #949b88;
+      --line: #2b3020;
+      --line-soft: #232719;
+      --lime-deep: #c9f24a;
+      --lime-mid: #a9d63c;
+      --flag: #e4b555;
+      --flag-bg: #2a2213;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0e100a;
+    --surface: #16190f;
+    --surface-2: #1c2014;
+    --ink: #eef1e6;
+    --ink-soft: #c6cbba;
+    --muted: #949b88;
+    --line: #2b3020;
+    --line-soft: #232719;
+    --lime-deep: #c9f24a;
+    --lime-mid: #a9d63c;
+    --flag: #e4b555;
+    --flag-bg: #2a2213;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+  }
+  :root[data-theme="light"] {
+    --paper: #f4f6ef;
+    --surface: #ffffff;
+    --surface-2: #ecefe4;
+    --ink: #14160f;
+    --ink-soft: #3c4235;
+    --muted: #61675a;
+    --line: #dbdfd0;
+    --line-soft: #e7eade;
+    --lime-deep: #3f6e09;
+    --lime-mid: #6f9c1c;
+    --flag: #8a5300;
+    --flag-bg: #fbf1de;
+    --shadow: 0 1px 2px rgba(20, 22, 15, .05), 0 8px 24px rgba(20, 22, 15, .04);
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  * { box-sizing: border-box; }
+
+  /* ---------- masthead ---------- */
+  .mast {
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .mast-in {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 44px 28px 38px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(30px, 4.4vw, 46px);
+    line-height: 1.04;
+    letter-spacing: -.028em;
+    font-weight: 800;
+    text-wrap: balance;
+    max-width: 20ch;
+  }
+  .mast-lede {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.62;
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: 62ch;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 26px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 4px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .meta b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- layout ---------- */
+  .shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 28px 96px;
+    display: grid;
+    grid-template-columns: 216px minmax(0, 1fr);
+    gap: 52px;
+    align-items: start;
+  }
+  nav.toc {
+    position: sticky;
+    top: 26px;
+    padding: 34px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-height: calc(100vh - 52px);
+    overflow-y: auto;
+  }
+  nav.toc h2 {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+  nav.toc a {
+    display: flex;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.35;
+    padding: 6px 10px 6px 9px;
+    border-left: 2px solid transparent;
+    border-radius: 0 6px 6px 0;
+  }
+  nav.toc a span { font-family: var(--mono); font-size: 11px; padding-top: 1px; opacity: .75; }
+  nav.toc a:hover { color: var(--ink); background: var(--surface-2); }
+  nav.toc a.on { color: var(--ink); border-left-color: var(--lime-mid); font-weight: 600; }
+  nav.toc a:focus-visible { outline: 2px solid var(--lime-mid); outline-offset: 2px; }
+
+  main { padding-top: 34px; min-width: 0; }
+
+  section { scroll-margin-top: 24px; margin-bottom: 20px; }
+  section + section { padding-top: 34px; border-top: 1px solid var(--line); }
+
+  .sec-num {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .14em;
+    color: var(--lime-mid);
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  h2.sec {
+    margin: 0 0 12px;
+    font-size: clamp(23px, 2.6vw, 31px);
+    letter-spacing: -.02em;
+    line-height: 1.12;
+    font-weight: 800;
+    text-wrap: balance;
+  }
+  .sec-lede {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin: 0 0 26px;
+    max-width: 66ch;
+  }
+  h3 {
+    margin: 34px 0 6px;
+    font-size: 17px;
+    letter-spacing: -.01em;
+    font-weight: 700;
+  }
+  h3 .h3-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    color: var(--muted);
+    margin-left: 10px;
+    text-transform: uppercase;
+  }
+  .area-note {
+    margin: 0 0 14px;
+    font-size: 14.5px;
+    color: var(--muted);
+    max-width: 72ch;
+  }
+  p { margin: 0 0 14px; }
+  main p { max-width: 72ch; }
+
+  /* ---------- feature tables ---------- */
+  .tw { overflow-x: auto; margin: 0 0 6px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14.5px; }
+  thead th {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-2);
+    white-space: nowrap;
+  }
+  tbody td { padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.id { font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  td.name { font-weight: 600; min-width: 168px; }
+  td.desc { color: var(--ink-soft); }
+  td.pri { width: 1%; white-space: nowrap; }
+
+  /* priority ladder — fill weight encodes urgency, so it survives greyscale printing */
+  .p { font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .08em; padding: 3px 8px 2px; border-radius: 5px; display: inline-block; }
+  .p0 { background: var(--lime); color: #14160f; border: 1px solid transparent; }
+  .p1 { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+  .p2 { background: transparent; color: var(--muted); border: 1px dashed var(--line); }
+
+  .risk {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .09em;
+    color: var(--flag);
+    background: var(--flag-bg);
+    border-radius: 4px;
+    padding: 2px 6px 1px;
+    white-space: nowrap;
+    margin-left: 7px;
+  }
+
+  /* ---------- callouts ---------- */
+  .call {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--lime-mid);
+    border-radius: 0 10px 10px 0;
+    padding: 18px 22px;
+    margin: 0 0 26px;
+    box-shadow: var(--shadow);
+  }
+  .call.warn { border-left-color: var(--flag); }
+  .call h4 {
+    margin: 0 0 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .call p { margin: 0 0 10px; font-size: 15px; color: var(--ink-soft); }
+  .call p:last-child { margin-bottom: 0; }
+  .call strong { color: var(--ink); }
+
+  /* ---------- key / legend ---------- */
+  .key { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin: 0 0 28px; }
+  .key-item { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .key-item .p { margin-bottom: 8px; }
+  .key-item p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+  .key-item b { display: block; color: var(--ink); font-size: 13.5px; margin-bottom: 3px; }
+
+  /* ---------- headline list ---------- */
+  ol.head-list { margin: 0 0 26px; padding: 0; list-style: none; counter-reset: hl; display: flex; flex-direction: column; gap: 2px; }
+  ol.head-list li {
+    counter-increment: hl;
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 14px;
+    padding: 10px 14px 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 14.5px;
+    align-items: baseline;
+  }
+  ol.head-list li::before {
+    content: counter(hl, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--lime-mid);
+    font-weight: 700;
+  }
+  ol.head-list strong { font-weight: 700; }
+  ol.head-list span { color: var(--muted); }
+
+  ul.plain { margin: 0 0 18px; padding-left: 20px; }
+  ul.plain li { margin-bottom: 7px; color: var(--ink-soft); max-width: 70ch; }
+
+  code { font-family: var(--mono); font-size: 12.5px; background: var(--surface-2); padding: 1.5px 5px; border-radius: 4px; }
+
+  a { color: var(--lime-deep); }
+
+  footer.doc {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 30px 28px 60px;
+    border-top: 1px solid var(--line);
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+  footer.doc p { max-width: 74ch; }
+
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    nav.toc { position: static; max-height: none; padding: 26px 0 0; flex-direction: row; flex-wrap: wrap; gap: 6px; border-bottom: 1px solid var(--line); padding-bottom: 20px; }
+    nav.toc h2 { width: 100%; margin-bottom: 4px; }
+    nav.toc a { border-left: none; border: 1px solid var(--line); border-radius: 7px; padding: 6px 11px; }
+    nav.toc a.on { border-color: var(--lime-mid); }
+  }
+  @media print {
+    nav.toc { display: none; }
+    .shell { grid-template-columns: 1fr; padding: 0 12px; }
+    section + section { page-break-before: auto; }
+    .tw { box-shadow: none; }
+    body { background: #fff; font-size: 11pt; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+  html { scroll-behavior: smooth; }
+</style>
+
+<header class="mast">
+  <div class="mast-in">
+    <p class="eyebrow">Lvl-Up Sports · Build specification</p>
+    <h1>What each of our three apps must do</h1>
+    <p class="mast-lede">
+      We are building three apps on one platform: <b>Player</b>, <b>Coach</b>, and <b>Venue &amp; Organiser</b>.
+      Cameras installed at partner venues record matches and turn them into stats and video automatically.
+      This document lists every feature each app needs, says how important each one is, and flags the
+      rules that are not negotiable. It is written for the development team — read section 0 first.
+    </p>
+    <div class="meta">
+      <span>Version <b>1.0</b></span>
+      <span>Sports <b>Tennis · Pickleball · Badminton · Padel</b></span>
+      <span>Market <b>India first</b></span>
+      <span>Apps <b>3</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="toc" aria-label="Sections">
+    <h2>Contents</h2>
+    <a href="#how"><span>00</span>How to read this</a>
+    <a href="#platform"><span>01</span>Platform (all three apps)</a>
+    <a href="#player"><span>02</span>Player app</a>
+    <a href="#coach"><span>03</span>Coach app</a>
+    <a href="#venue"><span>04</span>Venue &amp; Organiser app</a>
+    <a href="#language"><span>05</span>Language rules</a>
+    <a href="#order"><span>06</span>Build order</a>
+    <a href="#decisions"><span>07</span>Decisions we owe you</a>
+  </nav>
+
+  <main>
+
+    <!-- ══════════════ 00 ══════════════ -->
+    <section id="how">
+      <span class="sec-num">Section 00</span>
+      <h2 class="sec">How to read this</h2>
+      <p class="sec-lede">
+        Every feature has an ID, a one-line description of what it does for the person using it, and a
+        priority. Quote the ID in tickets and questions so we are always talking about the same thing.
+      </p>
+
+      <div class="key">
+        <div class="key-item">
+          <span class="p p0">P0</span>
+          <b>Launch</b>
+          <p>The app cannot ship without it. Either the product does not function, or we break a law or an app-store rule.</p>
+        </div>
+        <div class="key-item">
+          <span class="p p1">P1</span>
+          <b>Fast follow</b>
+          <p>Within two or three releases after launch. This is where most of our advantage over competitors lives.</p>
+        </div>
+        <div class="key-item">
+          <span class="p p2">P2</span>
+          <b>Later</b>
+          <p>Real value, but only worth building once the core loop is proven. Do not let these into the launch scope.</p>
+        </div>
+      </div>
+
+      <h3>Feature IDs</h3>
+      <p class="area-note">
+        <code>PF-##</code> platform (built once, used by all three apps) ·
+        <code>PL-##</code> Player app ·
+        <code>CO-##</code> Coach app ·
+        <code>VO-##</code> Venue &amp; Organiser app.
+      </p>
+
+      <div class="call warn">
+        <h4>The one rule that is never negotiable</h4>
+        <p>
+          We sell <strong>performance measurement, not health assessment</strong>. Nothing we build may
+          describe, imply or score a person's physical condition. Words like <em>injury risk</em>,
+          <em>biomechanics</em>, <em>joint load</em>, <em>fatigue</em> and <em>recovery</em> are banned
+          everywhere — screen text, notifications, reports, API field names, database columns and analytics
+          events included, because internal names leak into the interface.
+        </p>
+        <p>
+          Anything marked <span class="risk">CLAIM RISK</span> in this document is a place where a
+          reasonable developer would drift into that language without meaning to.
+          <a href="#language">Section 05</a> gives the full word list and approved replacements, and asks
+          for an automated check in the build pipeline.
+        </p>
+      </div>
+
+      <div class="call">
+        <h4>One platform, three front doors</h4>
+        <p>
+          A person signs in once with their phone number and gets the app matching their role. Venue
+          operators and tournament organisers share an app because they are usually the same person and
+          both jobs run off the same courts, calendar and cameras. Build the permission model first —
+          it cannot be retrofitted onto a shipped product without a rewrite.
+        </p>
+      </div>
+    </section>
+
+    <!-- ══════════════ 01 ══════════════ -->
+    <section id="platform">
+      <span class="sec-num">Section 01</span>
+      <h2 class="sec">Platform — built once, used by all three apps</h2>
+      <p class="sec-lede">
+        These are shared services. If three teams build three versions of any of them we will have three
+        different answers to the same question, and the compliance ones will be wrong. Build this layer
+        first; the three apps are clients of it.
+      </p>
+
+      <h3>Identity and access <span class="h3-tag">PF-01 → PF-09</span></h3>
+      <p class="area-note">One person, one account. The same human is often a player at one venue, a coach at an academy, and staff at a club.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PF-01</td><td class="name">Single account, three apps</td><td class="desc">One user record and one sign-in works across Player, Coach and Venue. The app decides which roles it shows, never which account you have.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-02</td><td class="name">Phone sign-in with OTP</td><td class="desc">Mobile number is the identity anchor in India. Needs TRAI DLT registration for SMS, plus auto-read of the code on both platforms.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-03</td><td class="name">Google and Apple sign-in</td><td class="desc">Google lifts conversion on Android. <strong>Sign in with Apple is mandatory on iOS</strong> once any social login exists — including accepting Apple's private relay email addresses.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-04</td><td class="name">Roles and permissions</td><td class="desc">player, guardian, coach, academy admin, venue owner, venue staff, organiser, official, support, admin — each scoped to a venue, academy or team rather than granted globally.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-05</td><td class="name">Data access grants</td><td class="desc">A coach seeing a player's data is a <em>grant</em>, not a role: scoped to what they may see, time-limited, revocable in one tap, and always accepted by the player — never auto-granted.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-06</td><td class="name">Venue, court and camera registry</td><td class="desc">The physical map: a venue owns courts, a court has a camera and a QR code, a QR scan resolves to booking → court → camera → recording session.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-07</td><td class="name">Venue verification</td><td class="desc">Proof of ownership checked by our team before a venue can take bookings or receive money. Unverified venues are read-only.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-08</td><td class="name">Junior accounts with a linked guardian</td><td class="desc">Capture date of birth, not a yes/no age question. Under-18 accounts do not activate until a guardian account is linked and verifiable consent recorded.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-09</td><td class="name">Account merge</td><td class="desc">Someone who signs up by phone then later uses Google must not end up with two accounts. Merge on verified phone number, with a conflict screen.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Consent, privacy and Indian law <span class="h3-tag">PF-10 → PF-20</span></h3>
+      <p class="area-note">India's data protection law (DPDP) is in force with obligations phasing in through 2027. Building to the end state now is far cheaper than retrofitting a live video platform later.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PF-10</td><td class="name">Itemised consent notice</td><td class="desc">A standalone, plain-language notice — not buried in terms — with each purpose listed and toggled separately, available in every language we support.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-11</td><td class="name">Separate consent purposes</td><td class="desc">Core service · recording your matches · sharing with a named coach · public profile · <strong>using your video to improve our AI</strong> · marketing · analytics. Never bundled. The AI-training one especially.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-12</td><td class="name">Consent ledger</td><td class="desc">A permanent record of who consented to what, when, from which app version, and against which version of the notice text. We must be able to prove what a person saw.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-13</td><td class="name">Withdraw as easily as you gave</td><td class="desc">One screen, one toggle, effective immediately, stating plainly what stops happening.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-14</td><td class="name">Privacy Centre</td><td class="desc">One shared screen in all three apps: download my data, correct it, delete it, manage consents, see who has access, nominate someone to act for me, raise a grievance.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-15</td><td class="name">Account deletion, in app and on the web</td><td class="desc">Apple requires in-app deletion; Google requires that <em>and</em> a public web URL declared in the store listing. Deactivating is not deleting — both stores reject that.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-16</td><td class="name">Deletion that actually propagates</td><td class="desc">Original file → every transcoded version → thumbnails → generated clips → CDN cache → search index → AI embeddings → analytics → backups. A "deleted" video still served from a CDN edge is a reportable failure.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-17</td><td class="name">Retention rules per data type</td><td class="desc">Raw footage, processed video, saved clips, stats, chat, consent records and invoices each get their own retention period, published in the notice and enforced automatically.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-18</td><td class="name">Grievance officer and ticketing</td><td class="desc">A named officer published in-app, on the site and in both store listings, plus an in-app form that issues a ticket ID and tracks status against the response deadline.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-19</td><td class="name">Breach detection and notification</td><td class="desc">We must notify the Data Protection Board within 72 hours and affected users without delay — which means we must be able to answer "who was affected" as a query, not a guess.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-20</td><td class="name">Access log on personal data</td><td class="desc">Every time someone other than the owner views or downloads a person's video or detailed stats, it is logged and the owner can see it.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="call warn">
+        <h4>The bystander problem — solve it with the camera, not with paperwork</h4>
+        <p>
+          A fixed court camera sees people who never signed anything: spectators, players on the next
+          court, children, staff. We cannot collect a tap from all of them, so the controls are technical:
+          <strong>frame only the court</strong> (masked field of view, audited as a device setting),
+          <strong>blur any person not part of the session</strong>, <strong>keep audio off by default</strong>,
+          and give anyone a "remove me from this footage" route that works without an account.
+          Venues must display signage at the entrance and courtside — make a photo of the installed
+          signage a gate before the camera goes live.
+        </p>
+      </div>
+
+      <h3>Video pipeline <span class="h3-tag">PF-21 → PF-29</span></h3>
+      <p class="area-note">Storage and bandwidth are our largest running cost and our biggest legal surface. Both are decided here.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PF-21</td><td class="name">Edge recorder at the venue</td><td class="desc">Records to a box at the venue first and uploads when it can — resumable, survives power cuts and dropped links. A bad connection must never cost a recording.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-22</td><td class="name">Upload rallies, not idle court time</td><td class="desc">Detect play on the edge box and discard the gaps. This removes well over half the data volume and is the single biggest cost lever in the product — a requirement, not an optimisation.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-23</td><td class="name">Adaptive streaming</td><td class="desc">Multiple quality levels from 240p to 1080p so playback works on a weak connection. H.264 is mandatory — low-end Android phones decode it in hardware.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-24</td><td class="name">Private video access only</td><td class="desc">Short-lived signed links tied to the person requesting them. No public storage buckets, ever.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-25</td><td class="name">Data saver</td><td class="desc">480p on mobile data, higher on Wi-Fi, no autoplay on cellular, and the download size shown before anyone taps download.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-26</td><td class="name">Server-side clip generation</td><td class="desc">A clip is a request for a start and end time, cut on our servers. Never download a whole match to a phone to trim it.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-27</td><td class="name">Share formats and watermark</td><td class="desc">Vertical 9:16 for Reels, Shorts and Status, plus square and wide. Our brand and optionally the venue's logo burned in, positioned to survive a crop.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-28</td><td class="name">Offline downloads</td><td class="desc">Stored encrypted in app-private space, with an expiry so downloads respect retention and lapsed subscriptions. Cap total offline storage and show what is used.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PF-29</td><td class="name">Speed targets we publish</td><td class="desc">"Stats ready within X minutes of the last point" is the product promise. Instrument it, alert on it, and show camera uptime to venues.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Payments and money <span class="h3-tag">PF-30 → PF-37</span></h3>
+      <p class="area-note">There is a hard split between what the app stores must bill and what we may bill directly. Getting it wrong costs 15–30% of gross margin or gets us rejected.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PF-30</td><td class="name">Two separate catalogues</td><td class="desc">Digital subscriptions <strong>must</strong> go through Apple and Google billing. Court bookings, coaching sessions, tournament entries and physical goods <strong>must not</strong>. They can never share a cart.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-31</td><td class="name">One entitlement service</td><td class="desc">A single answer to "what is this person allowed to do", fed by Apple receipts, Google receipts and direct subscriptions alike. All three apps read from it.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-32</td><td class="name">Receipt validation and store webhooks</td><td class="desc">Server-side validation plus live notifications for renewals, cancellations, billing retries and <strong>refunds</strong> — the refund hook is the one everybody forgets, and it must revoke access.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-33</td><td class="name">UPI first</td><td class="desc">UPI intent, collect and QR as the default rail, with a second provider for failover. Cards tokenised, never stored.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-34</td><td class="name">Recurring payments done properly</td><td class="desc">UPI AutoPay with the mandatory 24-hour pre-debit notice, awareness that charges run overnight, and a proper retry ladder — never cut access on the first failed debit.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-35</td><td class="name">GST invoicing</td><td class="desc">Tax rate configurable per product (they differ and they change), correct state-based split, customer GSTIN capture for business buyers, sequential invoice numbers, PDF in-app.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-36</td><td class="name">Refunds and credit notes</td><td class="desc">Cancellation windows per product, weather policy for outdoor courts, and an <strong>automatic credit when the camera fails</strong> — this rule will be invoked constantly, so define it now.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-37</td><td class="name">Ledger and payouts</td><td class="desc">One double-entry ledger for wallets, credits, referrals, discounts, refunds and payouts to venues and coaches, with KYC before any payout. Adding this later is the classic marketplace failure.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Notifications <span class="h3-tag">PF-38 → PF-42</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PF-38</td><td class="name">One preference matrix</td><td class="desc">Person × category × channel, honoured by every sender. Security and billing cannot be switched off; marketing is off until switched on.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-39</td><td class="name">Quiet hours and frequency cap</td><td class="desc">Nothing non-urgent between 10pm and 7am, and a hard ceiling on non-transactional messages per person per day, enforced centrally rather than per feature.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-40</td><td class="name">Deep links that land correctly</td><td class="desc">A notification opens the right screen in the right app, and falls back to the web then the store if that app is not installed.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-41</td><td class="name">WhatsApp as a channel</td><td class="desc">The highest-engagement channel in India, especially with parents and venue owners. Needs approved templates and stored opt-in. Service messages are cheap; marketing messages are not — route by category.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PF-42</td><td class="name">Email for records</td><td class="desc">Receipts, GST invoices, data exports, security alerts and grievance acknowledgements, with proper sender authentication.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>App quality and operations <span class="h3-tag">PF-43 → PF-51</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PF-43</td><td class="name">Works on cheap Android phones</td><td class="desc">Test on 3–4GB devices in the ₹8,000–18,000 band, not flagship emulators. Download under 40MB, cold start under two seconds on a mid-tier phone.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-44</td><td class="name">Works offline</td><td class="desc">Player: cached stats and downloads. Coach: notes and attendance courtside. Venue: check-in and court status — a venue cannot stop operating because the line dropped.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-45</td><td class="name">Everything translatable from day one</td><td class="desc">No text baked into images, no sentences assembled from fragments. English and Hindi at launch; Tamil, Telugu, Marathi, Bengali, Kannada next.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-46</td><td class="name">Reviewed sports glossary</td><td class="desc">Scoring terms are translated by a human per sport per language. A machine-translated "deuce" or "unforced error" destroys credibility with coaches instantly.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PF-47</td><td class="name">Accessibility</td><td class="desc">Screen-reader labels on every control including the video scrubber and charts, text scaling to 200%, 4.5:1 contrast, and <strong>never colour alone</strong> to carry meaning in a stats chart.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PF-48</td><td class="name">One analytics vocabulary</td><td class="desc">Same event names and property names across all three apps, validated on the way in. Consent-gated, and switched off entirely for under-18 accounts.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-49</td><td class="name">Feature flags and kill switches</td><td class="desc">Per role, venue, region and version — with named kill switches for video upload, AI insight generation, WhatsApp sending and each payment method.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-50</td><td class="name">Forced upgrade</td><td class="desc">A config endpoint giving minimum supported version and maintenance mode per app. A forced-upgrade path you did not build is discovered during an incident.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-51</td><td class="name">Rate limits and OTP fraud protection</td><td class="desc">Strict caps on OTP sends per number, device and IP with a spend circuit breaker — SMS pumping fraud is a live, expensive attack on Indian apps. Idempotency keys on every booking and payment.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Trust and safety <span class="h3-tag">PF-52 → PF-57</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PF-52</td><td class="name">Block, mute and report</td><td class="desc">On a person, clip, comment, chat, venue or coach. Blocking hides both ways — search, suggestions, leaderboard adjacency and challenge invites — without breaking a booking the venue needs.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-53</td><td class="name">Moderation queue</td><td class="desc">Automatic checking of profile photos and public clips before they appear, plus report → triage → act → appeal, with published response times.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-54</td><td class="name">Abuse filtering that speaks Indian languages</td><td class="desc">Must cover Hindi, regional languages and romanised Hinglish. English-only filters miss the overwhelming majority of real abuse here — make it a vendor selection criterion.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-55</td><td class="name">Safety defaults for minors</td><td class="desc">Private profile, off public leaderboards, no public clip sharing, and <strong>no messages from adults who are not their verified coach</strong>.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-56</td><td class="name">Guardian sees coach-to-minor chat</td><td class="desc">With a permanent banner in the conversation telling all three parties so. This is the standard safeguarding pattern and it deters misconduct by existing.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-57</td><td class="name">Ranking integrity</td><td class="desc">Only camera-verified matches count toward ranked leaderboards; diminishing returns on repeat opponents; detection of two accounts on one device; admin ability to void a match and recompute.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Getting past app review <span class="h3-tag">PF-58 → PF-61</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PF-58</td><td class="name">A working demo account</td><td class="desc"><strong>Our single biggest rejection risk.</strong> A reviewer cannot install a camera at a venue. Ship a demo login with finished matches, processed video, real stats and clips — plus a screen-recorded walkthrough in the review notes.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-59</td><td class="name">Honest privacy declarations</td><td class="desc">Apple's privacy labels and Google's data-safety form must match what the code actually does, including every third-party SDK. Mismatches are a common rejection and a legal exposure.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-60</td><td class="name">Not classified as a health app</td><td class="desc">Do not declare a health category, do not integrate health platforms, and answer the age-rating questions consistently with <a href="#language">Section 05</a>.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PF-61</td><td class="name">Designed empty states</td><td class="desc">Every screen must look right for a brand-new account with no matches. Crashing or looking broken on first launch is a real rejection cause.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ══════════════ 02 ══════════════ -->
+    <section id="player">
+      <span class="sec-num">Section 02</span>
+      <h2 class="sec">Player app</h2>
+      <p class="sec-lede">
+        The player brings nothing to the court — no tripod, no phone mount, no charging. They tap in, play,
+        and walk off with video and numbers. Everything below serves one repeating loop, and the loop is
+        what we are actually building.
+      </p>
+
+      <div class="call">
+        <h4>The loop</h4>
+        <p>
+          <strong>Book a camera court → tap in at the court → play → the recording finds me automatically →
+          stats and clips ready in minutes → share a clip → my rating moves → book again.</strong>
+        </p>
+        <p>
+          Roughly half of that chain is plumbing rather than features, and it is the half most easily
+          left out: checking in, controlling the recording, knowing which body on court is which account,
+          fixing a wrong score, and showing that processing is under way. Without those, the stats either
+          never appear or appear against the wrong person.
+        </p>
+      </div>
+
+      <h3>Sign-up and profile <span class="h3-tag">PL-01 → PL-08</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PL-01</td><td class="name">Pick your sports</td><td class="desc">One or more of tennis, pickleball, badminton and padel. Stats, level and feed all change per sport.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-02</td><td class="name">Starting level quiz</td><td class="desc">A few questions give a provisional level so match-making works on day one. Every rating system in the category solves this explicitly; without it a new player's first game is a random mismatch.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-03</td><td class="name">Playing hand and preferred format</td><td class="desc">Which side is your forehand, singles or doubles, and which side of the court you play. The vision system needs this to label shots correctly — it is a requirement, not a profile decoration.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-04</td><td class="name">Home venue and travel radius</td><td class="desc">Sets which venues, matches and players appear first.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-05</td><td class="name">Player card</td><td class="desc">The public identity: photo, level, sports, home venue, headline numbers, recent form, badges.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-06</td><td class="name">Shareable profile link</td><td class="desc">A web page anyone can open without the app — so a card can be posted into a WhatsApp group.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-07</td><td class="name">Separate profile per sport</td><td class="desc">One account, but a different level, stats and history for each sport. You can be strong at pickleball and a beginner at padel.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-08</td><td class="name">Link an existing rating</td><td class="desc">Connect a DUPR, UTR or federation ID so an established player does not start from zero.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Getting recorded <span class="h3-tag">PL-09 → PL-17 · the missing half</span></h3>
+      <p class="area-note">This whole group was absent from the first draft of the idea and it is where the product either works or silently fails.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PL-09</td><td class="name">Find a camera court</td><td class="desc">Map and list of nearby venues with a <strong>camera-enabled badge</strong> and live availability. This is the one question only our app can answer.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-10</td><td class="name">Book and pay for the court</td><td class="desc">Reserve a slot and pay by UPI. Booking is the daily habit; stats are the after-the-fact reward.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-11</td><td class="name">Split the court fee</td><td class="desc">Each of the two or four players pays their share. Culturally expected in India and shipped by every local competitor.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-12</td><td class="name">Check in at the court</td><td class="desc">Scan the court QR so the system knows you are on court 3 right now. Everything else hangs off this.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-13</td><td class="name">Start, pause and stop recording</td><td class="desc">The player controls the camera from their phone, and sees whether it is actually recording.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-14</td><td class="name">Say who is on which side</td><td class="desc"><strong>The highest-risk correctness feature in the system.</strong> Four people on a padel court and the vision system must know which body is which account. Get it wrong and every number is wrong for everyone. Include an ends-change and a "that's me" fix-it-later tool.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-15</td><td class="name">Everyone on court consents</td><td class="desc">The person who booked cannot consent on behalf of their opponent. Anyone who declines is not identified and is blurred.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-16</td><td class="name">Confirm and correct the score</td><td class="desc">The system scores the match; the players confirm or fix it. Automated scoring will sometimes be wrong, and one uncorrectable bad match destroys trust in every number we show.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-17</td><td class="name">"Analysing — ready in about 8 minutes"</td><td class="desc">A visible progress state and a push when it finishes. This is the most reliable reason anyone re-opens the app, and without it players assume the app lost their match.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Stats <span class="h3-tag">PL-18 → PL-25</span></h3>
+      <p class="area-note">Ten headline numbers shared by all four sports, so cards, comparisons and head-to-heads are always like-for-like — then a sport-specific set underneath.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PL-18</td><td class="name">The ten headline stats</td><td class="desc">Points won · serve points won · return points won · winners · unforced errors · consistency (shots in play) · average rally length · fastest shot · distance covered · points won on the points that decided a game.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-19</td><td class="name">Sport-specific stats</td><td class="desc">Tennis: first-serve %, aces, double faults, break points, net approaches. Padel: glass play, lobs, net-hold time. Pickleball: third-shot drop vs drive, kitchen-line time, dink rallies. Badminton: smash count and speed, shot mix, court zone split.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-20</td><td class="name">Post-match summary card</td><td class="desc">One screen with score, headline numbers, one insight and one clip. This is the thing a player screenshots — design it to be screenshotted.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-21</td><td class="name">Point-by-point timeline</td><td class="desc">Scroll the whole match and jump to any point's video.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-22</td><td class="name">Full history, filterable</td><td class="desc">Every session ever played, filtered by sport, venue, opponent, date or format.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-23</td><td class="name">Shot placement and court coverage maps</td><td class="desc">Where your shots landed and where you stood — visually striking, highly shareable, and hard for a competitor without cameras to copy.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-24</td><td class="name">Confidence on judgement calls</td><td class="desc">Show how sure the system is when it calls something a winner or an unforced error, so one debatable classification does not undermine the whole match.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-25</td><td class="name">Practice sessions get their own stats</td><td class="desc">Most court time is not a match. Drilling and feeding sessions need shots hit, percentage in, target accuracy — not a scoreline.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Movement and technique <span class="h3-tag">PL-26 → PL-30 <span class="risk">CLAIM RISK</span></span></h3>
+      <p class="area-note">
+        This is the "bio motion" idea. Everything here is a <strong>performance estimate from video</strong>.
+        Every screen in this group carries a permanent line: <em>"Performance estimate based on video. Not a health,
+        fitness or medical assessment."</em> Read <a href="#language">Section 05</a> before writing a single string here.
+      </p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PL-26</td><td class="name">Technique consistency per stroke</td><td class="desc">How repeatable your serve, forehand and backhand motion is across a session. Repeatable motion means reliable ball striking.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-27</td><td class="name">Contact point consistency</td><td class="desc">Where you meet the ball relative to your body, and how much that varies shot to shot.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-28</td><td class="name">Movement efficiency</td><td class="desc">Distance travelled relative to points played and shots hit, split-step timing, and how quickly you return to a ready position. Define it in-app as a court-positioning measure so nobody reads it as a physical one.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-29</td><td class="name">Skeleton overlay on your clip</td><td class="desc">A stick figure over your own video so you can see your motion. Show pattern and consistency only — <strong>no joint-angle numbers, no correct/incorrect verdict on a body position</strong>.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+          <tr><td class="id">PL-30</td><td class="name">Compare with your past self</td><td class="desc">Today's serve beside your best serve from three months ago, frame-aligned. The most persuasive single artefact we can produce.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Video, clips and sharing <span class="h3-tag">PL-31 → PL-38</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PL-31</td><td class="name">Watch the match without the dead time</td><td class="desc">Play only, ball-collecting removed. A ninety-minute session becomes twenty watchable minutes.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-32</td><td class="name">Automatic highlight reel</td><td class="desc">The app picks your best rallies and stitches a short reel with no effort from you.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-33</td><td class="name">Cut your own clip</td><td class="desc">Trim any moment yourself.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-34</td><td class="name">Score and speed burned into the clip</td><td class="desc">Every shared clip carries the score, the shot speed and our mark — so every share is a small advertisement.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-35</td><td class="name">Share to WhatsApp, Instagram and Shorts</td><td class="desc">Vertical export and a public link that opens in a browser with a proper preview image. WhatsApp is the distribution channel that matters here.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-36</td><td class="name">Three privacy levels</td><td class="desc"><strong>Participants only</strong> (default) · <strong>Friends</strong> · <strong>Public</strong>. Set once as a default, overridable per session.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-37</td><td class="name">Remove yourself from someone else's clip</td><td class="desc">Untag, or request takedown, with automatic removal pending review. Also notify a player when a clip they appear in is made public.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-38</td><td class="name">See your storage and retention</td><td class="desc">How long videos are kept, how much quota is used, and a warning before anything expires — so nobody loses a match they cared about.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Rating and rankings <span class="h3-tag">PL-39 → PL-44</span></h3>
+      <div class="call">
+        <h4>Our strongest defensible advantage</h4>
+        <p>
+          DUPR, UTR and Playtomic all depend on players self-reporting their own scores, and all suffer for
+          it. Our matches are recorded by a camera, which means we can offer a
+          <strong>verified rating that cannot be faked</strong>. Nothing else in this document is as hard
+          for a competitor to copy. Build the rating early so there is enough match volume to launch the
+          verified badge as a headline feature.
+        </p>
+      </div>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PL-39</td><td class="name">A skill rating that moves</td><td class="desc">One number per sport that updates after every recorded match, and is the basis of match-making.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-40</td><td class="name">Separate singles and doubles ratings</td><td class="desc">Doubles ability is not singles ability, and players know it.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-41</td><td class="name">Reliability indicator</td><td class="desc">How trustworthy your number is, based on how many recent matches back it. This is what stops arguments after a surprising result.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-42</td><td class="name">Camera-verified badge</td><td class="desc">Marks a rating built only from machine-recorded results. Self-reported matches sit in a separate, visibly labelled tier.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-43</td><td class="name">Head-to-head — "Face Off"</td><td class="desc">Your all-time record and stat comparison against a specific opponent. Cheap to build once stats exist, and highly engaging.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-44</td><td class="name">Leaderboards</td><td class="desc">Venue, city and level-band tables, plus weekly categories like fastest serve or longest rally — so a mid-level player has something they can actually win.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Social <span class="h3-tag">PL-45 → PL-50</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PL-45</td><td class="name">Friends and following</td><td class="desc">Follow players, see their results.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-46</td><td class="name">Find players you already know</td><td class="desc">Contact-book matching and nearby-player discovery with a level filter.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-47</td><td class="name">Activity feed and reactions</td><td class="desc">Matches, clips, milestones and level changes from people you follow, with lightweight applause. This is the retention mechanic, not a vanity feature.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-48</td><td class="name">Chat</td><td class="desc">One-to-one and group messaging to arrange games — with the minor-safety rules in PF-55 and PF-56 applied.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-49</td><td class="name">Chat with your coach</td><td class="desc">A direct line with clips shared inline.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-50</td><td class="name">Clubs and groups</td><td class="desc">Join your venue's club, see club rankings and events.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Games to play <span class="h3-tag">PL-51 → PL-55</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PL-51</td><td class="name">Open match board</td><td class="desc">Post "need one more, Saturday 8am, level 3.0–3.5" or join someone else's. This is the single feature that makes players open the app daily, and it fills the venue's empty courts.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-52</td><td class="name">Level-gated joining</td><td class="desc">Games only accept players inside a level band, so matches stay competitive.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-53</td><td class="name">Tournaments near you</td><td class="desc">Find, enter and pay for local events without leaving the app — these are created in the Venue &amp; Organiser app.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-54</td><td class="name">Draws, fixtures and live scores</td><td class="desc">Follow a bracket properly, including events you are not playing in.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-55</td><td class="name">Player-hosted games and ladders</td><td class="desc">Any player can host a recurring game or run a club ladder.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Getting better <span class="h3-tag">PL-56 → PL-62</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PL-56</td><td class="name">AI insights after a match</td><td class="desc">Two or three findings in plain English — "you won 71% of points under four shots but 38% over eight; shorten the point". Generated from a <strong>fixed, reviewed catalogue</strong> of outputs, never free-form. <span class="risk">CLAIM RISK</span></td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-57</td><td class="name">Drills tied to the finding</td><td class="desc">A specific drill aimed at the weakness the data just found, so the insight has somewhere to go.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-58</td><td class="name">Trends over week, month and six months</td><td class="desc">The founder's "monthly dashboard", done the way it actually works: a trend across several windows, not a monthly report.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-59</td><td class="name">Goals</td><td class="desc">Set a target — play eight times a month, get first serves over 60% — and watch it fill. A dashboard without a goal informs; with one it motivates.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-60</td><td class="name">Personal bests</td><td class="desc">Fastest serve, longest rally, best win, most matches in a month.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-61</td><td class="name">Shareable monthly recap</td><td class="desc">Matches, hours, level change and best moments in one card built to be posted.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-62</td><td class="name">Streaks and badges</td><td class="desc">Consecutive weeks played and unlockable milestones. Cheap to build, disproportionate effect on how often people come back.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Money and gear <span class="h3-tag">PL-63 → PL-67</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">PL-63</td><td class="name">Free tier and subscription</td><td class="desc">Free gets basic stats and limited video; paid unlocks depth. <strong>Design the free/paid line before building features</strong> — it decides which features need gating.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">PL-64</td><td class="name">Wallet, passes and credits</td><td class="desc">Prepaid balance and ten-play packs, which is what drives repeat visits to a venue.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-65</td><td class="name">Refer a friend</td><td class="desc">Both sides get credit. The cheapest acquisition channel available to us and standard in Indian consumer apps.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">PL-66</td><td class="name">"What's in my bag"</td><td class="desc">Show your racquet, string and shoes on your player card. The natural, no-inventory way into commerce.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+          <tr><td class="id">PL-67</td><td class="name">Shop — racquets, shoes, apparel</td><td class="desc">Deliberately later, and starting as affiliate links rather than owned stock. Inventory, sizing, returns and support are a separate business, and no comparable product has made an in-app store work at this stage. <span class="risk">CLAIM RISK</span> — gear copy is full of support, cushioning and comfort claims; filter third-party product text before display.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ══════════════ 03 ══════════════ -->
+    <section id="coach">
+      <span class="sec-num">Section 03</span>
+      <h2 class="sec">Coach app</h2>
+      <p class="sec-lede">
+        A coach's day is: who is turning up, what am I running today, who owes me money, what do I tell the
+        parent, and did last week's work stick. An app that only answers "here are their numbers" is a
+        report card, and report cards get opened once a month. This app has to be the coach's daily home screen.
+      </p>
+
+      <div class="call">
+        <h4>The launch loop</h4>
+        <p>
+          The coach opens the app and sees today's sessions. They tap a batch and mark attendance in one tap,
+          offline. The batch view flags three players improving and two slipping. They tap a player: recent form,
+          three strengths, three things to work on. They tap a weakness and get a video playlist of exactly those
+          points. They draw on one frame, record a ten-second voice note, send it. They broadcast "6am cancelled,
+          rain" to the batch. <strong>That is P0. Everything else is expansion.</strong>
+        </p>
+      </div>
+
+      <h3>Permission to see a player's data <span class="h3-tag">CO-01 → CO-07 · build this first</span></h3>
+      <p class="area-note">
+        Most academy players in India are under 18, which makes this a legal requirement as well as a
+        trust one. It also cannot be retrofitted — a permission model bolted onto a shipped analytics app is a rewrite.
+      </p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">CO-01</td><td class="name">Invite a player</td><td class="desc">The coach sends an invite; nothing is visible until the player — or their guardian — accepts.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-02</td><td class="name">Player-initiated access</td><td class="desc">A player can also grant a coach access from their own app.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-03</td><td class="name">Choose what is shared</td><td class="desc">The player picks: summary stats, detailed stats, video, downloads, notes — and from what date forward.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-04</td><td class="name">Access expires</td><td class="desc">Time-bounded by default and renewable. Coaching relationships end; access must not be perpetual.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-05</td><td class="name">Revoke in one tap</td><td class="desc">The coach's view goes dark immediately. Coaches move players between academies; nobody keeps a window into a player they no longer coach.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-06</td><td class="name">Guardian grants for under-18s</td><td class="desc">Only a verified guardian may grant, scope or revoke access for a minor.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-07</td><td class="name">Pending and lapsed shown on the roster</td><td class="desc">The coach can see who has not accepted yet and whose access has expired, with a nudge action.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Players and batches <span class="h3-tag">CO-08 → CO-13</span></h3>
+      <p class="area-note">Indian academies run in batches, not individuals. The batch is the organising unit for everything.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">CO-08</td><td class="name">Roster</td><td class="desc">The definitive list of players this coach coaches, with status: active, trial, paused, left.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-09</td><td class="name">Batches and squads</td><td class="desc">Named groups — "U14 Red, Tue &amp; Thu 6am" — each with its own schedule, drills and dashboard.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-10</td><td class="name">A player in several batches</td><td class="desc">One player can sit in a technical batch, a match-play batch and a school team at once.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-11</td><td class="name">Search, filter and bulk actions</td><td class="desc">Filter by age band, level, batch, venue, last session or payment status; move twelve players between batches in one go.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-12</td><td class="name">Coach at several venues</td><td class="desc">Indian coaches routinely work across three or four venues plus a school. Roster, calendar, earnings and access are all venue-aware, and leaving a venue cleanly cuts access.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-13</td><td class="name">Assistant coaches</td><td class="desc">A head coach adds assistants with limited permissions, and assigns a cover coach with temporary access to one batch.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Player performance <span class="h3-tag">CO-14 → CO-22</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">CO-14</td><td class="name">Player profile in one screen</td><td class="desc">Bio, level, batches, session history, coach notes and pinned metrics.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-15</td><td class="name">Recent form</td><td class="desc">The last few sessions summarised so a coach reads the trajectory in five seconds.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-16</td><td class="name">Strengths and things to work on</td><td class="desc">An automatic plain-language shortlist. <strong>This translation layer is where most analytics products fail</strong> — raw numbers do not tell a coach what to run on Tuesday.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-17</td><td class="name">Improvement over time</td><td class="desc">Any metric charted across weeks and months. This is what the coach shows the parent to justify the fee.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-18</td><td class="name">Batch dashboard</td><td class="desc">A coach with forty players cannot open forty profiles. Surface the exceptions: who improved, who plateaued, whose attendance is falling.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-19</td><td class="name">Compare two players</td><td class="desc">Side by side — genuinely useful for pairing doubles and picking a squad.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-20</td><td class="name">Compare against a peer group</td><td class="desc">"Your U14 is top quartile for return depth among U14s in South India." Only possible because we hold data across many venues — a real advantage. Anonymised and aggregated only, and gated carefully for minors.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-21</td><td class="name">Coach's own observations</td><td class="desc">Cameras miss attitude, effort and intent, and miss courts entirely. Give coaches somewhere for their judgement, or they will feel replaced rather than helped.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-22</td><td class="name">Flag a wrong number</td><td class="desc">Show confidence on automated stats and let a coach report one as wrong. A coach who spots a bad figure with no explanation stops trusting all of them.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Coaching with video <span class="h3-tag">CO-23 → CO-29</span></h3>
+      <p class="area-note">Coaches teach with pictures and their own voice, not tables. A stats-only app loses to the coach's existing phone and WhatsApp habit.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">CO-23</td><td class="name">Every session, against the right player</td><td class="desc">Recordings appear automatically on the correct player's profile, with point-level jump and slow motion.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-24</td><td class="name">Draw on a frozen frame</td><td class="desc">Lines, angles and circles to teach a cue.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-25</td><td class="name">Voice note over a clip</td><td class="desc">Ten seconds of the coach explaining it. <strong>The highest-adoption feature in every comparable product</strong>, and cheap to build.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-26</td><td class="name">Side-by-side comparison</td><td class="desc">Two clips synced: the player against their own earlier self, or against a model clip. The most convincing thing you can put in front of a parent.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-27</td><td class="name">Video playlists from stats</td><td class="desc">"Show me every second-serve point she lost this month" returns a playlist. Competitors need hours of manual tagging to do this; we get it from the stat engine. <strong>A signature capability.</strong></td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-28</td><td class="name">Send a clip to the player</td><td class="desc">With the annotation and note attached, into their feed or as a WhatsApp link.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-29</td><td class="name">Download clips before going courtside</td><td class="desc">Venue Wi-Fi fails. A coach whose app spins courtside never opens it again.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Sessions, drills and homework <span class="h3-tag">CO-30 → CO-37</span></h3>
+      <p class="area-note">Without these the app diagnoses but never prescribes. The value chain is find the weakness → prescribe the work → deliver it → measure whether it changed.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">CO-30</td><td class="name">Drill library</td><td class="desc">Searchable drills per sport with diagram, video, purpose, level, court setup and player count.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-31</td><td class="name">Add your own drills</td><td class="desc">Court diagram editor and the coach's own video.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-32</td><td class="name">Session plan builder</td><td class="desc">Drag drills into a timed session — warm-up, technical, tactical, match play — and save it as a reusable template.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-33</td><td class="name">Courtside session mode</td><td class="desc">Big buttons, works offline, shows today's plan with a timer and a checklist. Puts the app in the coach's hand <em>during</em> the session, not just after it.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-34</td><td class="name">Assign homework</td><td class="desc">Drills, clips to watch or shadow reps, given to a player or a batch with a due date. Coaching happens in two hours a week; improvement happens in the other 166.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-35</td><td class="name">See who did it</td><td class="desc">Completion across the batch at a glance.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-36</td><td class="name">Player films themselves and sends it back</td><td class="desc">The coach annotates and replies in the same thread, closing the loop.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-37</td><td class="name">Drills suggested from the data</td><td class="desc">Weakness found → drill proposed → assigned → measured again next session. Nobody in racket sports closes this loop well. Needs a mature drill taxonomy first, or it will embarrass us.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Schedule and attendance <span class="h3-tag">CO-38 → CO-43</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">CO-38</td><td class="name">Coach calendar</td><td class="desc">Every session across every batch and venue in one day and week view. This is what makes the app the daily home screen.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-39</td><td class="name">Recurring sessions</td><td class="desc">Create a repeating batch slot; cancel or move a single occurrence.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-40</td><td class="name">Attendance in one tap</td><td class="desc">Present, absent, late — working offline. <strong>The most-used feature in every academy tool in India</strong>, and the basis of fee reconciliation.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-41</td><td class="name">Attendance trends</td><td class="desc">Percentage per player and per batch, with an alert when someone starts drifting away.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-42</td><td class="name">Absence notice from players</td><td class="desc">A player or parent flags an absence in advance so the coach knows the headcount.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-43</td><td class="name">Is the camera on?</td><td class="desc">Before a session, the coach can see whether that court is recording today.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Talking to players and parents <span class="h3-tag">CO-44 → CO-49</span></h3>
+      <p class="area-note">Coaches run everything on WhatsApp groups today. An app without messaging will sit alongside WhatsApp and lose the relationship.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">CO-44</td><td class="name">Broadcast to a batch</td><td class="desc">One message to everyone — schedule change, rain cancellation, entry deadline — with read receipts.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-45</td><td class="name">One-to-one chat</td><td class="desc">With the player or their guardian, subject to the minor-safety rules in PF-55 and PF-56.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">CO-46</td><td class="name">Reaches them on WhatsApp</td><td class="desc">Critical messages fall back to the channel Indian parents actually read.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-47</td><td class="name">Monthly progress report</td><td class="desc">One tap produces a shareable report: trend, strengths, focus areas, attendance, coach comment.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-48</td><td class="name">A parent version, in plain words</td><td class="desc">No jargon, no raw metric dump. <strong>In Indian junior sport the parent is the payer and the decision-maker</strong> — this is the strongest retention artefact we have. Templates are locked and performance-only. <span class="risk">CLAIM RISK</span></td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-49</td><td class="name">Message templates in several languages</td><td class="desc">Fee reminders, cancellations and event notices, ready to send in English, Hindi or a regional language.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>The coach's business <span class="h3-tag">CO-50 → CO-57</span></h3>
+      <p class="area-note">Fee collection — not merchandise — is the biggest operational pain for Indian coaches and academies, and the strongest reason they keep the app.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">CO-50</td><td class="name">Collect coaching fees</td><td class="desc">Raise invoices and take term or monthly fees by UPI, with cash recorded manually — a large share of academy fees are still cash, and a tool that cannot record cash shows wrong dues.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-51</td><td class="name">Who has paid, on the roster</td><td class="desc">Payment status beside each player's name. This is what coaches want; a full accounting module is not.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-52</td><td class="name">Automatic fee reminders</td><td class="desc">Nudges by app and WhatsApp so the coach stops chasing people personally.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-53</td><td class="name">Recurring monthly fees</td><td class="desc">UPI AutoPay mandates with the retry ladder from PF-34.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-54</td><td class="name">Private lesson booking</td><td class="desc">A player books a one-to-one slot with the coach and pays in the app.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-55</td><td class="name">Earnings and payouts</td><td class="desc">What the coach earned this month, what has settled, what is coming.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-56</td><td class="name">Session packs</td><td class="desc">Sell ten-session packages that decrement automatically on attendance.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+          <tr><td class="id">CO-57</td><td class="name">Gear sales and commission</td><td class="desc">Sell strings, shuttles, grips and apparel to their players and earn on it. <span class="risk">CLAIM RISK</span> — recommend by playing style and preference only, never comfort, support or protection.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Being found by new players <span class="h3-tag">CO-58 → CO-62</span></h3>
+      <p class="area-note">This turns the app from a tool the coach tolerates into a business they depend on — the strongest retention mechanic available to us.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">CO-58</td><td class="name">Verified certifications</td><td class="desc">Upload coaching credentials and get a verified badge once checked. The trust mechanism that makes discovery work, and a quality lever for us.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-59</td><td class="name">Public coach profile</td><td class="desc">Credentials, sports, venues, languages, availability and rates on a shareable page.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">CO-60</td><td class="name">Coach directory</td><td class="desc">Players and parents search by sport, location, level, language and price.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+          <tr><td class="id">CO-61</td><td class="name">Enquiry inbox and trial bookings</td><td class="desc">Leads arrive with a status — new, contacted, trial booked, converted, lost.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+          <tr><td class="id">CO-62</td><td class="name">Ratings and reviews</td><td class="desc">Verified players review coaches; coaches can respond. Needs volume before it means anything.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ══════════════ 04 ══════════════ -->
+    <section id="venue">
+      <span class="sec-num">Section 04</span>
+      <h2 class="sec">Venue &amp; Organiser app</h2>
+      <p class="sec-lede">
+        One app for two jobs, because they are usually the same person and both run off the same courts,
+        calendar and cameras. Inside, keep the two clearly separated: a space for running the venue and a
+        space for running events. This is the app a paying subscriber opens every single day, so it has to
+        be an operating system, not a dashboard.
+      </p>
+
+      <div class="call">
+        <h4>Build the operations layer before the insights layer</h4>
+        <p>
+          Almost every number a venue wants — players, coaches, hours used, revenue, best players, most
+          improved — is <strong>derived from bookings, memberships and recordings</strong>. Ship booking,
+          payments, consent and camera health first, and the analytics then come almost free and are
+          actually correct. Ship analytics first and every figure will be either wrong or entered by hand.
+        </p>
+      </div>
+
+      <h3>Camera and court health <span class="h3-tag">VO-01 → VO-09 · nobody else can build this</span></h3>
+      <p class="area-note">
+        "Is a camera offline right now?" is the most important question this app answers, and it is the
+        thing no booking software can offer. A venue paying monthly for cameras that were silently dead for
+        a week will cancel — so this is both our best differentiator and our biggest churn risk.
+      </p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-01</td><td class="name">Live camera status board</td><td class="desc">Every camera shown as online, recording, idle or <strong>offline</strong>, with the time it was last heard from.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-02</td><td class="name">Offline alert within minutes</td><td class="desc">Push and WhatsApp to the venue manager and to our support team the moment a camera drops — before a player complains.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-03</td><td class="name">Connection diagnostics</td><td class="desc">Current upload speed, packet loss, and whether the site is on its main line or the mobile backup.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-04</td><td class="name">Upload backlog</td><td class="desc">How much footage is still sitting on the venue's box waiting to reach us.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-05</td><td class="name">Booked hours vs recorded hours</td><td class="desc">"143 hours booked, 141 captured." <strong>This is the receipt for the subscription</strong> — it proves the value every month and flags gaps before anyone asks.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-06</td><td class="name">Camera knocked or blocked</td><td class="desc">Flag when a camera has moved, the view is obstructed, or the lens needs cleaning.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-07</td><td class="name">Power and battery state</td><td class="desc">Mains or backup, and uptime since the last power event — a daily reality in India.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-08</td><td class="name">Restart a camera remotely</td><td class="desc">One tap before raising a ticket.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-09</td><td class="name">Monthly uptime report</td><td class="desc">"Your cameras were up 99.2% of booked hours." Defends the renewal conversation before it happens.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Setup, courts and staff <span class="h3-tag">VO-10 → VO-17</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-10</td><td class="name">Guided setup</td><td class="desc">Add courts → map cameras → set prices → invite staff → go live, as a step-by-step first run.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-11</td><td class="name">Venue profile</td><td class="desc">Name, address, photos, amenities, sports, contact, opening hours and holiday closures.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-12</td><td class="name">Tax and bank details</td><td class="desc">GSTIN, PAN, registered address, invoice series, and a verified bank account or UPI ID for settlements.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-13</td><td class="name">Court list and status</td><td class="desc">Each court with sport, surface, indoor or outdoor, lighting — and an under-maintenance state that blocks bookings automatically.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-14</td><td class="name">Staff accounts</td><td class="desc">Named logins for owner, manager, front desk, coach and ground staff.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-15</td><td class="name">Role-based permissions</td><td class="desc"><strong>Front desk must not see revenue, change prices, issue refunds or browse other people's footage.</strong> Without this an owner will not let staff use the app at all, and the app dies.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-16</td><td class="name">Audit log</td><td class="desc">Who changed a price, deleted a booking, issued a refund or deleted footage — permanently recorded.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-17</td><td class="name">Courtside display</td><td class="desc">A screen at the venue showing today's bookings, "Court 3 — Sharma, 7pm", live scores and offers.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Bookings <span class="h3-tag">VO-18 → VO-25 · the spine</span></h3>
+      <p class="area-note">If the venue books somewhere else, this app has no role in their day and every number in it is wrong.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-18</td><td class="name">Day and week calendar</td><td class="desc">Courts as columns, time down the side, drag to create, colour-coded by type.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-19</td><td class="name">Counter booking in three taps</td><td class="desc">Staff take a walk-in and collect cash or scan a UPI QR.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-20</td><td class="name">Online booking</td><td class="desc">Players book and pay without phoning the venue.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-21</td><td class="name">Recurring bookings and blocks</td><td class="desc">A weekly slot for a coach or corporate, plus internal holds for coaching, events and maintenance.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-22</td><td class="name">Never double-book</td><td class="desc">Hard block on booking the same court, coach or equipment twice.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-23</td><td class="name">Cancellation and no-show rules</td><td class="desc">Court time is perishable and venues lose real money here. Configurable windows, a no-show fee or forfeited credit, one grace pass, and a report by player.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-24</td><td class="name">Waitlist with auto-notify</td><td class="desc">The cheapest revenue in the building: someone cancels a peak slot and the queue is told instantly.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-25</td><td class="name">Open matches fill empty courts</td><td class="desc">"Two more needed, 7pm doubles" published to the player pool — the venue's dead hours become games.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Pricing, offers and memberships <span class="h3-tag">VO-26 → VO-33</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-26</td><td class="name">Peak and off-peak rates</td><td class="desc">Different prices by day, time band, court and sport. No racket venue charges one flat rate, and filling the off-peak is the whole commercial game.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-27</td><td class="name">Member vs guest pricing</td><td class="desc">Automatic discounts by membership tier.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-28</td><td class="name">Packages and prepaid credits</td><td class="desc">Ten-hour packs and wallet top-ups that debit automatically.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-29</td><td class="name">Coupons and promo codes</td><td class="desc">Percentage, flat and first-booking codes with usage caps and expiry.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-30</td><td class="name">Charge for recording</td><td class="desc">Offer "record my match" as a paid add-on at booking — the venue's simplest way to make the camera subscription pay for itself.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-31</td><td class="name">Membership plans</td><td class="desc">Tiers with price, duration, court quota and booking privileges — the venue's own recurring revenue.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-32</td><td class="name">Auto-renewal and reminders</td><td class="desc">UPI AutoPay with a proper retry ladder, plus nudges before expiry and win-back after it.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-33</td><td class="name">Family accounts</td><td class="desc">Several players under one paying account — the norm in Indian academies.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Money <span class="h3-tag">VO-34 → VO-41</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-34</td><td class="name">Take money every way</td><td class="desc">UPI intent and QR, cards, netbanking, wallets — and <strong>cash</strong>, marked by staff.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-35</td><td class="name">Cash tally at shift close</td><td class="desc">What staff took vs what the system expected, with the difference flagged. Without this an owner cannot trust the revenue figure at all.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-36</td><td class="name">GST invoices</td><td class="desc">Proper tax invoices with GSTIN, SAC code, correct state split and a continuous number series. A GST-registered venue cannot use a system that does not produce these.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-37</td><td class="name">Refunds and credit notes</td><td class="desc">With correct tax reversal, partial refunds, and wallet credit as an alternative.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-38</td><td class="name">Settlement view</td><td class="desc">When money lands in the bank, what was deducted, transaction by transaction. This is the first thing an owner checks each morning.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-39</td><td class="name">Today's summary</td><td class="desc">One screen: collections by method, bookings, refunds and dues.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-40</td><td class="name">Outstanding dues</td><td class="desc">Who owes what and for how long, with a one-tap WhatsApp payment link.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-41</td><td class="name">Accounting export</td><td class="desc">Invoices and collections in a format the venue's accountant can load into Tally or Zoho. The accountant is a gatekeeper in Indian small business.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Analytics the venue actually uses <span class="h3-tag">VO-42 → VO-51</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-42</td><td class="name">Revenue dashboard</td><td class="desc">By day, week and month, split by court hire, coaching, membership, retail and events.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-43</td><td class="name">Utilisation heatmap</td><td class="desc">Court by hour by weekday, showing exactly where the dead time is. <strong>The single most actionable chart a venue will ever see</strong> — and it pairs directly with off-peak offers.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-44</td><td class="name">Storage used vs quota</td><td class="desc">Gigabytes consumed, trend, oldest footage held, and cost if they exceed it.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-45</td><td class="name">How much the platform is used</td><td class="desc">Which parts of the app the venue uses, session counts, video hours consumed, active players and coaches.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-46</td><td class="name">Player numbers and churn</td><td class="desc">Active players, new vs returning, frequency, and who has stopped coming.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-47</td><td class="name">Coach performance</td><td class="desc">Hours delivered, students taught, revenue generated, availability actually used.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-48</td><td class="name">Best players</td><td class="desc">Top by wins, hours, matches or rating at this venue — a leaderboard the venue can promote.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-49</td><td class="name">Most improved players</td><td class="desc">Whose numbers are trending up. A retention hook the venue can act on and a natural upsell moment.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-50</td><td class="name">Cancellations and no-shows</td><td class="desc">Rate, by member and by slot, with the revenue lost and recovered.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-51</td><td class="name">Scheduled reports and export</td><td class="desc">A weekly summary by email and CSV or PDF export of anything on screen.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Marketing and community <span class="h3-tag">VO-52 → VO-57</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-52</td><td class="name">Player directory</td><td class="desc">Everyone who has ever booked or played, with contact, level, sport and history.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-53</td><td class="name">Smart lists</td><td class="desc">"Lapsed 60 days", "peak-only players", "high spenders", "juniors" — segments the venue can message.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-54</td><td class="name">Broadcast campaigns</td><td class="desc">WhatsApp, SMS or push to a segment, with redemption tracked back to revenue.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-55</td><td class="name">Public booking page</td><td class="desc">A findable web page with live availability and pay-to-book.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-56</td><td class="name">Weekly auto-generated content</td><td class="desc">A highlight reel and a "player of the week" clip, branded with the venue's logo — free marketing made from footage they already paid for.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-57</td><td class="name">Coaching and academy operations</td><td class="desc">Coach roster, bookable lessons, batches, attendance, commission and payout reports — mirroring the Coach app but from the venue's side.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Consent, footage and retention <span class="h3-tag">VO-58 → VO-64</span></h3>
+      <p class="area-note">
+        A camera company filming minors in India without a guardian-consent flow and a working deletion path
+        carries risk no amount of feature velocity offsets. Handled well, "we delete on request and we show
+        you exactly what we hold" becomes a sales argument against unmanaged CCTV.
+      </p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-58</td><td class="name">Signage, generated and verified</td><td class="desc">We supply the entrance and courtside notice artwork; the venue uploads a photo of it installed, and that photo gates camera activation.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-59</td><td class="name">Consent state on every player</td><td class="desc">Visible on the player record, versioned, captured at signup or booking.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-60</td><td class="name">Guardian consent for under-18s</td><td class="desc">A first-class flow, not an afterthought — junior academies are a major part of the Indian market.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-61</td><td class="name">Opt-out that changes behaviour</td><td class="desc">A player who declines is not identified, is blurred, and their booking is flagged so staff know.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-62</td><td class="name">Retention with expiry warnings</td><td class="desc">Configurable retention per plan, automatic deletion, and advance warning so nothing valuable disappears unannounced.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-63</td><td class="name">Deletion requests, tracked</td><td class="desc">A logged workflow with a deadline and proof of completion, reachable by someone with no account.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-64</td><td class="name">Separate consent for marketing use</td><td class="desc">General filming consent does not permit using someone's footage in an advert. As policy, <strong>never use a minor's footage in marketing</strong>, even with guardian consent.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Running a tournament — setup and draws <span class="h3-tag">VO-65 → VO-74</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-65</td><td class="name">Create an event</td><td class="desc">Name, sport, dates, venue, format, entry fee, rules and poster.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-66</td><td class="name">Categories</td><td class="desc">Age groups, gender, singles, doubles, mixed, and skill or rating bands.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-67</td><td class="name">Online entry and payment</td><td class="desc">Players register and pay, and pick a partner for doubles.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-68</td><td class="name">All the bracket types</td><td class="desc">Single elimination, double elimination, round robin, groups into knockout, Swiss, and a consolation plate. "Fixtures" understates this considerably.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-69</td><td class="name">Seeding</td><td class="desc">Manual, rating-based or random, with protected seeds and club separation so teammates do not meet in round one.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-70</td><td class="name">Byes handled automatically</td><td class="desc">Any field size, not just powers of two.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-71</td><td class="name">Winners advance by themselves</td><td class="desc">The moment a score is confirmed, the bracket updates.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-72</td><td class="name">Walkovers, retirements and defaults</td><td class="desc">Each handled correctly, with the draw progressing correctly.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-73</td><td class="name">Publish the draw</td><td class="desc">A public page, PDF and shareable image for WhatsApp.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-74</td><td class="name">Entry caps, waitlist and withdrawals</td><td class="desc">Cap each category, queue the rest, and replace a withdrawal without rebuilding the draw.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Running a tournament — the day itself <span class="h3-tag">VO-75 → VO-87</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-75</td><td class="name">The draw uses real courts</td><td class="desc">Tournament matches consume actual inventory on the venue calendar and block normal bookings. <strong>This is the entire reason the two roles share one app</strong> — every generic bracket tool is blind to whether court 3 is free.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-76</td><td class="name">Order of play</td><td class="desc">Matches assigned to courts and times automatically, respecting rest between matches, court count and when the lights go off.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-77</td><td class="name">No player in two places at once</td><td class="desc">Someone in singles, doubles and mixed never gets two simultaneous matches.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-78</td><td class="name">Reschedule mid-event</td><td class="desc">Rain or an overrun recalculates the rest of the day and tells everyone affected.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-79</td><td class="name">"You're on court 3 in 20 minutes"</td><td class="desc">Push and WhatsApp to players, plus an on-deck board at the venue.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-80</td><td class="name">Score entry</td><td class="desc">By organiser, umpire or the players, with rules validated per sport.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-81</td><td class="name">Umpire and scorer logins</td><td class="desc">Scoped accounts that can score their assigned matches but cannot touch draws or money.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-82</td><td class="name">Score confirmation and disputes</td><td class="desc">A referee confirms or corrects; a disputed result freezes until reviewed.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-83</td><td class="name">Scoring from the camera</td><td class="desc">Score read from the video with human override — a genuine advantage given we own the hardware.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-84</td><td class="name">Go live from any court</td><td class="desc">One tap to stream to a public page or to YouTube and Facebook.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-85</td><td class="name">Scoreboard on the stream</td><td class="desc">The score graphic appears automatically with no operator. This is what makes small-venue streaming watchable at all.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-86</td><td class="name">Live commentary</td><td class="desc">A local commentator joins from a phone or browser as an audio track over the automatic feed, with multiple language tracks. Cheap to build, genuinely delightful.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-87</td><td class="name">Public event page and venue screens</td><td class="desc">Draws, schedule, live scores, results and streams on one shareable link — and the same on screens around the venue.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Making events pay <span class="h3-tag">VO-88 → VO-92</span></h3>
+      <p class="area-note">Sponsorship is how a venue argues the camera subscription pays for itself. Consider pulling a basic sponsor logo overlay forward as a sales asset.</p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-88</td><td class="name">Sponsors and where they appear</td><td class="desc">Sponsor tiers with logos placed on the stream overlay, draw sheets, event page and venue screens.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-89</td><td class="name">Sponsor exposure report</td><td class="desc">Minutes on screen and viewers reached — what the organiser sells against next season. Nothing in the Indian market does this at club level.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-90</td><td class="name">Event clips as they happen</td><td class="desc">Instantly shareable point clips during the event, which is what spreads the event online.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-91</td><td class="name">Paid streams</td><td class="desc">Free, ad-supported, pay-per-view, event pass or season pass, with revenue share back to the venue.</td><td class="pri"><span class="p p2">P2</span></td></tr>
+          <tr><td class="id">VO-92</td><td class="name">Results archive and ranking points</td><td class="desc">Every past event browsable, points awarded by finish, and a venue or circuit leaderboard. Plus clone-last-year's-event in one tap.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Leagues and ladders <span class="h3-tag">VO-93 → VO-96</span></h3>
+      <p class="area-note">
+        A tournament is one busy weekend. A league or ladder is eight to twelve weeks of <em>guaranteed
+        recurring bookings</em> — arguably worth more to a venue than tournaments, and missing from the
+        original brief entirely.
+      </p>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-93</td><td class="name">League seasons</td><td class="desc">Divisions, fixtures, standings and promotion or relegation across a season.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-94</td><td class="name">Self-scheduled leagues</td><td class="desc">Players are paired and arrange their own match inside a window. Ideal where courts are scarce, because it does not need a fixed slot.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-95</td><td class="name">Box leagues and ladders</td><td class="desc">A rolling challenge ladder with promotion boxes — very sticky for retention.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-96</td><td class="name">Social formats</td><td class="desc">Drop-in nights, mixers, americanos and king-of-the-court, which fill off-peak courts with beginners.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Support and multi-venue <span class="h3-tag">VO-97 → VO-102</span></h3>
+      <div class="tw"><table>
+        <thead><tr><th>ID</th><th>Feature</th><th>What it does</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="id">VO-97</td><td class="name">Raise a ticket with diagnostics attached</td><td class="desc">"Court 2 camera down since Tuesday" — with photos, severity and the device's own telemetry attached automatically. Today this would be a personal WhatsApp thread with no record.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-98</td><td class="name">Ticket status and response clock</td><td class="desc">Open, acknowledged, engineer on site, resolved — against the response time we promised. Hardware businesses live or die on this.</td><td class="pri"><span class="p p0">P0</span></td></tr>
+          <tr><td class="id">VO-99</td><td class="name">Book an engineer visit</td><td class="desc">See who is coming and when.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-100</td><td class="name">Help articles and a direct line</td><td class="desc">Self-serve guides in English and Hindi, plus a WhatsApp line to their account manager — which Indian venue owners will use more than any ticket form.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-101</td><td class="name">Group dashboard for chains</td><td class="desc">Revenue, utilisation, players and camera health across every site, plus a site-by-site comparison. Chains are the highest-value accounts and ask on the first call.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+          <tr><td class="id">VO-102</td><td class="name">Permissions across a chain</td><td class="desc">A venue manager sees their own site; the group owner sees everything.</td><td class="pri"><span class="p p1">P1</span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ══════════════ 05 ══════════════ -->
+    <section id="language">
+      <span class="sec-num">Section 05</span>
+      <h2 class="sec">Language rules — read before writing any screen text</h2>
+      <p class="sec-lede">
+        We measure performance. We do not assess health. That distinction is what keeps our software out of
+        medical-device regulation, and it is decided by the words on our screens — because in Indian law a
+        product's <em>intended purpose</em> is judged by what it claims. A single label reading "injury risk"
+        is evidence of intent.
+      </p>
+
+      <div class="call warn">
+        <h4>Why a developer will get this wrong without meaning to</h4>
+        <p>
+          Every pose-estimation library, research paper and vendor datasheet the movement module will be
+          built from is written in exactly this vocabulary. The default is to copy it. So is the default for
+          translators, for anyone writing a push notification, and for any AI that generates insight text.
+          <strong>This cannot be enforced by good intentions — it needs a build-time check.</strong>
+        </p>
+      </div>
+
+      <h3>Banned words, everywhere</h3>
+      <p class="area-note">
+        Not just on screen: also in notification and WhatsApp templates, PDF reports, store listings and
+        screenshots, <strong>API field names, database columns and analytics event names</strong> — because
+        internal names leak into the interface sooner or later.
+      </p>
+      <div class="tw"><table>
+        <thead><tr><th>Group</th><th>Never use</th></tr></thead>
+        <tbody>
+          <tr><td class="name">The core list</td><td class="desc">injury risk · injury prevention · biomechanics · asymmetry · prognosis · screening · joint load</td></tr>
+          <tr><td class="name">Clinical words</td><td class="desc">diagnose · diagnosis · treat · treatment · therapy · rehab · rehabilitation · clinical · medical · physio · doctor · screening (use "checking" where you mean content moderation)</td></tr>
+          <tr><td class="name">Body-condition words</td><td class="desc">strain · sprain · overuse · muscle imbalance · posture correction · tendon · ligament · joint</td></tr>
+          <tr><td class="name">Physiology-adjacent</td><td class="desc">fatigue · recovery · readiness · training load · load management · calories burned · intensity score · wellness score · health score · fitness assessment</td></tr>
+          <tr><td class="name">Claim phrasing</td><td class="desc">"reduces your risk of…" · "prevents…" · "safe technique" · "unsafe technique" · "protects your…" · "below normal"</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Say this instead</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Where a developer reaches for</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td class="desc">Biomechanics, biomechanical analysis</td><td class="name">Technique analysis · motion analysis</td></tr>
+          <tr><td class="desc">Asymmetry, imbalance between sides</td><td class="name">Shot-side consistency · left/right shot distribution</td></tr>
+          <tr><td class="desc">Joint load, strain, injury risk score</td><td class="name">No equivalent — <strong>do not build the feature</strong></td></tr>
+          <tr><td class="desc">Training load, fatigue</td><td class="name">Court time · session volume · distance covered · shots played</td></tr>
+          <tr><td class="desc">Drop-off late in a match</td><td class="name">Late-match intensity · change in work rate across sets</td></tr>
+          <tr><td class="desc">Recovery, readiness</td><td class="name">No equivalent — do not build it</td></tr>
+          <tr><td class="desc">Movement screening or assessment</td><td class="name">Movement pattern summary · technique consistency</td></tr>
+          <tr><td class="desc">Fitness tests entered by a coach</td><td class="name">Performance benchmarks — sprint time, agility time, jump distance</td></tr>
+          <tr><td class="desc">Corrective exercise</td><td class="name">Technique drill · practice drill</td></tr>
+          <tr><td class="desc">"Your form is unsafe"</td><td class="name">"Your contact point varied more than usual this session"</td></tr>
+          <tr><td class="desc">"Reduce your injury risk"</td><td class="name">"Build a more repeatable motion"</td></tr>
+          <tr><td class="desc">"Below normal for their age"</td><td class="name">"Below the typical range for this level and age band"</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>The seven places this will go wrong</h3>
+      <ol class="head-list">
+        <li><strong>Movement and technique screens (PL-26 to PL-30).</strong> <span>Highest risk. Every string here needs review, and joint-angle numbers must not be shown at all in version one.</span></li>
+        <li><strong>AI-generated insights (PL-56).</strong> <span>"Rest more" or "warm up before serving" is one prompt slip away. Constrain generation to a fixed reviewed catalogue and filter the output server-side before it reaches a phone.</span></li>
+        <li><strong>The progress dashboard (PL-58).</strong> <span>After "you played 14 hours this month" the obvious next sentence is "are you overtraining?" Report volume as fact; never characterise it as too much, too little, risky or safe.</span></li>
+        <li><strong>Parent reports (CO-48).</strong> <span>Auto-generated sentences drift fastest here. Lock the templates; never suggest seeking or avoiding any physical intervention.</span></li>
+        <li><strong>Gear recommendations (PL-67, CO-57).</strong> <span>Manufacturer copy is saturated with support, cushioning and protection claims. Filter any third-party product text before display.</span></li>
+        <li><strong>Translations (PF-45).</strong> <span>A translator will helpfully render "movement efficiency" into something health-flavoured. Run the same check against every language file, not just English.</span></li>
+        <li><strong>Junior players.</strong> <span>Movement analysis on children draws the most scrutiny of all. For under-16 accounts, show the video overlay only — no scores, no recommendations attached.</span></li>
+      </ol>
+
+      <h3>How we enforce it</h3>
+      <ul class="plain">
+        <li>One shared dictionary in the codebase mapping every metric to its approved display name, unit and description. Nothing user-facing is written by hand outside it.</li>
+        <li>A build-time check that <strong>fails the build</strong> if any banned term appears in any language file, notification template, report template, API field name or store metadata file.</li>
+        <li>A server-side filter on every AI-generated string before it reaches a device.</li>
+        <li>A permanent line on every movement screen: <em>"Performance estimate based on video. Not a health, fitness or medical assessment."</em></li>
+        <li>The same rule applies to the website, sales decks and investor material. One "prevent injuries" line anywhere undoes all of the above.</li>
+      </ul>
+    </section>
+
+    <!-- ══════════════ 06 ══════════════ -->
+    <section id="order">
+      <span class="sec-num">Section 06</span>
+      <h2 class="sec">Build order</h2>
+      <p class="sec-lede">
+        Some of this is sequencing preference. Some of it is not: the permission model, the consent system
+        and the entitlement service cannot be added to a shipped product without a rewrite, so they come
+        first regardless of how unglamorous they look on a roadmap.
+      </p>
+
+      <h3>Phase 1 — foundations <span class="h3-tag">before any app screen</span></h3>
+      <ul class="plain">
+        <li>Identity, roles and the data-access grant model (PF-01 to PF-09)</li>
+        <li>Consent ledger, retention rules and the deletion pipeline (PF-10 to PF-20)</li>
+        <li>Venue, court and camera registry with QR binding (PF-06)</li>
+        <li>Entitlement service and the two separate payment catalogues (PF-30 to PF-32)</li>
+        <li>The banned-word build check (Section 05)</li>
+      </ul>
+
+      <h3>Phase 2 — make one venue work end to end</h3>
+      <p>Pick a single venue and make the whole loop real there before building breadth.</p>
+      <ul class="plain">
+        <li><strong>Venue:</strong> courts, bookings, pricing, payments with GST, staff permissions, camera health, consent and signage (VO-01 to VO-05, VO-10 to VO-22, VO-26, VO-34 to VO-39, VO-58 to VO-64)</li>
+        <li><strong>Player:</strong> sign-up, find and book a camera court, check in, control the recording, say who is where, confirm the score, get stats and video, share a clip (PL-01 to PL-22, PL-31 to PL-38)</li>
+        <li><strong>Platform:</strong> edge recording, rally-only upload, adaptive playback, clip generation, notifications (PF-21 to PF-29, PF-38 to PF-42)</li>
+      </ul>
+
+      <h3>Phase 3 — the coach, and the reasons to come back</h3>
+      <ul class="plain">
+        <li><strong>Coach:</strong> the full P0 loop — permissions, roster and batches, attendance, batch dashboard, video with drawing and voice notes, broadcast messaging (CO-01 to CO-29, CO-38 to CO-45)</li>
+        <li><strong>Player:</strong> rating with reliability, head-to-head, leaderboards, open matches, trends and goals (PL-39 to PL-44, PL-51, PL-58 to PL-61)</li>
+        <li><strong>Venue:</strong> memberships, waitlists, no-show rules, utilisation heatmap and the analytics set (VO-23 to VO-33, VO-42 to VO-51)</li>
+      </ul>
+
+      <h3>Phase 4 — events, and everything that makes money</h3>
+      <ul class="plain">
+        <li>Tournaments end to end, on real court inventory, with live streaming and automatic scoreboards (VO-65 to VO-87)</li>
+        <li>Leagues and ladders — the recurring-booking engine (VO-93 to VO-96)</li>
+        <li>Sponsors and exposure reporting (VO-88 to VO-90)</li>
+        <li>Coach fee collection and private lessons (CO-50 to CO-55)</li>
+        <li>Movement and technique analysis, with the language rules enforced (PL-26 to PL-30)</li>
+      </ul>
+
+      <h3>Phase 5 — later</h3>
+      <p>
+        Marketplace discovery for coaches, the shop, paid streams, multi-venue chain tooling, reels feed,
+        gamification and every other P2 in this document. None of these should be allowed into launch scope.
+      </p>
+    </section>
+
+    <!-- ══════════════ 07 ══════════════ -->
+    <section id="decisions">
+      <span class="sec-num">Section 07</span>
+      <h2 class="sec">Decisions we owe you</h2>
+      <p class="sec-lede">
+        These are ours to answer, not the development team's, and several of them change the architecture.
+        We should settle them before Phase 1 starts.
+      </p>
+      <ol class="head-list">
+        <li><strong>Three separate apps in the stores, or one app that switches by role?</strong> <span>Three listings are clearer to users, but Apple rejects near-duplicate apps — each would need genuinely distinct screens, screenshots and descriptions.</span></li>
+        <li><strong>Who is responsible for the footage — us or the venue?</strong> <span>Decides who answers a deletion request, what goes in the venue contract, and how access rules are written.</span></li>
+        <li><strong>Which of our revenue lines are digital subscriptions?</strong> <span>Those must be billed by Apple and Google at their commission. Court bookings, coaching and physical goods must not be. This is 15–30% of gross margin.</span></li>
+        <li><strong>Do we ever use customer video to train our models?</strong> <span>If yes it needs its own separate opt-in and its own notice — and a defensible answer for footage containing people who never consented.</span></li>
+        <li><strong>How long do we keep video on the free tier?</strong> <span>Simultaneously our biggest cloud cost, our main reason to upgrade, and a mandatory disclosure in the privacy notice.</span></li>
+        <li><strong>Face recognition — yes or no?</strong> <span>Recommendation: no. Identify players by court position and tracking instead. If yes, it becomes the most sensitive data we hold and needs its own consent, retention and deletion path.</span></li>
+        <li><strong>Do we accept under-13s at all?</strong> <span>Recommendation: no. Set the floor at 13 with guardian-managed profiles for 13–17, which keeps us out of the heavier children's-app regimes in both stores.</span></li>
+        <li><strong>Does the Player app have public social features at launch?</strong> <span>Public posts and comments make us an intermediary under Indian IT rules, with a 24-hour acknowledgement and 7-day resolution duty. Deferring the public social layer materially reduces launch compliance load.</span></li>
+        <li><strong>Do we collect players' money, or does the venue?</strong> <span>If we collect and deduct commission we need split settlement, payee KYC and possibly tax-deduction obligations. It changes the entire money model.</span></li>
+        <li><strong>What do we promise on speed?</strong> <span>"Stats ready within X minutes" is the product promise and it should be a number we choose deliberately, then measure ourselves against.</span></li>
+      </ol>
+
+      <div class="call">
+        <h4>What this document is not</h4>
+        <p>
+          It is a specification of <em>what</em> each app must do and in what order, not <em>how</em> to build
+          it. Screen designs, data models, API contracts and platform choices are the development team's to
+          propose. Where we have stated a mechanism — edge recording, rally-only upload, three privacy levels,
+          camera-verified ratings — it is because the product or the law depends on it, and those we would
+          want to discuss before changing.
+        </p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="doc">
+  <p>
+    Lvl-Up Sports · App feature specification v1.0 · Internal working document for the development team.
+    Questions and change requests go to contact@thelvlupsports.com quoting the feature ID.
+  </p>
+</footer>
+
+<script>
+  // TOC scrollspy — highlights the section currently under the top of the viewport
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (a) { a.classList.remove('on'); });
+        if (map[e.target.id]) map[e.target.id].classList.add('on');
+      });
+    }, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+    document.querySelectorAll('section[id]').forEach(function (s) { obs.observe(s); });
+  })();
+</script>
