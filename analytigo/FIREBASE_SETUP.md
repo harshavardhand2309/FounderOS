@@ -16,8 +16,8 @@ with real auth.
 1. <https://console.firebase.google.com> → **Add project** → name it (e.g. `lvlup-sports`).
 2. Google Analytics is optional; you can skip it.
 3. In the project, click the **Web** icon (`</>`) to register a web app
-   (e.g. "Lvl-Up Web"). Tick Firebase Hosting — the site now deploys there.
-   See [`DEPLOY.md`](./DEPLOY.md) for the full go-live sequence.
+   (e.g. "Lvl-Up Web"). **Do not** tick Firebase Hosting — the site deploys via
+   GitHub Pages.
 4. Copy the `firebaseConfig` values it shows you. You need these six:
 
    | Config key from Firebase | Environment variable |
@@ -51,10 +51,9 @@ with real auth.
 runs on, or Google/Apple popups and phone auth will be rejected:
 
 - `localhost`
-- `thelvlupsports.com`
-- `www.thelvlupsports.com`
-- `<project>.web.app` and `<project>.firebaseapp.com` (present by default)
-- `harshavardhand2309.github.io`, if you keep the GitHub Pages preview
+- `harshavardhand2309.github.io`
+- your custom domain, once you have one
+- the Vercel domain, if you move there later
 
 ## 4. Create Firestore and publish the rules
 
@@ -143,7 +142,5 @@ surprises.
   and its data. Not built yet — needed before the Android app ships.
 - **App Check.** Blocks bots from hammering your auth and Firestore endpoints.
   Worth enabling before launch.
-- **SMS region policy.** Auth → Settings → allow India only. Free, and it is the
-  main defence against SMS toll fraud on phone OTP.
 - **Backups.** Firestore → Backups, set a daily schedule.
 - **Budget alerts.** Billing → Budgets & alerts.

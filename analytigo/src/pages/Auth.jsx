@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { css } from '../utils/css.js'
-import { firebaseReady, socialLogin, signUp, confirmPhone, refreshEmailVerified, signInIdentifier, upsertUserProfile, recordSignIn, authErrorMessage, clearRecaptcha } from '../utils/firebase.js'
+import { firebaseReady, socialLogin, signUp, confirmPhone, refreshEmailVerified, signInIdentifier, upsertUserProfile, recordSignIn } from '../utils/firebase.js'
 import '../styles/auth.css'
 
 // Sign In / Sign Up — one white-and-lime auth screen matching the hero.
@@ -72,18 +72,11 @@ export default function Auth({ mode = 'signin' }) {
     setBusy(true)
     try {
       const { user, confirmation } = await signUp(data, 'au-recaptcha')
-      await upsertUserProfile(user, {
-        name: data.name, email: data.email, phone: data.phone, role, provider: 'password',
-        agreedToTerms: agree,
-        modelTrainingOptIn: trainOptIn,
-      })
+      await upsertUserProfile(user, { name: data.name, email: data.email, phone: data.phone, role, provider: 'password', modelTrainingOptIn: trainOptIn })
       confirmRef.current = confirmation
       setStep('verify')
     } catch (err) {
-      // The account may already exist from a previous attempt that failed at the
-      // phone step — say so plainly instead of leaving people stuck on a form
-      // that will never succeed.
-      setNotice(authErrorMessage(err, 'Could not create the account. Please try again.'))
+      setNotice(err?.message || 'Could not create the account. Please try again.')
     } finally { setBusy(false) }
   }
 
@@ -98,7 +91,7 @@ export default function Auth({ mode = 'signin' }) {
       if (r.needsOtp) { confirmRef.current = { confirmationResult: r.confirmationResult }; setContact({ phone: f.identifier.value, email: '' }); setStep('verify') }
       else { await recordSignIn(r.user, 'password'); setStep('done') }
     } catch (err) {
-      setNotice(authErrorMessage(err, 'Sign-in failed. Check your details and try again.'))
+      setNotice(err?.message || 'Sign-in failed. Check your details and try again.')
     } finally { setBusy(false) }
   }
 
@@ -106,41 +99,24 @@ export default function Auth({ mode = 'signin' }) {
     e.preventDefault()
     setNotice('')
     if (!firebaseReady) { if (phoneCode.length < 6) { setNotice('Enter the 6-digit code to continue.'); return } setStep('done'); return }
-
-    const c = confirmRef.current
-    // Only demand a code when there is actually an OTP outstanding. Previously
-    // an account created without a phone number advanced past this screen on an
-    // empty box, because `confirmPhone(null)` returns true.
-    const needsCode = Boolean(c?.confirmationResult || c?.verificationId)
-    if (needsCode && !/^\d{6}$/.test(phoneCode)) {
-      setNotice('Enter the 6-digit code we sent by SMS.')
-      return
-    }
-
     setBusy(true)
     try {
+      const c = confirmRef.current
       if (c?.confirmationResult) {
         const res = await c.confirmationResult.confirm(phoneCode) // sign-in OTP
         await upsertUserProfile(res.user, { provider: 'phone' })
         await recordSignIn(res.user, 'phone')
-        clearRecaptcha()
-      } else if (needsCode) {
-        await confirmPhone(c, phoneCode) // sign-up: link phone
-      }
+      } else if (c) await confirmPhone(c, phoneCode) // sign-up: link phone
       setStep('done')
     } catch (err) {
-      setNotice(authErrorMessage(err, 'That code did not match. Please re-enter it.'))
+      setNotice(err?.message || 'That code did not match. Please re-enter it.')
     } finally { setBusy(false) }
   }
 
   const onCheckEmail = async () => {
     if (!firebaseReady) { setEmailOk(true); return }
-    // Read the result into a local first. Checking the `emailOk` state here
-    // read the *previous* render's value, so a user who had just verified was
-    // shown "verified" and "not verified yet" at the same time.
-    const ok = await refreshEmailVerified()
-    setEmailOk(ok)
-    setNotice(ok ? '' : 'Not verified yet — click the link in your email, then try again.')
+    setEmailOk(await refreshEmailVerified())
+    if (!emailOk) setNotice('Not verified yet — click the link in your email, then try again.')
   }
 
   const onSocial = async (provider) => {
@@ -153,7 +129,7 @@ export default function Auth({ mode = 'signin' }) {
       await recordSignIn(user, provider.toLowerCase())
       setStep('done')
     }
-    catch (err) { setNotice(authErrorMessage(err, `${provider} sign-in was cancelled.`)) }
+    catch (err) { setNotice(err?.message || `${provider} sign-in was cancelled.`) }
     finally { setBusy(false) }
   }
 
@@ -334,11 +310,6 @@ export default function Auth({ mode = 'signin' }) {
                     </p>
                   </div>
                 )}
-
-                {/* On sign-up the consent block sits between the first notice and
-                    this button, so an error shown up there is off-screen when the
-                    button is what the user is looking at. Repeat it here. */}
-                {notice && isSignup && <p className="au-notice" role="alert">{notice}</p>}
 
                 <button type="submit" className="au-submit" disabled={busy}>{busy ? 'Please wait…' : (isSignup ? 'Create account' : 'Sign in')}</button>
 

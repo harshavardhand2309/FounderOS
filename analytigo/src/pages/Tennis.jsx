@@ -1,14 +1,10 @@
-import { Suspense, lazy, useEffect, useLayoutEffect, useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { css } from '../utils/css.js'
 import { useCountUp } from '../hooks/useCountUp.js'
 import { useStickyNav } from '../hooks/useStickyNav.js'
 import TennisView from '../components/TennisView.jsx'
 
-// The analytics dashboard pulls in three.js, recharts and the Excel parser.
-// Keeping it behind lazy() means the Tennis page itself stays light and none
-// of that is downloaded until someone actually asks for their numbers.
-const TennisAnalyticsApp = lazy(() => import('../dash/TennisAnalyticsApp.tsx'))
+const TENNIS_ANALYTICS_UPLOAD_URL = 'https://tennisanalytics-0072.web.app/tennis/upload'
 
 // Tennis page — a single hero screen. Teal theme is exposed as CSS variables on
 // the root so every descendant can reference var(--ta) / rgba(var(--tc), x).
@@ -16,28 +12,14 @@ export default function Tennis() {
   const rootRef = useRef(null)
   const navRef = useRef(null)
   const videoRef = useRef(null)
-  const navigate = useNavigate()
-  const { pathname } = useLocation()
-
-  // Analytics is a state of this page, not a different page — the hero stays
-  // mounted underneath. Driving it off the URL keeps Back/Forward working.
-  const dashOpen = pathname.startsWith('/tennis/analytics')
 
   // Always open at the very top — never inherit scroll from the previous route.
   useLayoutEffect(() => {
-    if (!dashOpen) window.scrollTo(0, 0)
-  }, [dashOpen])
+    window.scrollTo(0, 0)
+  }, [])
 
   useCountUp(rootRef, [])
   useStickyNav(navRef, [])
-
-  // Don't let the page behind the dashboard scroll with it.
-  useEffect(() => {
-    if (!dashOpen) return
-    const prev = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = prev }
-  }, [dashOpen])
 
   // Keep the background video reliably playing (autoplay can be refused; loop on end).
   useEffect(() => {
@@ -73,30 +55,8 @@ export default function Tennis() {
       <TennisView
         navRef={navRef}
         videoRef={videoRef}
-        openDashboard={() => navigate('/tennis/analytics')}
+        openDashboard={() => window.location.assign(TENNIS_ANALYTICS_UPLOAD_URL)}
       />
-
-      {dashOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Tennis analytics"
-          style={css('position:fixed;inset:0;z-index:300;overflow-y:auto;overscroll-behavior:contain;background:#0c0a1f')}
-        >
-          <Suspense fallback={<DashLoading />}>
-            <TennisAnalyticsApp onExit={() => navigate('/tennis')} />
-          </Suspense>
-        </div>
-      )}
-    </div>
-  )
-}
-
-function DashLoading() {
-  return (
-    <div style={css("min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#0c0a1f;color:#dfe5ea;font:600 13px/1 'Sora';letter-spacing:.18em;text-transform:uppercase")}>
-      <span style={css('width:42px;height:42px;border-radius:50%;border:2px solid rgba(15,182,164,.25);border-top-color:#34e6d2;animation:spinSlow .9s linear infinite')} />
-      Loading analytics
     </div>
   )
 }
