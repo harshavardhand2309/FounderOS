@@ -12,8 +12,8 @@ import useHashFlag from '../hooks/useHashFlag.js'
 // that is downloaded until someone actually asks for their numbers. The same
 // import() is exposed as a prefetch below, so hovering the button warms the
 // chunk and the click opens instantly — module registry dedupes the two.
-const loadDash = () => import('../dash/TennisAnalyticsApp.tsx')
-const TennisAnalyticsApp = lazy(loadDash)
+const loadDash = () => import('../dash/app/dashboard/page.tsx')
+const DashboardPage = lazy(loadDash)
 
 // Tennis page — a single hero screen. Teal theme is exposed as CSS variables on
 // the root so every descendant can reference var(--ta) / rgba(var(--tc), x).
@@ -127,7 +127,10 @@ export default function Tennis() {
           style={css('position:fixed;inset:0;z-index:300;overflow-y:auto;overscroll-behavior:contain;background:#0c0a1f')}
         >
           <Suspense fallback={<DashLoading />}>
-            <TennisAnalyticsApp onExit={closeDashboard} />
+            {/* initialSport skips upstream's sport picker — we arrived from the
+                Tennis card, so the sport is already known. "Change Sport" in the
+                dashboard header still reaches the picker. */}
+            <DashboardPage onExit={closeDashboard} initialSport="tennis" />
           </Suspense>
         </div>
       )}

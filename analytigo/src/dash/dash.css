@@ -8,7 +8,9 @@
       sizes, which would break the legal pages (/terms, /privacy, /refunds)
       and /careers — they are the only places on the site that rely on browser
       defaults. Instead the parts of preflight the dashboard actually needs are
-      re-created below, scoped to `.lv-dash`.
+      re-created in preflight.css, scoped to `.lv-dash` via :where() so the
+      scoping costs no specificity — see that file's header, the details are
+      load-bearing.
 
    2. UTILITIES ARE IMPORTED UNLAYERED. The site's own CSS is unlayered, and in
       the cascade unlayered rules beat every @layer rule regardless of
@@ -23,6 +25,10 @@
 
 @layer theme;
 @import "tailwindcss/theme.css" layer(theme);
+/* Must come BEFORE the utilities import — see the header of preflight.css.
+   Where the two can set the same property at equal specificity, the later
+   stylesheet wins, and that has to be the utility. */
+@import "./preflight.css";
 @import "tailwindcss/utilities.css";
 
 /* Only scan the dashboard tree. Without this Tailwind walks the whole project
@@ -46,105 +52,6 @@
 
     --animate-fade-in: lvd-fade-in 0.5s ease-out;
     --animate-slide-up: lvd-slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* ── Scoped preflight ──────────────────────────────────────────────────────
-   The subset of Tailwind's reset the dashboard depends on. Everything is
-   confined to `.lv-dash`, so the rest of the site is untouched. */
-
-.lv-dash,
-.lv-dash *,
-.lv-dash *::before,
-.lv-dash *::after {
-    box-sizing: border-box;
-    /* `border-2` sets width only; without a style the border is invisible. */
-    border-width: 0;
-    border-style: solid;
-    border-color: currentColor;
-}
-
-.lv-dash {
-    font-family: var(--font-body);
-    color: #f5f7fa;
-    -webkit-font-smoothing: antialiased;
-}
-
-.lv-dash h1,
-.lv-dash h2,
-.lv-dash h3,
-.lv-dash h4,
-.lv-dash h5,
-.lv-dash h6 {
-    font-size: inherit;
-    font-weight: inherit;
-    margin: 0;
-}
-
-.lv-dash p,
-.lv-dash figure,
-.lv-dash blockquote,
-.lv-dash pre,
-.lv-dash dl,
-.lv-dash dd,
-.lv-dash hr {
-    margin: 0;
-}
-
-.lv-dash ul,
-.lv-dash ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.lv-dash button,
-.lv-dash input,
-.lv-dash select,
-.lv-dash textarea {
-    font: inherit;
-    color: inherit;
-    letter-spacing: inherit;
-    margin: 0;
-    padding: 0;
-    background-color: transparent;
-    background-image: none;
-}
-
-.lv-dash button {
-    cursor: pointer;
-    text-align: inherit;
-    -webkit-appearance: button;
-    appearance: button;
-}
-
-.lv-dash button:disabled {
-    cursor: default;
-}
-
-.lv-dash img,
-.lv-dash svg,
-.lv-dash video,
-.lv-dash canvas {
-    display: block;
-    vertical-align: middle;
-}
-
-.lv-dash img,
-.lv-dash video {
-    max-width: 100%;
-    height: auto;
-}
-
-.lv-dash table {
-    border-collapse: collapse;
-    text-indent: 0;
-}
-
-/* The site paints dark scrollbars globally; inside the dashboard let the
-   component-level scrollbar styling below take over cleanly. */
-.lv-dash ::selection {
-    background: rgba(6, 182, 212, 0.35);
-    color: #fff;
 }
 
 /* ── Ported utility classes (were `@layer utilities` in globals.css) ───────

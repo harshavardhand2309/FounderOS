@@ -1,0 +1,117 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Scoped preflight — the subset of Tailwind's reset the dashboard depends on,
+   confined to `.lv-dash` so the rest of the site is untouched.
+
+   TWO RULES, both about specificity, both of which were got wrong once:
+
+   1. SCOPE WITH :where(), NEVER A BARE .lv-dash PREFIX.
+      Tailwind's real preflight styles `button` (0,0,1) and `*` (0,0,0) — low
+      enough that any utility class (0,1,0) beats it. Writing `.lv-dash button`
+      raises that to (0,1,1), which outranks `bg-white/5`, `p-6` and `border`
+      and silently strips them from every button and card in the dashboard.
+      `:where()` contributes zero specificity, so scoping is free and the
+      balance upstream relies on is preserved exactly.
+
+   2. THIS FILE IS IMPORTED BEFORE tailwindcss/utilities.css.
+      Where specificity ties (`:where(.lv-dash) *` vs `.border`, both able to
+      set border-width), the later rule wins — and that must be the utility.
+      CSS requires every @import to precede ordinary rules, which is why the
+      reset lives in its own file instead of sitting inline in dash.css.
+
+   It still beats the site's own unlayered element selectors, because this
+   stylesheet ships in the lazily-loaded dashboard chunk and therefore always
+   arrives after index.css.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.lv-dash),
+:where(.lv-dash) *,
+:where(.lv-dash) *::before,
+:where(.lv-dash) *::after {
+    box-sizing: border-box;
+    /* `border-2` sets width only; without a style the border is invisible. */
+    border-width: 0;
+    border-style: solid;
+    border-color: currentColor;
+}
+
+:where(.lv-dash) {
+    font-family: var(--font-body);
+    color: #f5f7fa;
+    -webkit-font-smoothing: antialiased;
+}
+
+:where(.lv-dash) h1,
+:where(.lv-dash) h2,
+:where(.lv-dash) h3,
+:where(.lv-dash) h4,
+:where(.lv-dash) h5,
+:where(.lv-dash) h6 {
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0;
+}
+
+:where(.lv-dash) p,
+:where(.lv-dash) figure,
+:where(.lv-dash) blockquote,
+:where(.lv-dash) pre,
+:where(.lv-dash) dl,
+:where(.lv-dash) dd,
+:where(.lv-dash) hr {
+    margin: 0;
+}
+
+:where(.lv-dash) ul,
+:where(.lv-dash) ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+:where(.lv-dash) button,
+:where(.lv-dash) input,
+:where(.lv-dash) select,
+:where(.lv-dash) textarea {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    background-image: none;
+}
+
+:where(.lv-dash) button {
+    cursor: pointer;
+    text-align: inherit;
+    -webkit-appearance: button;
+    appearance: button;
+}
+
+:where(.lv-dash) button:disabled {
+    cursor: default;
+}
+
+:where(.lv-dash) img,
+:where(.lv-dash) svg,
+:where(.lv-dash) video,
+:where(.lv-dash) canvas {
+    display: block;
+    vertical-align: middle;
+}
+
+:where(.lv-dash) img,
+:where(.lv-dash) video {
+    max-width: 100%;
+    height: auto;
+}
+
+:where(.lv-dash) table {
+    border-collapse: collapse;
+    text-indent: 0;
+}
+
+:where(.lv-dash) ::selection {
+    background: rgba(6, 182, 212, 0.35);
+    color: #fff;
+}
