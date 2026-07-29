@@ -14,6 +14,7 @@ import Loader from '../components/loader/Loader.jsx'
 import T2CourtDraw from '../components/loader/T2CourtDraw.jsx'
 import About from '../components/About.jsx'
 import { joinWaitlist } from '../utils/firebase.js'
+import TrailerModal from '../components/TrailerModal.jsx'
 
 // footer waitlist capture — stores to Firestore when Firebase is configured,
 // otherwise confirms locally so the demo still responds
@@ -256,6 +257,7 @@ export default function Home({ skipLoader = false }) {
   // Skipped when arriving back from a sport page, on every SPA re-entry, and in
   // the loader lab.
   const [loading, setLoading] = useState(() => !skipLoader && !bootLoaderPlayed && !returningToSports())
+  const [trailerOpen, setTrailerOpen] = useState(false)
 
   // mark the boot as played only after this mount committed (StrictMode-safe)
   useEffect(() => { bootLoaderPlayed = true }, [])
@@ -556,7 +558,7 @@ export default function Home({ skipLoader = false }) {
             </span>
           </h1>
           <div className="lr-btn" style={{ ...css('display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:38px'), transitionDelay: '2.1s' }}>
-            <button className="h-glass" style={css("display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:320px;font:600 14px/1 'Sora';color:#16181c;padding:14px 40px 14px 16px;border-radius:12px;background:rgba(255,255,255,.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.24);cursor:pointer;transition:background .15s")}>
+            <button onClick={() => setTrailerOpen(true)} className="h-glass" style={css("display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:320px;font:600 14px/1 'Sora';color:#16181c;padding:14px 40px 14px 16px;border-radius:12px;background:rgba(255,255,255,.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.24);cursor:pointer;transition:background .15s")}>
               <span style={css('width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c9ef2f,#a8cf12);display:flex;align-items:center;justify-content:center;animation:glowPulseP 2.4s infinite')}>
                 <span style={css('width:0;height:0;border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent #16181c;margin-left:2px')} />
               </span>
@@ -675,6 +677,15 @@ export default function Home({ skipLoader = false }) {
 
       {/* floating section navigator (overlay only) */}
       <SiteNav />
+
+      <TrailerModal
+        open={trailerOpen}
+        onClose={() => setTrailerOpen(false)}
+        src="/assets/Finaldraft02.mp4"
+        poster="/assets/home-intro-poster.jpg"
+        title="Lvl-Up Sports trailer"
+        accent="#c9f24a"
+      />
 
       {loading && (
         <Loader
