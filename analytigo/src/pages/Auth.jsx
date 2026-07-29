@@ -137,7 +137,7 @@ export default function Auth({ mode = 'signin' }) {
     <div className="au-root">
       <aside className="au-brand">
         <Link to="/" className="au-logo" aria-label="Lvl-Up Sports home">
-          <img className="au-logo-mark" src="/assets/logo.jpg" alt="" aria-hidden="true" />
+          <img className="au-logo-mark" src="/assets/Logo.png" alt="" aria-hidden="true" />
           <span className="au-logo-word">Lvl-Up</span>
         </Link>
         <div className="au-brand-mid">

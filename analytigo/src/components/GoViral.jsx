@@ -150,10 +150,6 @@ export default function GoViral() {
                 <span key={t} className="gv-tag">{t}</span>
               ))}
             </div>
-            <button className="gv-cta">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 3l14 9-14 9V3z" fill="#fff" /></svg>
-              Generate My Highlight Reel
-            </button>
           </div>
 
           {/* sliding filmstrip of clip cards */}

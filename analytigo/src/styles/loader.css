@@ -236,6 +236,25 @@ body.ld-lock { overflow: hidden !important; }
   letter-spacing: -0.025em;
   color: #0d100c;
 }
+.t2-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  object-fit: cover;
+  display: block;
+  /* The crest is the first thing to resolve, ahead of the court drawing itself. */
+  animation: t2LogoIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes t2LogoIn {
+  from { opacity: 0; transform: scale(0.86); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t2-logo { animation: none; }
+}
+
 .t2-brand-chip {
   background: #4f8a0c;
   color: #fff;

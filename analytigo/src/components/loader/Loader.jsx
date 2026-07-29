@@ -7,7 +7,10 @@ import '../../styles/loader.css'
 // The hero montage (home-intro.mp4) is deliberately NOT gated on — it is a muted
 // background layer with a poster behind it, so making the visitor wait on a
 // multi-megabyte video would double the loader's length for no visible gain.
-export const HOME_ASSETS = ['/assets/home-intro-poster.jpg']
+// Logo.png is gated on because the loader itself renders it — without it the
+// brand lockup would pop in partway through the load, or not at all on a slow
+// connection. It is also the first thing the nav needs once the gate lifts.
+export const HOME_ASSETS = ['/assets/home-intro-poster.jpg', '/assets/Logo.png']
 
 // The template is passed in rather than looked up from a registry so a page that
 // ships one loader doesn't pull the other three into its bundle.

@@ -1,16 +1,16 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { css } from '../utils/css.js'
 import { useCountUp } from '../hooks/useCountUp.js'
 import { useStickyNav } from '../hooks/useStickyNav.js'
 import LandingView from '../components/LandingView.jsx'
-
-const PICKLEBALL_ANALYTICS_UPLOAD_URL = 'https://tennisanalytics-0072.web.app/dashboard#upload'
+import TrailerModal from '../components/TrailerModal.jsx'
 
 // Pickleball page — a single hero screen.
 export default function Landing() {
   const rootRef = useRef(null)
   const navRef = useRef(null)
   const videoRef = useRef(null)
+  const [trailerOpen, setTrailerOpen] = useState(false)
 
   // Always open at the very top — never inherit the scroll position from the
   // previous route (e.g. the homepage).
@@ -47,7 +47,16 @@ export default function Landing() {
       {/* fine noise overlay */}
       <div style={css('position:fixed;inset:0;z-index:200;pointer-events:none;opacity:.022;mix-blend-mode:overlay;background-image:radial-gradient(rgba(255,255,255,.9) .5px,transparent .6px);background-size:3px 3px')} />
 
-      <LandingView navRef={navRef} videoRef={videoRef} openDashboard={() => window.location.assign(PICKLEBALL_ANALYTICS_UPLOAD_URL)} />
+      <LandingView navRef={navRef} videoRef={videoRef} onWatchTrailer={() => setTrailerOpen(true)} />
+
+      <TrailerModal
+        open={trailerOpen}
+        onClose={() => setTrailerOpen(false)}
+        src="/assets/Highlight-Pickleball.mp4"
+        poster="/assets/landing-bg-poster.jpg"
+        title="Lvl-Up Pickleball trailer"
+        accent="#e8232e"
+      />
     </div>
   )
 }

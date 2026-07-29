@@ -1,10 +1,9 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { css } from '../utils/css.js'
 import { useCountUp } from '../hooks/useCountUp.js'
 import { useStickyNav } from '../hooks/useStickyNav.js'
 import TennisView from '../components/TennisView.jsx'
-
-const TENNIS_ANALYTICS_UPLOAD_URL = 'https://tennisanalytics-0072.web.app/tennis/upload'
+import TrailerModal from '../components/TrailerModal.jsx'
 
 // Tennis page — a single hero screen. Teal theme is exposed as CSS variables on
 // the root so every descendant can reference var(--ta) / rgba(var(--tc), x).
@@ -12,6 +11,7 @@ export default function Tennis() {
   const rootRef = useRef(null)
   const navRef = useRef(null)
   const videoRef = useRef(null)
+  const [trailerOpen, setTrailerOpen] = useState(false)
 
   // Always open at the very top — never inherit scroll from the previous route.
   useLayoutEffect(() => {
@@ -55,7 +55,16 @@ export default function Tennis() {
       <TennisView
         navRef={navRef}
         videoRef={videoRef}
-        openDashboard={() => window.location.assign(TENNIS_ANALYTICS_UPLOAD_URL)}
+        onWatchTrailer={() => setTrailerOpen(true)}
+      />
+
+      <TrailerModal
+        open={trailerOpen}
+        onClose={() => setTrailerOpen(false)}
+        src="/assets/highlight-Tennis.mp4"
+        poster="/assets/tennis-bg-poster.jpg"
+        title="Lvl-Up Tennis trailer"
+        accent="#34e6d2"
       />
     </div>
   )

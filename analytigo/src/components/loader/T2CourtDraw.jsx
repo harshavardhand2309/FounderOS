@@ -110,7 +110,13 @@ export default function T2CourtDraw({ p, pct, phase }) {
 
       <div className="t2-inner">
         <div className="t2-top">
-          <span className="t2-brand">LVL-UP<span className="t2-brand-chip">SPORTS</span></span>
+          <span className="t2-brand">
+            {/* Same mark, size and corner as the nav logo it hands off to, so the
+                loader reads as the page assembling itself rather than a splash
+                screen that gets replaced. */}
+            <img className="t2-logo" src="/assets/Logo.png" alt="" aria-hidden="true" />
+            LVL-UP<span className="t2-brand-chip">SPORTS</span>
+          </span>
           <span className="t2-step">{label}</span>
         </div>
 
