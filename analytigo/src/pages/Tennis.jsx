@@ -4,6 +4,7 @@ import { useCountUp } from '../hooks/useCountUp.js'
 import { useStickyNav } from '../hooks/useStickyNav.js'
 import TennisView from '../components/TennisView.jsx'
 import TrailerModal from '../components/TrailerModal.jsx'
+import useHashFlag from '../hooks/useHashFlag.js'
 
 // Tennis page — a single hero screen. Teal theme is exposed as CSS variables on
 // the root so every descendant can reference var(--ta) / rgba(var(--tc), x).
@@ -11,7 +12,8 @@ export default function Tennis() {
   const rootRef = useRef(null)
   const navRef = useRef(null)
   const videoRef = useRef(null)
-  const [trailerOpen, setTrailerOpen] = useState(false)
+  // hash-driven so the browser Back button closes the trailer
+  const [trailerOpen, openTrailer, closeTrailer] = useHashFlag('trailer')
 
   // Always open at the very top — never inherit scroll from the previous route.
   useLayoutEffect(() => {
@@ -55,12 +57,12 @@ export default function Tennis() {
       <TennisView
         navRef={navRef}
         videoRef={videoRef}
-        onWatchTrailer={() => setTrailerOpen(true)}
+        onWatchTrailer={() => openTrailer()}
       />
 
       <TrailerModal
         open={trailerOpen}
-        onClose={() => setTrailerOpen(false)}
+        onClose={closeTrailer}
         src="/assets/highlight-Tennis.mp4"
         poster="/assets/tennis-bg-poster.jpg"
         title="Lvl-Up Tennis trailer"

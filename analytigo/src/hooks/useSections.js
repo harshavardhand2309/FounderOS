@@ -7,7 +7,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 // sections collapse + re-anchor as they're scrolled through.
 
 export const SECTIONS = [
-  { sel: 'header', label: 'Hero' },
+  { sel: 'header', label: 'Home' },
   { sel: '#sports', label: 'Your Sport' },
   { sel: '.bm-section', label: 'Bio Motion' },
   { sel: '.fo-section', label: 'Face Off' },

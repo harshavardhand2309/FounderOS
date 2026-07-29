@@ -4,13 +4,15 @@ import { useCountUp } from '../hooks/useCountUp.js'
 import { useStickyNav } from '../hooks/useStickyNav.js'
 import LandingView from '../components/LandingView.jsx'
 import TrailerModal from '../components/TrailerModal.jsx'
+import useHashFlag from '../hooks/useHashFlag.js'
 
 // Pickleball page — a single hero screen.
 export default function Landing() {
   const rootRef = useRef(null)
   const navRef = useRef(null)
   const videoRef = useRef(null)
-  const [trailerOpen, setTrailerOpen] = useState(false)
+  // hash-driven so the browser Back button closes the trailer
+  const [trailerOpen, openTrailer, closeTrailer] = useHashFlag('trailer')
 
   // Always open at the very top — never inherit the scroll position from the
   // previous route (e.g. the homepage).
@@ -47,11 +49,11 @@ export default function Landing() {
       {/* fine noise overlay */}
       <div style={css('position:fixed;inset:0;z-index:200;pointer-events:none;opacity:.022;mix-blend-mode:overlay;background-image:radial-gradient(rgba(255,255,255,.9) .5px,transparent .6px);background-size:3px 3px')} />
 
-      <LandingView navRef={navRef} videoRef={videoRef} onWatchTrailer={() => setTrailerOpen(true)} />
+      <LandingView navRef={navRef} videoRef={videoRef} onWatchTrailer={() => openTrailer()} />
 
       <TrailerModal
         open={trailerOpen}
-        onClose={() => setTrailerOpen(false)}
+        onClose={closeTrailer}
         src="/assets/Highlight-Pickleball.mp4"
         poster="/assets/landing-bg-poster.jpg"
         title="Lvl-Up Pickleball trailer"

@@ -9,7 +9,7 @@ import '../styles/sectionnav.css'
 // scroll can't throw off the landing. Scroll tracking is rAF-throttled + imperative.
 
 const SECTIONS = [
-  { sel: 'header', label: 'Hero' },
+  { sel: 'header', label: 'Home' },
   { sel: '#sports', label: 'Pick Your Game' },
   { sel: '.bm-section', label: 'Bio Motion Analysis' },
   { sel: '.fo-section', label: 'Face Off' },

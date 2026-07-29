@@ -1,79 +1,147 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { css } from '../utils/css.js'
 
-// Full-screen trailer player. The Watch Trailer buttons on the Tennis and
-// Pickleball heroes had no handler at all — they rendered, hovered, and did
-// nothing. Now that the trailer is the only call to action on those pages, it
-// has to actually play something.
+// Full-screen trailer. Edge to edge on a black ground, no transport controls —
+// it runs like a title sequence, not a video player. Escape or the browser's
+// Back button returns to the page (the caller drives `open` from the URL hash,
+// so Back gets a real history entry to pop).
 //
-// accent is the page's own colour (teal on Tennis, red on Pickleball) so the
-// player belongs to the page it opened from.
+// The video is letterboxed rather than cropped: `cover` would fill the screen
+// but cut whatever sits near the frame edges, which on a trailer means the
+// titles and the logo. Black bars on a black ground read as intentional.
 export default function TrailerModal({ open, onClose, src, poster, title, accent = '#c9f24a' }) {
-  const closeRef = useRef(null)
   const videoRef = useRef(null)
   const restoreRef = useRef(null)
+  const hideTimer = useRef(0)
+  const [chromeOn, setChromeOn] = useState(true)
+  const [needsSound, setNeedsSound] = useState(false)
 
-  // Esc to close, and keep focus inside the dialog while it is open.
+  // Reveal the close button on movement, then let it fade back out.
+  const wake = useCallback(() => {
+    setChromeOn(true)
+    clearTimeout(hideTimer.current)
+    hideTimer.current = setTimeout(() => setChromeOn(false), 2600)
+  }, [])
+
   useEffect(() => {
     if (!open) return
     restoreRef.current = document.activeElement
-    const onKey = (e) => {
-      if (e.key === 'Escape') onClose()
-    }
+
+    const onKey = (e) => { if (e.key === 'Escape') onClose() }
     document.addEventListener('keydown', onKey)
 
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    closeRef.current?.focus()
+    // loader.css sets `html { scrollbar-gutter: stable }`, which keeps reserving
+    // the scrollbar strip even once the page stops scrolling — leaving an ~11px
+    // band of page beside a supposedly full-screen video. Release it while the
+    // trailer owns the screen.
+    const root = document.documentElement
+    const prevGutter = root.style.scrollbarGutter
+    root.style.scrollbarGutter = 'auto'
+    wake()
+
+    const v = videoRef.current
+    // The click that opened this is a user gesture, so sound is normally
+    // allowed. If the browser refuses anyway, fall back to muted and offer the
+    // sound back rather than playing a silent trailer with no way to fix it.
+    if (v) {
+      v.muted = false
+      const p = v.play()
+      if (p && p.catch) {
+        p.catch(() => {
+          v.muted = true
+          setNeedsSound(true)
+          const q = v.play()
+          if (q && q.catch) q.catch(() => {})
+        })
+      }
+    }
 
     return () => {
       document.removeEventListener('keydown', onKey)
       document.body.style.overflow = prevOverflow
-      // Pause on unmount so audio never outlives the dialog.
+      root.style.scrollbarGutter = prevGutter
+      clearTimeout(hideTimer.current)
       try { videoRef.current?.pause() } catch { /* ignore */ }
       try { restoreRef.current?.focus?.() } catch { /* ignore */ }
     }
-  }, [open, onClose])
+  }, [open, onClose, wake])
 
   if (!open) return null
+
+  const enableSound = (e) => {
+    e.stopPropagation()
+    const v = videoRef.current
+    if (!v) return
+    v.muted = false
+    setNeedsSound(false)
+    const p = v.play()
+    if (p && p.catch) p.catch(() => {})
+  }
 
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-label={title}
-      onClick={onClose}
-      style={css('position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(6,7,9,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)')}
+      onMouseMove={wake}
+      onTouchStart={wake}
+      style={css('position:fixed;inset:0;z-index:600;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden')}
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={css('position:relative;width:100%;max-width:1040px;border-radius:16px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,.14);box-shadow:0 40px 100px rgba(0,0,0,.7)')}
-      >
-        <video
-          ref={videoRef}
-          src={src}
-          poster={poster}
-          controls
-          autoPlay
-          playsInline
-          preload="metadata"
-          style={css('display:block;width:100%;height:auto;max-height:78vh;background:#000')}
-        />
-      </div>
+      <video
+        ref={videoRef}
+        src={src}
+        poster={poster}
+        autoPlay
+        playsInline
+        preload="metadata"
+        onEnded={onClose}
+        style={css('width:100%;height:100%;object-fit:contain;display:block;background:#000')}
+      />
+
+      {/* Sound is only offered when the browser blocked it — otherwise there is
+          no control on screen at all. */}
+      {needsSound && (
+        <button
+          onClick={enableSound}
+          style={{
+            ...css("position:absolute;left:50%;bottom:38px;transform:translateX(-50%);display:inline-flex;align-items:center;gap:9px;font:600 13px/1 'Sora';color:#0a0b0d;background:rgba(255,255,255,.92);border:none;padding:12px 20px;border-radius:999px;cursor:pointer;backdrop-filter:blur(8px)"),
+            outlineColor: accent,
+          }}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" />
+            <path d="M17 8.5a5 5 0 0 1 0 7M20 6a9 9 0 0 1 0 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+          Tap for sound
+        </button>
+      )}
 
       <button
-        ref={closeRef}
         onClick={onClose}
         aria-label="Close trailer"
         style={{
-          ...css('position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#eef1f3;cursor:pointer;backdrop-filter:blur(8px)'),
+          ...css('position:absolute;top:22px;right:22px;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.24);color:#fff;cursor:pointer;backdrop-filter:blur(8px);transition:opacity .3s'),
+          opacity: chromeOn ? 1 : 0,
+          pointerEvents: chromeOn ? 'auto' : 'none',
           outlineColor: accent,
         }}
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         </svg>
       </button>
+
+      <span
+        aria-hidden="true"
+        style={{
+          ...css("position:absolute;top:30px;left:26px;font:600 10.5px/1 'JetBrains Mono';letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5);transition:opacity .3s"),
+          opacity: chromeOn ? 1 : 0,
+        }}
+      >
+        Esc or back to return
+      </span>
     </div>
   )
 }
