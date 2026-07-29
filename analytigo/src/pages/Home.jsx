@@ -15,6 +15,7 @@ import T2CourtDraw from '../components/loader/T2CourtDraw.jsx'
 import About from '../components/About.jsx'
 import { joinWaitlist } from '../utils/firebase.js'
 import TrailerModal from '../components/TrailerModal.jsx'
+import StickyRail, { RailPicker, readDesign } from '../components/nav/StickyRail.jsx'
 
 // footer waitlist capture — stores to Firestore when Firebase is configured,
 // otherwise confirms locally so the demo still responds
@@ -258,6 +259,8 @@ export default function Home({ skipLoader = false }) {
   // the loader lab.
   const [loading, setLoading] = useState(() => !skipLoader && !bootLoaderPlayed && !returningToSports())
   const [trailerOpen, setTrailerOpen] = useState(false)
+  // review build: which sticky-rail direction is on screen (null = today's globe)
+  const [navDesign, setNavDesign] = useState(() => readDesign())
 
   // mark the boot as played only after this mount committed (StrictMode-safe)
   useEffect(() => { bootLoaderPlayed = true }, [])
@@ -675,13 +678,17 @@ export default function Home({ skipLoader = false }) {
         </div>
       </footer>
 
-      {/* floating section navigator (overlay only) */}
-      <SiteNav />
+      {/* floating section navigator (overlay only). While a sticky-rail
+          direction is being trialled the globe steps aside, so the two are
+          compared rather than stacked. */}
+      {!navDesign && <SiteNav />}
+      <StickyRail design={navDesign} />
+      <RailPicker design={navDesign} onChange={setNavDesign} />
 
       <TrailerModal
         open={trailerOpen}
         onClose={() => setTrailerOpen(false)}
-        src="/assets/Finaldraft02.mp4"
+        src="/assets/Finaldraft03.mp4"
         poster="/assets/home-intro-poster.jpg"
         title="Lvl-Up Sports trailer"
         accent="#c9f24a"
