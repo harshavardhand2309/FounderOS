@@ -207,9 +207,9 @@ function SportGlyph({ name, c }) {
 // full Pick Your Game roster — 2 live, 2 coming soon
 const SPORTS = [
   { title: 'Tennis', to: '/tennis', img: '/assets/sport-tennis.jpg', desc: 'Serve, return, and full rally intelligence.', glyph: 'tennis', live: true },
-  { title: 'Pickleball', to: '/pickleball', img: '/assets/sport-pickleball-edit.png', desc: 'Shot tracking, kitchen play, and rally analytics.', glyph: 'pickle', live: true },
+  { title: 'Pickleball', to: '/pickleball', img: '/assets/sport-pickleball-edit.webp', desc: 'Shot tracking, kitchen play, and rally analytics.', glyph: 'pickle', live: true },
   { title: 'Badminton', img: '/assets/sport-badminton.jpg', desc: 'Smash speed, footwork, and rally control.', glyph: 'badminton', live: false },
-  { title: 'Padel', img: '/assets/sports-paddle.png', desc: 'Wall play, lob depth, and point construction.', glyph: 'padel', live: false },
+  { title: 'Padel', img: '/assets/sports-paddle.webp', desc: 'Wall play, lob depth, and point construction.', glyph: 'padel', live: false },
 ]
 // footer: one app card per audience, each with store links
 const FOOT_ROLES = [

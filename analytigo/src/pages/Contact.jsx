@@ -179,7 +179,7 @@ export default function Contact() {
               <p>Monday to Saturday, 9:00–19:00 IST. Messages sent outside those hours are picked up the next working morning.</p>
             </div>
             <PageMedia
-              src="/assets/sports-paddle.png"
+              src="/assets/sports-paddle.webp"
               alt="A padel court of the kind we fit"
               tag="On site"
               caption="A walkthrough takes about an hour and settles mounting, lighting and network before anything is ordered."
