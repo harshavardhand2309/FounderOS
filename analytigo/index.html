@@ -14,19 +14,13 @@
     <!-- The loading screen shows the crest, so start fetching it during HTML
          parse rather than waiting for React to mount and request it. -->
     <link rel="preload" as="image" href="/assets/Logo.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Sora + JetBrains Mono are the marketing site's faces. Outfit and Inter
-         belong to the analytics dashboard, which is ported from Sportsanalytics
-         and asks for them by name (font-display / --font-body, 123 call sites).
-         They ride along on this one request rather than a second stylesheet:
-         the extra CSS is a few hundred bytes, and the browser only downloads a
-         .woff2 once something on screen actually renders in that family — which
-         never happens outside the dashboard. -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300..900&family=Inter:wght@300..800&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Webfonts are self-hosted (src/styles/fonts.css, files in
+         public/assets/fonts). There is deliberately no Google Fonts <link>: that
+         was a render-blocking request to a third party on every page load, and
+         when it could not be reached the whole site fell back to a system serif.
+         Sora + JetBrains Mono are the site's faces; Outfit + Inter belong to the
+         analytics dashboard and are only downloaded once something renders in
+         them, so the marketing pages never pay for them. -->
   </head>
   <body>
     <div id="root"></div>
