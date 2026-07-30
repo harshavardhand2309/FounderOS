@@ -6,14 +6,13 @@ import { useStickyNav } from '../hooks/useStickyNav.js'
 import TennisView from '../components/TennisView.jsx'
 import TrailerModal from '../components/TrailerModal.jsx'
 import useHashFlag from '../hooks/useHashFlag.js'
+import useFullBleed from '../hooks/useFullBleed.js'
 
-// The analytics dashboard pulls in three.js, recharts and the Excel parser.
-// Keeping it behind lazy() means the Tennis page itself stays light and none of
-// that is downloaded until someone actually asks for their numbers. The same
-// import() is exposed as a prefetch below, so hovering the button warms the
-// chunk and the click opens instantly — module registry dedupes the two.
-const loadDash = () => import('../dash/app/dashboard/page.tsx')
-const DashboardPage = lazy(loadDash)
+// PRODUCTION: the Tennis hero offers the trailer only — the View Analytics
+// button is not shown yet. /tennis/analytics still resolves, so the dashboard is
+// reachable by URL for demos, and stays behind lazy() so three.js, recharts and
+// the Excel parser are never in the payload of a visit that does not ask for it.
+const DashboardPage = lazy(() => import('../dash/app/dashboard/page.tsx'))
 
 // Tennis page — a single hero screen. Teal theme is exposed as CSS variables on
 // the root so every descendant can reference var(--ta) / rgba(var(--tc), x).
@@ -26,19 +25,17 @@ export default function Tennis() {
   // hash-driven so the browser Back button closes the trailer
   const [trailerOpen, openTrailer, closeTrailer] = useHashFlag('trailer')
 
+  // one 100vh hero, no scroll — drop the reserved scrollbar strip so the video
+  // and its gradients reach the right edge
+  useFullBleed()
+
   // Analytics is a state of this page, not a different page — the hero stays
   // mounted underneath. Driving it off the URL keeps Back/Forward working and
   // makes /tennis/analytics a real, linkable address.
   const dashOpen = pathname.startsWith('/tennis/analytics')
-  // Whether *we* pushed the analytics entry. If so, closing unwinds it so Back
-  // and the Close button land in exactly the same place; on a deep link there
-  // is nothing to unwind, so we replace instead of navigating out of the site.
+  // Nothing in the UI pushes this entry any more, so a visit is always a deep
+  // link and Close replaces rather than navigating out of the site.
   const pushedDash = useRef(false)
-
-  const openDashboard = useCallback(() => {
-    pushedDash.current = true
-    navigate('/tennis/analytics')
-  }, [navigate])
 
   const closeDashboard = useCallback(() => {
     if (pushedDash.current) {
@@ -115,8 +112,6 @@ export default function Tennis() {
         navRef={navRef}
         videoRef={videoRef}
         onWatchTrailer={() => openTrailer()}
-        openDashboard={openDashboard}
-        prefetchDashboard={loadDash}
       />
 
       {dashOpen && (

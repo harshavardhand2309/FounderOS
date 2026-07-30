@@ -5,6 +5,7 @@ import { useStickyNav } from '../hooks/useStickyNav.js'
 import LandingView from '../components/LandingView.jsx'
 import TrailerModal from '../components/TrailerModal.jsx'
 import useHashFlag from '../hooks/useHashFlag.js'
+import useFullBleed from '../hooks/useFullBleed.js'
 
 // Pickleball page — a single hero screen.
 export default function Landing() {
@@ -13,6 +14,10 @@ export default function Landing() {
   const videoRef = useRef(null)
   // hash-driven so the browser Back button closes the trailer
   const [trailerOpen, openTrailer, closeTrailer] = useHashFlag('trailer')
+
+  // one 100vh hero, no scroll — drop the reserved scrollbar strip so the video
+  // and its gradients reach the right edge
+  useFullBleed()
 
   // Always open at the very top — never inherit the scroll position from the
   // previous route (e.g. the homepage).
