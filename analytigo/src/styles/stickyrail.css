@@ -76,6 +76,15 @@
   overflow-x: auto;
   scrollbar-width: none;
   scroll-snap-type: x proximity;
+  /* Safety net for the fit ladder below. Those breakpoints are sized from
+     measurements, but text width depends on whether Sora has arrived — and it is
+     fetched from a third party, so on a cold cache or a blocked request the tabs
+     render in fallback metrics and can be wider than measured. The strip already
+     scrolls and place() keeps the active tab in view; this fades the last 28px so
+     any residual overflow reads as "there is more to the right" instead of a
+     clipped word. No overflow, no visible mask. */
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
 }
 
 .sr-items::-webkit-scrollbar { display: none; }
@@ -145,28 +154,32 @@
    whole as long as possible. Every step is sized from a measurement of the real
    rail, listed as the width it recovers.
 
+   Each threshold is set above the width where the step becomes necessary, so the
+   row lands with slack rather than to the pixel — for the same webfont-metrics
+   reason as the mask on .sr-items.
+
    These used to live under `.sr-item` while the grip block wrote
    `[data-sr="grip"] .sr-item` — two class-level selectors beating one, so none
    of it ever applied and the last tab was clipped at 1440 and 1366, the two
    commonest laptop widths. Grip is folded into the base selectors above now, so
    there is nothing left to outrank these. */
-@media (max-width: 1530px) {          /* −66px: the logo already says it */
+@media (max-width: 1560px) {          /* −66px: the logo already says it */
   .sr-word { display: none; }
 }
-@media (max-width: 1400px) {          /* −40px */
+@media (max-width: 1460px) {          /* −40px */
   .sr-item { padding: 10px 11px; }
 }
-@media (max-width: 1300px) {          /* −180px: the 01…10 prefixes are decoration */
+@media (max-width: 1340px) {          /* −180px: the 01…10 prefixes are decoration */
   .sr-num { display: none; }
 }
-@media (max-width: 1040px) {          /* −58px */
-  .sr-signin { display: none; }
-  .sr-item { padding: 10px 9px; }     /* −40px */
-}
-@media (max-width: 1060px) {          /* −60px */
+@media (max-width: 1100px) {          /* −60px */
   .sr-item { font-size: 11px; letter-spacing: .03em; }
 }
-@media (max-width: 980px) {           /* −40px, the last step before the 900px cutoff */
+@media (max-width: 1040px) {          /* −58px + −40px */
+  .sr-signin { display: none; }
+  .sr-item { padding: 10px 9px; }
+}
+@media (max-width: 1000px) {          /* −40px, the last step before the 900px cutoff */
   .sr-item { padding: 10px 7px; }
   .sr-nav { gap: 9px; padding: 0 12px; }
 }
