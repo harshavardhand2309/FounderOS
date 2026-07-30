@@ -827,11 +827,29 @@ button {
   width: 100%;
   height: 100%;
 }
-/* sharp full-composition layer (contain = no crop / zoom / distortion) */
+/* Sharp full-composition layer. `contain` shows the whole frame with no crop,
+   which is right until the window is WIDER than the footage — then it fits the
+   height and leaves pillarbox bars down both sides, filled by the blurred layer
+   below. Those bars are visibly darker and softer than the centre, and they are
+   large: the backdrops are 1920x1070 (aspect 1.794), and a maximised 1080p
+   Chrome window is 1920x937 (2.049) once browser chrome takes its height, which
+   pillarboxes 119px each side. An ultrawide loses 311px each side.
+
+   So `contain` holds only while the window is narrower than the footage. From
+   16/9 up it switches to `cover`, which fills the width completely and trades a
+   modest vertical crop for it — 66px top and bottom on that 1920x937 window.
+
+   Deliberately scoped to the aspect ratios that are actually broken: anything
+   narrower than 16/9 letterboxes rather than pillarboxes and already looks
+   right, so it is left exactly as it was. Portrait phones especially — `cover`
+   there would crop the subject out of the shot entirely. */
 .lh-bg .lh-video {
   object-fit: contain;
   object-position: center;
   filter: contrast(1.05) saturate(1.06);
+}
+@media (min-aspect-ratio: 16/9) {
+  .lh-bg .lh-video { object-fit: cover; }
 }
 /* blurred edge-fill behind the sharp layer — covers any letterbox / pillarbox
    gap so the backdrop reaches edge-to-edge on every aspect ratio (no black bars),

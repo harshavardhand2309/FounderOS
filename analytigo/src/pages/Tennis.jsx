@@ -4,8 +4,9 @@ import { css } from '../utils/css.js'
 import { useCountUp } from '../hooks/useCountUp.js'
 import { useStickyNav } from '../hooks/useStickyNav.js'
 import TennisView from '../components/TennisView.jsx'
-import TrailerModal from '../components/TrailerModal.jsx'
+import TrailerModal, { warmTrailer } from '../components/TrailerModal.jsx'
 import useHashFlag from '../hooks/useHashFlag.js'
+import useFullBleed from '../hooks/useFullBleed.js'
 
 // The analytics dashboard pulls in three.js, recharts and the Excel parser.
 // Keeping it behind lazy() means the Tennis page itself stays light and none of
@@ -14,6 +15,11 @@ import useHashFlag from '../hooks/useHashFlag.js'
 // chunk and the click opens instantly — module registry dedupes the two.
 const loadDash = () => import('../dash/app/dashboard/page.tsx')
 const DashboardPage = lazy(loadDash)
+
+// One source of truth for the trailer, so the poster, the <video> and the
+// hover-warm can never drift apart.
+const TRAILER = '/assets/highlight-Tennis.mp4'
+const TRAILER_POSTER = '/assets/highlight-Tennis-poster.jpg'
 
 // Tennis page — a single hero screen. Teal theme is exposed as CSS variables on
 // the root so every descendant can reference var(--ta) / rgba(var(--tc), x).
@@ -25,6 +31,10 @@ export default function Tennis() {
   const { pathname } = useLocation()
   // hash-driven so the browser Back button closes the trailer
   const [trailerOpen, openTrailer, closeTrailer] = useHashFlag('trailer')
+
+  // one 100vh hero, no scroll — drop the reserved scrollbar strip so the video
+  // and its gradients reach the right edge
+  useFullBleed()
 
   // Analytics is a state of this page, not a different page — the hero stays
   // mounted underneath. Driving it off the URL keeps Back/Forward working and
@@ -115,6 +125,7 @@ export default function Tennis() {
         navRef={navRef}
         videoRef={videoRef}
         onWatchTrailer={() => openTrailer()}
+        onPrepareTrailer={() => warmTrailer(TRAILER)}
         openDashboard={openDashboard}
         prefetchDashboard={loadDash}
       />
@@ -138,8 +149,8 @@ export default function Tennis() {
       <TrailerModal
         open={trailerOpen}
         onClose={closeTrailer}
-        src="/assets/highlight-Tennis.mp4"
-        poster="/assets/tennis-bg-poster.jpg"
+        src={TRAILER}
+        poster={TRAILER_POSTER}
         title="Lvl-Up Tennis trailer"
         accent="#34e6d2"
       />

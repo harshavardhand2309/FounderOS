@@ -3,8 +3,14 @@ import { css } from '../utils/css.js'
 import { useCountUp } from '../hooks/useCountUp.js'
 import { useStickyNav } from '../hooks/useStickyNav.js'
 import LandingView from '../components/LandingView.jsx'
-import TrailerModal from '../components/TrailerModal.jsx'
+import TrailerModal, { warmTrailer } from '../components/TrailerModal.jsx'
 import useHashFlag from '../hooks/useHashFlag.js'
+import useFullBleed from '../hooks/useFullBleed.js'
+
+// One source of truth for the trailer, so the poster, the <video> and the
+// hover-warm can never drift apart.
+const TRAILER = '/assets/Highlight-Pickleball.mp4'
+const TRAILER_POSTER = '/assets/Highlight-Pickleball-poster.jpg'
 
 // Pickleball page — a single hero screen.
 export default function Landing() {
@@ -13,6 +19,10 @@ export default function Landing() {
   const videoRef = useRef(null)
   // hash-driven so the browser Back button closes the trailer
   const [trailerOpen, openTrailer, closeTrailer] = useHashFlag('trailer')
+
+  // one 100vh hero, no scroll — drop the reserved scrollbar strip so the video
+  // and its gradients reach the right edge
+  useFullBleed()
 
   // Always open at the very top — never inherit the scroll position from the
   // previous route (e.g. the homepage).
@@ -49,13 +59,18 @@ export default function Landing() {
       {/* fine noise overlay */}
       <div style={css('position:fixed;inset:0;z-index:200;pointer-events:none;opacity:.022;mix-blend-mode:overlay;background-image:radial-gradient(rgba(255,255,255,.9) .5px,transparent .6px);background-size:3px 3px')} />
 
-      <LandingView navRef={navRef} videoRef={videoRef} onWatchTrailer={() => openTrailer()} />
+      <LandingView
+        navRef={navRef}
+        videoRef={videoRef}
+        onWatchTrailer={() => openTrailer()}
+        onPrepareTrailer={() => warmTrailer(TRAILER)}
+      />
 
       <TrailerModal
         open={trailerOpen}
         onClose={closeTrailer}
-        src="/assets/Highlight-Pickleball.mp4"
-        poster="/assets/landing-bg-poster.jpg"
+        src={TRAILER}
+        poster={TRAILER_POSTER}
         title="Lvl-Up Pickleball trailer"
         accent="#e8232e"
       />

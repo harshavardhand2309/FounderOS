@@ -1,6 +1,30 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { css } from '../utils/css.js'
 
+// Start buffering a trailer before it is asked for.
+//
+// The modal only mounts on click, so until then nothing about the file has been
+// fetched and the first two seconds are spent downloading rather than playing.
+// Hovering the button is a good enough signal of intent to start early: this
+// parks a detached <video preload="auto"> on the URL, and when the modal opens
+// its own element requests the same URL and is served from cache.
+//
+// Cached per src so a user sweeping over the button does not start it again, and
+// deliberately never removed — the buffer is the whole point, and there is one
+// trailer per page.
+const warmed = new Map()
+export function warmTrailer(src) {
+  if (!src || warmed.has(src) || typeof document === 'undefined') return
+  try {
+    const v = document.createElement('video')
+    v.preload = 'auto'
+    v.muted = true
+    v.src = src
+    v.load()
+    warmed.set(src, v)
+  } catch { /* a failed warm just means the old behaviour */ }
+}
+
 // Full-screen trailer. Edge to edge on a black ground, no transport controls —
 // it runs like a title sequence, not a video player. Escape or the browser's
 // Back button returns to the page (the caller drives `open` from the URL hash,
@@ -95,7 +119,8 @@ export default function TrailerModal({ open, onClose, src, poster, title, accent
         poster={poster}
         autoPlay
         playsInline
-        preload="metadata"
+        // by the time this mounts the user has committed — buffer freely
+        preload="auto"
         onEnded={onClose}
         style={css('width:100%;height:100%;object-fit:contain;display:block;background:#000')}
       />
