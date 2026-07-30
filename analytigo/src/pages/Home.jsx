@@ -9,14 +9,14 @@ import Commentary from '../components/Commentary.jsx'
 import Recommendations from '../components/Recommendations.jsx'
 import Ecosystem from '../components/Ecosystem.jsx'
 import HeroShowcase from '../components/HeroShowcase.jsx'
-import SiteNav from '../components/nav/SiteNav.jsx'
 import Loader from '../components/loader/Loader.jsx'
 import T2CourtDraw from '../components/loader/T2CourtDraw.jsx'
 import About from '../components/About.jsx'
 import { joinWaitlist } from '../utils/firebase.js'
 import TrailerModal from '../components/TrailerModal.jsx'
 import useHashFlag from '../hooks/useHashFlag.js'
-import StickyRail, { RailPicker, readDesign } from '../components/nav/StickyRail.jsx'
+import StickyRail from '../components/nav/StickyRail.jsx'
+import SectionNav from '../components/SectionNav.jsx'
 
 // footer waitlist capture — stores to Firestore when Firebase is configured,
 // otherwise confirms locally so the demo still responds
@@ -262,7 +262,6 @@ export default function Home({ skipLoader = false }) {
   // hash-driven so the browser Back button closes the trailer
   const [trailerOpen, openTrailer, closeTrailer] = useHashFlag('trailer')
   // review build: which sticky-rail direction is on screen (null = today's globe)
-  const [navDesign, setNavDesign] = useState(() => readDesign())
 
   // mark the boot as played only after this mount committed (StrictMode-safe)
   useEffect(() => { bootLoaderPlayed = true }, [])
@@ -680,12 +679,12 @@ export default function Home({ skipLoader = false }) {
         </div>
       </footer>
 
-      {/* floating section navigator (overlay only). While a sticky-rail
-          direction is being trialled the globe steps aside, so the two are
-          compared rather than stacked. */}
-      {!navDesign && <SiteNav />}
-      <StickyRail design={navDesign} />
-      <RailPicker design={navDesign} onChange={setNavDesign} />
+      {/* Section navigator. Grip Tape is final, so the rail is the navigator on
+          desktop and the floating globe it was trialled against is gone. The
+          rail needs a wide row, so below 900px SectionNav's button + sheet still
+          takes over — the CSS decides which one is on screen, they never stack. */}
+      <StickyRail />
+      <SectionNav />
 
       <TrailerModal
         open={trailerOpen}

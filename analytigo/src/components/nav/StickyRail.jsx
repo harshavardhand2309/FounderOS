@@ -3,29 +3,12 @@ import { Link } from 'react-router-dom'
 import useSections from '../../hooks/useSections.js'
 import '../../styles/stickyrail.css'
 
-// Sticky section rail, in ten switchable directions, so we can judge them on the
-// real page rather than in a mockup. Scroll-spy, smooth-scroll and the pinned
-// "Pick Your Game" stage are all handled by useSections, which the globe already
-// uses — this is a second skin on the same engine, not a second engine.
+// Sticky section rail — Grip Tape, chosen from the ten variants that were built
+// to be judged on the real page. The other nine, the review picker and the
+// runtime switch are gone, and Grip's styling is now the rail's own.
 //
-// REVIEW BUILD: the floating picker bottom-left switches direction and remembers
-// the choice. Once one is chosen, keep its CSS block, drop the other nine, delete
-// DESIGNS/RailPicker and render <StickyRail design="<id>" /> with no picker.
-
-export const DESIGNS = [
-  { id: 'scoreboard', name: 'Scoreboard' },
-  { id: 'baseline', name: 'Baseline' },
-  { id: 'dugout', name: 'Dugout' },
-  { id: 'grip', name: 'Grip Tape' },
-  { id: 'broadcast', name: 'Broadcast' },
-  { id: 'flap', name: 'Split-Flap' },
-  { id: 'neon', name: 'Neon Wire' },
-  { id: 'stat', name: 'Stat Chips' },
-  { id: 'kitchen', name: 'Kitchen' },
-  { id: 'hex', name: 'Hex Shield' },
-]
-
-const STORE = 'lvlup:navdesign'
+// Scroll-spy, section progress, smooth-scroll and the pinned "Pick Your Game"
+// stage all live in useSections, so this file is only the skin.
 
 // Ten full section names do not fit one row at laptop widths, so the rail gets
 // a short form while the sections keep their real names.
@@ -42,38 +25,22 @@ const SHORT = {
   Connect: 'Connect',
 }
 
-export function readDesign() {
-  try {
-    const q = new URLSearchParams(window.location.search).get('nav')
-    if (q) return q === 'off' ? null : q
-    const s = localStorage.getItem(STORE)
-    return s === 'off' ? null : (s || 'dugout')
-  } catch {
-    return 'dugout'
-  }
-}
-
-export default function StickyRail({ design }) {
-  const { items, active, go } = useSections()
+export default function StickyRail() {
+  // `progress` is section-relative, not scrollHeight-relative — see useSections.
+  const { items, active, progress, go } = useSections()
   const [shown, setShown] = useState(false)
-  const [progress, setProgress] = useState(0)
   const itemsRef = useRef(null)
   const btnRefs = useRef([])
 
-  // Hero is index 0 — the brand handles it, so the rail lists the rest.
+  // Home is index 0 — the brand handles it, so the rail lists the rest.
   const railItems = useMemo(
     () => items.map((it, i) => ({ ...it, i })).filter((it) => it.i > 0),
     [items],
   )
 
   useEffect(() => {
-    const onScroll = () => {
-      const doc = document.documentElement
-      const max = doc.scrollHeight - window.innerHeight
-      setProgress(max > 0 ? (window.scrollY / max) * 100 : 0)
-      // reveal once the hero is behind us
-      setShown(window.scrollY > window.innerHeight * 0.6)
-    }
+    // reveal once the hero is behind us
+    const onScroll = () => setShown(window.scrollY > window.innerHeight * 0.6)
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll)
     onScroll()
@@ -98,16 +65,16 @@ export default function StickyRail({ design }) {
     }
   }, [active])
 
-  useLayoutEffect(place, [place, design, railItems.length])
+  useLayoutEffect(place, [place, railItems.length])
   useEffect(() => {
     window.addEventListener('resize', place)
     return () => window.removeEventListener('resize', place)
   }, [place])
 
-  if (!design || railItems.length < 2) return null
+  if (railItems.length < 2) return null
 
   return (
-    <div className={`sr-wrap${shown ? ' is-on' : ''}`} data-sr={design}>
+    <div className={`sr-wrap${shown ? ' is-on' : ''}`}>
       <nav className="sr-nav" aria-label="Section shortcuts">
         <button className="sr-brand" onClick={() => go(0)} aria-label="Back to top">
           <img className="sr-mark" src="/assets/Logo.png" alt="" aria-hidden="true" />
@@ -125,11 +92,6 @@ export default function StickyRail({ design }) {
               onClick={() => go(it.i)}
             >
               <span className="sr-num">{String(n + 1).padStart(2, '0')}</span>
-              <span className="sr-spark" aria-hidden="true">
-                {[0, 1, 2, 3, 4].map((k) => (
-                  <i key={k} style={{ height: 4 + ((n * 3 + k * 5) % 9) + 'px' }} />
-                ))}
-              </span>
               <span className="sr-lbl">{SHORT[it.label] || it.label}</span>
             </button>
           ))}
@@ -140,47 +102,16 @@ export default function StickyRail({ design }) {
           <Link to="/signup" className="sr-go">Get Started</Link>
         </div>
 
-        <i className="sr-prog" style={{ '--sr-p': progress + '%' }} aria-hidden="true" />
+        <i
+          className="sr-prog"
+          style={{ '--sr-p': progress.toFixed(2) + '%' }}
+          role="progressbar"
+          aria-label="Page progress"
+          aria-valuenow={Math.round(progress)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        />
       </nav>
-    </div>
-  )
-}
-
-/* ── review-only picker ─────────────────────────────────────────────────── */
-export function RailPicker({ design, onChange }) {
-  const [open, setOpen] = useState(false)
-  const current = DESIGNS.find((d) => d.id === design)
-
-  const set = (id) => {
-    try { localStorage.setItem(STORE, id ?? 'off') } catch { /* ignore */ }
-    onChange(id)
-  }
-
-  return (
-    <div className="sr-pick">
-      {open && (
-        <div className="sr-pick-panel" role="group" aria-label="Navigation style">
-          {DESIGNS.map((d) => (
-            <button
-              key={d.id}
-              aria-pressed={design === d.id}
-              onClick={() => set(d.id)}
-            >
-              {d.name}
-            </button>
-          ))}
-          <button aria-pressed={design === null} onClick={() => set(null)}>
-            Off (globe only)
-          </button>
-          <p className="sr-pick-note">
-            Your choice is remembered on this device. Share a specific one with
-            <code> ?nav={design || 'off'}</code>.
-          </p>
-        </div>
-      )}
-      <button className="sr-pick-tab" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
-        Nav style: <b>{current ? current.name : 'Off'}</b> {open ? '▾' : '▴'}
-      </button>
     </div>
   )
 }

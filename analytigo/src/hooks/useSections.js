@@ -26,8 +26,11 @@ const absTop = (el) => el.getBoundingClientRect().top + window.scrollY
 export default function useSections() {
   const [items, setItems] = useState([])
   const [active, setActive] = useState(0)
+  const [progress, setProgress] = useState(0)
   const elsRef = useRef([])
   const activeRef = useRef(0)
+  const progRef = useRef(0)
+  const settledRef = useRef(false)
   const scrollRaf = useRef(0)
 
   useLayoutEffect(() => {
@@ -40,7 +43,7 @@ export default function useSections() {
       setItems(found.map((f) => ({ label: f.label })))
     }
     resolve()
-    const t = setTimeout(resolve, 900) // re-resolve once layout/pins settle
+    const t = setTimeout(() => { resolve(); settledRef.current = true }, 900) // re-resolve once layout/pins settle
     return () => clearTimeout(t)
   }, [])
 
@@ -55,6 +58,33 @@ export default function useSections() {
       let a = 0
       for (let i = 0; i < els.length; i++) if (absTop(els[i]) <= cy) a = i
       if (a !== activeRef.current) { activeRef.current = a; setActive(a) }
+
+      // Progress is measured in SECTIONS, not document pixels, because this
+      // page's height is not stable: the four scroll-pinned stages are 420vh
+      // while they play their reveal and collapse to 100vh once finished, and
+      // the unlock re-anchors scroll to the track's top (Home.jsx). Over a first
+      // pass the document loses ~9,700px of the 22,100 it started with — so
+      // scrollY / (scrollHeight - innerHeight) snapped backwards four times,
+      // once per stage. Second visits start unlocked, which is why it only
+      // misbehaved the first time through.
+      //
+      // Each section owns an equal slice of the bar, and the bar glides to the
+      // next slice over the last viewport of approach. That makes it continuous
+      // across a section boundary (the departing fraction reaches exactly 1 as
+      // the arriving one starts at 0), monotonic, and blind to a track
+      // collapsing — a pin refunds scroll, but it never changes which section
+      // you are in. It also means the bar always agrees with the highlighted
+      // tab, which is the only thing a rail progress bar should claim.
+      //
+      // Held at 0 until the section list has settled: the first resolve runs
+      // while the boot loader is still up, where the sections sit at different
+      // offsets and the list can be short — dividing by a smaller count reads
+      // high, and the bar would drop when the real layout arrived. The rail is
+      // hidden until 0.6vh of scroll anyway, so nothing is on screen yet.
+      const next = a + 1 < els.length ? absTop(els[a + 1]) : null
+      const frac = next == null ? 0 : clamp(1 - (next - cy) / vh, 0, 1)
+      const p = settledRef.current ? ((a + frac) / (els.length - 1)) * 100 : 0
+      if (Math.abs(p - progRef.current) > 0.05) { progRef.current = p; setProgress(p) }
     }
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -95,5 +125,5 @@ export default function useSections() {
 
   useEffect(() => () => { if (scrollRaf.current) cancelAnimationFrame(scrollRaf.current) }, [])
 
-  return { items, active, go, clamp }
+  return { items, active, progress, go, clamp }
 }

@@ -1,11 +1,16 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   Sticky section rail — ten directions, switchable at runtime while we decide.
+   Sticky section rail — Grip Tape.
 
-   Namespaced `sr-` (unused elsewhere in the codebase) and driven by
-   [data-sr="<id>"] on the wrapper. Every direction uses only the brand greens
-   already in index.css: #c9f24a, #d6f637, #4f8a0c.
+   Namespaced `sr-` (unused elsewhere in the codebase). Ten directions were built
+   so they could be judged on the real page; Grip Tape won, and the other nine
+   plus the review picker and the [data-sr] switch are gone. Grip's rules are
+   folded into the base selectors rather than left behind an attribute prefix,
+   because that prefix was two class-level selectors deep and silently outranked
+   every responsive rule below (see "Fitting ten tabs"). Rendering was pixel-diffed
+   against the reviewed version at 1680px and 1920px to confirm the fold changed
+   nothing.
 
-   Once a direction is chosen, delete the other nine blocks and the picker.
+   Brand greens only, all already in index.css: #c9f24a, #d6f637, #4f8a0c.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .sr-wrap {
@@ -58,8 +63,10 @@
 }
 
 .sr-word {
-  font: 800 14px/1 'Sora', sans-serif;
-  letter-spacing: -.01em;
+  font: 800 15px/1 'Sora', sans-serif;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #e2eddb;
 }
 
 .sr-items {
@@ -77,24 +84,35 @@
   flex: 0 0 auto;
   scroll-snap-align: center;
   position: relative;
-  background: none;
   border: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
-  font: 600 12.5px/1 'Sora', sans-serif;
-  padding: 9px 11px;
-  border-radius: 8px;
-  color: inherit;
+  font: 800 12px/1 'Sora', sans-serif;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 10px 13px;
+  border-radius: 2px;
+  background: #171f15;
+  color: #7e9175;
+  /* the tape shear. Children counter-skew so the type stays upright. */
+  transform: skewX(-11deg);
   transition: color .18s, background .18s, transform .18s;
 }
 
+.sr-item > * { display: inline-block; transform: skewX(11deg); }
+
+.sr-item:hover { background: #1e2a1b; color: #cfe0c6; }
+.sr-item[aria-current="true"] { background: #d6f637; color: #10160f; }
+
 .sr-num { font: 600 9px/1 'JetBrains Mono', monospace; opacity: .5; }
 
-/* the sparkline belongs to Stat Chips only — otherwise it silently eats width */
-.sr-spark { display: none; }
+/* .sr-spark belonged to the Stat Chips variant and is gone from the markup with
+   it — it rendered zero-wide but still cost the 6px item gap, 60px across ten
+   tabs, because `.sr-item > *` overrode the display:none that was meant to hide
+   it. Nothing to hide now. */
 
 .sr-item:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 
@@ -121,192 +139,47 @@
 
 .sr-prog { position: absolute; left: 0; bottom: 0; height: 2px; width: var(--sr-p, 0%); }
 
-/* Ten full labels need ~1240px. Below that, shed the wordmark, then Sign In,
-   so the section labels stay whole for as long as possible. */
-@media (max-width: 1240px) {
-  .sr-item { padding: 9px 8px; }
-  .sr-items { gap: 1px; }
-  .sr-nav { gap: 10px; }
+/* ── Fitting ten tabs ──────────────────────────────────────────────────────
+   Ten labels plus the brand and both CTAs need ~1530px. Below that the row is
+   shed in order of how little each part is missed, so the section labels stay
+   whole as long as possible. Every step is sized from a measurement of the real
+   rail, listed as the width it recovers.
+
+   These used to live under `.sr-item` while the grip block wrote
+   `[data-sr="grip"] .sr-item` — two class-level selectors beating one, so none
+   of it ever applied and the last tab was clipped at 1440 and 1366, the two
+   commonest laptop widths. Grip is folded into the base selectors above now, so
+   there is nothing left to outrank these. */
+@media (max-width: 1530px) {          /* −66px: the logo already says it */
   .sr-word { display: none; }
 }
-@media (max-width: 1040px) {
+@media (max-width: 1400px) {          /* −40px */
+  .sr-item { padding: 10px 11px; }
+}
+@media (max-width: 1300px) {          /* −180px: the 01…10 prefixes are decoration */
+  .sr-num { display: none; }
+}
+@media (max-width: 1040px) {          /* −58px */
   .sr-signin { display: none; }
-  .sr-item { font-size: 12px; }
+  .sr-item { padding: 10px 9px; }     /* −40px */
+}
+@media (max-width: 1060px) {          /* −60px */
+  .sr-item { font-size: 11px; letter-spacing: .03em; }
+}
+@media (max-width: 980px) {           /* −40px, the last step before the 900px cutoff */
+  .sr-item { padding: 10px 7px; }
+  .sr-nav { gap: 9px; padding: 0 12px; }
 }
 
-/* ══════════ 1 · SCOREBOARD ══════════ */
-[data-sr="scoreboard"] .sr-nav { background: #07100a; border-bottom: 2px solid #1d3a20; }
-[data-sr="scoreboard"] .sr-word { font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: .12em; font-size: 12px; color: #dff7c4; text-transform: uppercase; }
-[data-sr="scoreboard"] .sr-item { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #5c7a5e; border-radius: 2px; padding: 10px; }
-[data-sr="scoreboard"] .sr-num { color: #2e4a30; opacity: 1; }
-[data-sr="scoreboard"] .sr-item[aria-current="true"] { color: #08140b; background: #c9f24a; box-shadow: 0 0 18px rgba(201, 242, 74, .55); }
-[data-sr="scoreboard"] .sr-item[aria-current="true"] .sr-num { color: #08140b; }
-[data-sr="scoreboard"] .sr-signin { color: #8fae91; }
-[data-sr="scoreboard"] .sr-go { background: #c9f24a; color: #07100a; border-radius: 2px; font-family: 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; font-size: 11px; }
-[data-sr="scoreboard"] .sr-prog { background: #c9f24a; box-shadow: 0 0 10px #c9f24a; }
+/* Colours that belong to the bar itself rather than to a tab. */
+.sr-nav { background: #10160f; border-bottom: 1px solid #24331f; overflow: hidden; }
+.sr-signin { color: #9db094; }
+.sr-go { text-transform: uppercase; letter-spacing: .06em; background: #d6f637; color: #10160f; transform: skewX(-11deg); border-radius: 2px; }
+.sr-prog { background: #d6f637; }
 
-/* ══════════ 2 · BASELINE ══════════ */
-[data-sr="baseline"] .sr-nav { background: #f4f5f0; border-bottom: 3px solid #11150f; height: 66px; }
-[data-sr="baseline"] .sr-word { color: #11150f; }
-[data-sr="baseline"] .sr-item { color: #4a5347; border-right: 1px solid #cdd2c6; border-radius: 0; padding: 10px 15px; }
-[data-sr="baseline"] .sr-item:last-child { border-right: 0; }
-[data-sr="baseline"] .sr-item[aria-current="true"] { color: #11150f; font-weight: 800; }
-[data-sr="baseline"] .sr-marker { left: 0; bottom: -3px; height: 3px; width: var(--sr-mw, 0px); transform: translateX(var(--sr-mx, 0px)); background: #4f8a0c; }
-[data-sr="baseline"] .sr-marker::after { content: ''; position: absolute; left: 50%; top: -9px; width: 11px; height: 11px; margin-left: -5.5px; border-radius: 50%; background: #c9f24a; border: 1.5px solid #11150f; }
-[data-sr="baseline"] .sr-signin { color: #4a5347; }
-[data-sr="baseline"] .sr-go { background: #11150f; color: #f4f5f0; }
-[data-sr="baseline"] .sr-prog { display: none; }
-
-/* ══════════ 3 · DUGOUT ══════════ */
-[data-sr="dugout"] .sr-nav { background: #0d1410; border-bottom: 1px solid #1e2b21; height: 70px; gap: 14px; }
-[data-sr="dugout"] .sr-word { color: #e7f0e2; }
-[data-sr="dugout"] .sr-items { gap: 7px; }
-[data-sr="dugout"] .sr-item { flex-direction: column; align-items: flex-start; gap: 3px; background: #141d17; border: 1px solid #223026; border-radius: 9px; padding: 8px 13px 9px; color: #93a596; font-size: 12px; box-shadow: 0 2px 0 #0a100c; }
-[data-sr="dugout"] .sr-num { font-size: 8.5px; letter-spacing: .16em; opacity: .75; }
-[data-sr="dugout"] .sr-item::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 2px; background: transparent; border-radius: 9px 9px 0 0; transition: background .2s; }
-[data-sr="dugout"] .sr-item:hover { transform: translateY(-2px); color: #d7e6d0; }
-[data-sr="dugout"] .sr-item[aria-current="true"] { background: #1b2a1f; border-color: #4f8a0c; color: #eaf7e2; transform: translateY(-3px); box-shadow: 0 6px 0 #0a100c, 0 10px 26px -10px rgba(79, 138, 12, .6); }
-[data-sr="dugout"] .sr-item[aria-current="true"]::before { background: #c9f24a; }
-[data-sr="dugout"] .sr-signin { color: #a9bcaa; }
-[data-sr="dugout"] .sr-go { background: #c9f24a; color: #0d1410; border-radius: 9px; }
-[data-sr="dugout"] .sr-prog { background: #4f8a0c; }
-
-/* ══════════ 4 · GRIP TAPE ══════════ */
-[data-sr="grip"] .sr-nav { background: #10160f; border-bottom: 1px solid #24331f; overflow: hidden; }
-[data-sr="grip"] .sr-word { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; color: #e2eddb; }
-[data-sr="grip"] .sr-item { font-weight: 800; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; transform: skewX(-11deg); border-radius: 2px; color: #7e9175; padding: 10px 13px; background: #171f15; }
-[data-sr="grip"] .sr-item > * { display: inline-block; transform: skewX(11deg); }
-[data-sr="grip"] .sr-item:hover { background: #1e2a1b; color: #cfe0c6; }
-[data-sr="grip"] .sr-item[aria-current="true"] { background: #d6f637; color: #10160f; }
-[data-sr="grip"] .sr-signin { color: #9db094; }
-[data-sr="grip"] .sr-go { text-transform: uppercase; letter-spacing: .06em; background: #d6f637; color: #10160f; transform: skewX(-11deg); border-radius: 2px; }
-[data-sr="grip"] .sr-prog { background: #d6f637; }
-
-/* ══════════ 5 · BROADCAST ══════════ */
-[data-sr="broadcast"] .sr-nav { background: linear-gradient(90deg, #06210f 0%, #0a2b14 60%, #06210f 100%); border-bottom: 1px solid #124a22; height: 64px; }
-[data-sr="broadcast"] .sr-word { font-weight: 800; text-transform: uppercase; letter-spacing: .08em; font-size: 14px; color: #fff; }
-[data-sr="broadcast"] .sr-items { z-index: 1; }
-[data-sr="broadcast"] .sr-item { font-weight: 800; font-size: 12px; letter-spacing: .07em; text-transform: uppercase; color: #86b394; border-radius: 0; padding: 10px 13px; }
-[data-sr="broadcast"] .sr-item[aria-current="true"] { color: #fff; }
-[data-sr="broadcast"] .sr-marker { left: 0; top: 10px; bottom: 10px; width: var(--sr-mw, 0px); transform: translateX(var(--sr-mx, 0px)); background: linear-gradient(90deg, #4f8a0c, #7bc41a); border-radius: 2px; z-index: 0; box-shadow: 0 0 20px rgba(123, 196, 26, .45); }
-[data-sr="broadcast"] .sr-signin { color: #9fc7ab; }
-[data-sr="broadcast"] .sr-go { text-transform: uppercase; letter-spacing: .07em; background: #fff; color: #06210f; border-radius: 2px; }
-[data-sr="broadcast"] .sr-prog { background: #7bc41a; }
-
-/* ══════════ 6 · SPLIT-FLAP ══════════ */
-[data-sr="flap"] .sr-nav { background: #0b0d0a; border-bottom: 1px solid #1c2118; }
-[data-sr="flap"] .sr-word { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #cdd8bb; }
-[data-sr="flap"] .sr-items { gap: 4px; }
-[data-sr="flap"] .sr-item { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; background: #15180f; border-radius: 3px; color: #6f7d5e; padding: 11px; border-top: 1px solid #232a1b; border-bottom: 1px solid #050604; overflow: hidden; }
-[data-sr="flap"] .sr-item::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0, 0, 0, .55); }
-[data-sr="flap"] .sr-item[aria-current="true"] { background: #d6f637; color: #12160c; animation: srFlap .42s cubic-bezier(.4, 0, .2, 1); }
-@keyframes srFlap {
-  0% { transform: perspective(200px) rotateX(-88deg); filter: brightness(.4); }
-  100% { transform: perspective(200px) rotateX(0deg); filter: brightness(1); }
+/* Below 900px there is no room for a ten-tab row, and SectionNav's floating
+   button + sheet takes over (sectionnav.css uses the same breakpoint, so the two
+   are never on screen together). */
+@media (max-width: 900px) {
+  .sr-wrap { display: none; }
 }
-@media (prefers-reduced-motion: reduce) { [data-sr="flap"] .sr-item[aria-current="true"] { animation: none; } }
-[data-sr="flap"] .sr-signin { color: #98a687; }
-[data-sr="flap"] .sr-go { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; background: #d6f637; color: #12160c; border-radius: 3px; }
-[data-sr="flap"] .sr-prog { background: #d6f637; }
-
-/* ══════════ 7 · NEON WIRE ══════════ */
-[data-sr="neon"] .sr-nav { background: rgba(8, 12, 9, .72); backdrop-filter: blur(18px) saturate(170%); -webkit-backdrop-filter: blur(18px) saturate(170%); border-bottom: 1px solid rgba(160, 255, 120, .13); }
-[data-sr="neon"] .sr-word { font-weight: 500; letter-spacing: .06em; color: #dff3d4; }
-[data-sr="neon"] .sr-item { font-weight: 500; font-size: 12.5px; letter-spacing: .03em; color: #7f8f79; }
-[data-sr="neon"] .sr-num { display: none; }
-[data-sr="neon"] .sr-item:hover { color: #d7ecc9; }
-[data-sr="neon"] .sr-item[aria-current="true"] { color: #c8ff8a; }
-[data-sr="neon"] .sr-marker { left: 0; bottom: 12px; height: 1.5px; width: var(--sr-mw, 0px); transform: translateX(var(--sr-mx, 0px)); background: #b6ff7a; box-shadow: 0 0 10px #9bff4d, 0 0 22px rgba(155, 255, 77, .55); border-radius: 2px; }
-[data-sr="neon"] .sr-signin { color: #9fb098; }
-[data-sr="neon"] .sr-go { background: transparent; border: 1px solid rgba(160, 255, 120, .55); color: #c8ff8a; }
-[data-sr="neon"] .sr-prog { background: linear-gradient(90deg, transparent, #9bff4d); }
-
-/* ══════════ 8 · STAT CHIPS ══════════ */
-[data-sr="stat"] .sr-nav { background: #0a0f0b; border-bottom: 1px solid #1a241c; height: 68px; }
-[data-sr="stat"] .sr-word { color: #dfeada; }
-[data-sr="stat"] .sr-items { gap: 6px; }
-[data-sr="stat"] .sr-item { background: #0f170f; border: 1px solid #1d281f; border-radius: 20px; color: #8fa08c; padding: 8px 13px 8px 9px; gap: 8px; font-size: 11.5px; }
-[data-sr="stat"] .sr-num { display: none; }
-[data-sr="stat"] .sr-spark { display: inline-flex; align-items: flex-end; gap: 1.5px; height: 13px; }
-[data-sr="stat"] .sr-spark i { width: 2px; background: #2f4433; border-radius: 1px; display: block; }
-[data-sr="stat"] .sr-item:hover { border-color: #2c4030; color: #cfe0c9; }
-[data-sr="stat"] .sr-item[aria-current="true"] { background: #16261a; border-color: #4f8a0c; color: #eefae6; }
-[data-sr="stat"] .sr-item[aria-current="true"] .sr-spark i { background: #c9f24a; }
-[data-sr="stat"] .sr-signin { color: #a3b3a0; }
-[data-sr="stat"] .sr-go { background: #4f8a0c; color: #eefae6; border-radius: 20px; }
-[data-sr="stat"] .sr-prog { background: #4f8a0c; }
-
-/* ══════════ 9 · KITCHEN LINE ══════════ */
-[data-sr="kitchen"] .sr-nav { background: #123b1b; border-bottom: 2px solid #f4f5f0; height: 64px; }
-[data-sr="kitchen"] .sr-word { color: #f4f5f0; }
-[data-sr="kitchen"] .sr-items { z-index: 1; }
-[data-sr="kitchen"] .sr-item { color: #a9c9ad; border-radius: 0; padding: 11px 14px; font-weight: 700; font-size: 12px; border-left: 1px solid rgba(244, 245, 240, .16); }
-[data-sr="kitchen"] .sr-item:first-child { border-left: 0; }
-[data-sr="kitchen"] .sr-item[aria-current="true"] { color: #123b1b; }
-[data-sr="kitchen"] .sr-marker { left: 0; top: 0; bottom: 0; width: var(--sr-mw, 0px); transform: translateX(var(--sr-mx, 0px)); background: repeating-linear-gradient(135deg, #cfe96a 0 7px, #c2e155 7px 14px); border-left: 2px solid #f4f5f0; border-right: 2px solid #f4f5f0; z-index: 0; }
-[data-sr="kitchen"] .sr-signin { color: #cfe0d0; }
-[data-sr="kitchen"] .sr-go { background: #f4f5f0; color: #123b1b; }
-[data-sr="kitchen"] .sr-prog { background: #cfe96a; }
-
-/* ══════════ 10 · HEX SHIELD ══════════ */
-[data-sr="hex"] .sr-nav { background: #0c1a10; border-bottom: 1px solid #1b3520; height: 70px; }
-[data-sr="hex"] .sr-word { font-weight: 900; letter-spacing: -.02em; color: #e6f5e0; }
-[data-sr="hex"] .sr-items { gap: 3px; }
-[data-sr="hex"] .sr-item { clip-path: polygon(11% 0, 89% 0, 100% 50%, 89% 100%, 11% 100%, 0 50%); background: #14261a; color: #8dab92; border-radius: 0; padding: 11px 17px; font-weight: 700; font-size: 12px; }
-[data-sr="hex"] .sr-num { display: none; }
-[data-sr="hex"] .sr-item:hover { background: #1b3222; color: #d6ecd2; }
-[data-sr="hex"] .sr-item[aria-current="true"] { background: linear-gradient(150deg, #c9f24a, #93c81f); color: #0c1a10; }
-[data-sr="hex"] .sr-signin { color: #a6bfaa; }
-[data-sr="hex"] .sr-go { background: #c9f24a; color: #0c1a10; clip-path: polygon(9% 0, 91% 0, 100% 50%, 91% 100%, 9% 100%, 0 50%); padding: 11px 20px; border-radius: 0; }
-[data-sr="hex"] .sr-prog { background: #c9f24a; }
-
-/* ══════════ the picker — REVIEW ONLY, delete with the losing nine ══════════ */
-.sr-pick {
-  position: fixed;
-  left: 14px;
-  bottom: 14px;
-  z-index: 90;
-  font: 600 11px/1 'Sora', sans-serif;
-}
-
-.sr-pick-tab {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: #11150f;
-  color: #d9e8cc;
-  border: 1px solid #2b3a26;
-  border-radius: 999px;
-  padding: 9px 14px;
-  cursor: pointer;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
-}
-.sr-pick-tab b { color: #c9f24a; font-weight: 700; }
-
-.sr-pick-panel {
-  margin-top: 8px;
-  width: 232px;
-  background: #0e130c;
-  border: 1px solid #2b3a26;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, .55);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5px;
-}
-
-.sr-pick-panel button {
-  font: 600 11px/1.2 'Sora', sans-serif;
-  text-align: left;
-  padding: 8px 9px;
-  border-radius: 8px;
-  border: 1px solid #26331f;
-  background: #141a11;
-  color: #a9bd9c;
-  cursor: pointer;
-}
-.sr-pick-panel button:hover { border-color: #4f8a0c; color: #e4f3d8; }
-.sr-pick-panel button[aria-pressed="true"] { background: #c9f24a; color: #0e130c; border-color: #c9f24a; }
-.sr-pick-panel button:focus-visible { outline: 2px solid #c9f24a; outline-offset: 2px; }
-.sr-pick-note { grid-column: 1 / -1; color: #6f7f64; font: 500 10px/1.45 'Sora', sans-serif; margin: 2px 0 0; }
