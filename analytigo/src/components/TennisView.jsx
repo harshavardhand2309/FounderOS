@@ -4,7 +4,7 @@ import { css } from '../utils/css.js'
 // Tennis marketing view — a single hero screen (lower sections removed).
 // Teal accent via var(--ta) / rgba(var(--tc), x) set on the page root.
 
-export default function TennisView({ navRef, videoRef, onWatchTrailer }) {
+export default function TennisView({ navRef, videoRef, onWatchTrailer, onPrepareTrailer }) {
   // Both the logo and the Home button return to the Pick Your Game section via this one
   // handler, so they can never diverge. Router <Link>/#sports preserves Back/Forward.
   const goHome = () => { try { sessionStorage.setItem('lvlup:goto', 'sports') } catch { /* ignore */ } }
@@ -43,7 +43,12 @@ export default function TennisView({ navRef, videoRef, onWatchTrailer }) {
             Transform every match into actionable insights with AI-powered tennis analytics, serve intelligence, return analysis, rally performance, court coverage, and match intelligence.
           </p>
           <div style={css('display:flex;align-items:center;gap:16px;flex-wrap:wrap')}>
-            <button onClick={onWatchTrailer} className="h-glass" style={css("display:inline-flex;align-items:center;gap:14px;font:600 15px/1 'Sora';color:#eef1f3;padding:11px 22px 11px 12px;border-radius:13px;background:rgba(255,255,255,.07);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.16);cursor:pointer;transition:background .15s")}>
+            <button
+              onClick={onWatchTrailer}
+              onMouseEnter={onPrepareTrailer}
+              onFocus={onPrepareTrailer}
+              onTouchStart={onPrepareTrailer}
+              className="h-glass" style={css("display:inline-flex;align-items:center;gap:14px;font:600 15px/1 'Sora';color:#eef1f3;padding:11px 22px 11px 12px;border-radius:13px;background:rgba(255,255,255,.07);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.16);cursor:pointer;transition:background .15s")}>
               <span style={css('width:38px;height:38px;border-radius:50%;background:var(--ta);display:flex;align-items:center;justify-content:center;animation:glowPulse 2.4s infinite')}>
                 <span style={css('width:0;height:0;border-style:solid;border-width:7px 0 7px 11px;border-color:transparent transparent transparent #06201d;margin-left:3px')} />
               </span>

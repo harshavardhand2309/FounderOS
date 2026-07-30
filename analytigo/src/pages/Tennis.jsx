@@ -4,7 +4,7 @@ import { css } from '../utils/css.js'
 import { useCountUp } from '../hooks/useCountUp.js'
 import { useStickyNav } from '../hooks/useStickyNav.js'
 import TennisView from '../components/TennisView.jsx'
-import TrailerModal from '../components/TrailerModal.jsx'
+import TrailerModal, { warmTrailer } from '../components/TrailerModal.jsx'
 import useHashFlag from '../hooks/useHashFlag.js'
 import useFullBleed from '../hooks/useFullBleed.js'
 
@@ -13,6 +13,11 @@ import useFullBleed from '../hooks/useFullBleed.js'
 // reachable by URL for demos, and stays behind lazy() so three.js, recharts and
 // the Excel parser are never in the payload of a visit that does not ask for it.
 const DashboardPage = lazy(() => import('../dash/app/dashboard/page.tsx'))
+
+// One source of truth for the trailer, so the poster, the <video> and the
+// hover-warm can never drift apart.
+const TRAILER = '/assets/highlight-Tennis.mp4'
+const TRAILER_POSTER = '/assets/highlight-Tennis-poster.jpg'
 
 // Tennis page — a single hero screen. Teal theme is exposed as CSS variables on
 // the root so every descendant can reference var(--ta) / rgba(var(--tc), x).
@@ -112,6 +117,7 @@ export default function Tennis() {
         navRef={navRef}
         videoRef={videoRef}
         onWatchTrailer={() => openTrailer()}
+        onPrepareTrailer={() => warmTrailer(TRAILER)}
       />
 
       {dashOpen && (
@@ -133,8 +139,8 @@ export default function Tennis() {
       <TrailerModal
         open={trailerOpen}
         onClose={closeTrailer}
-        src="/assets/highlight-Tennis.mp4"
-        poster="/assets/tennis-bg-poster.jpg"
+        src={TRAILER}
+        poster={TRAILER_POSTER}
         title="Lvl-Up Tennis trailer"
         accent="#34e6d2"
       />

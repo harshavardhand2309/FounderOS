@@ -13,10 +13,17 @@ import Loader from '../components/loader/Loader.jsx'
 import T2CourtDraw from '../components/loader/T2CourtDraw.jsx'
 import About from '../components/About.jsx'
 import { joinWaitlist } from '../utils/firebase.js'
-import TrailerModal from '../components/TrailerModal.jsx'
+import TrailerModal, { warmTrailer } from '../components/TrailerModal.jsx'
 import useHashFlag from '../hooks/useHashFlag.js'
 import StickyRail from '../components/nav/StickyRail.jsx'
 import SectionNav from '../components/SectionNav.jsx'
+
+// One source of truth for the hero trailer, so the poster, the <video> and the
+// hover-warm can never drift apart. The poster used to be home-intro-poster.jpg
+// — the *background montage's* first frame, a different clip — so opening the
+// trailer flashed an unrelated still before the real footage arrived.
+const TRAILER = '/assets/Finaldraft03.mp4'
+const TRAILER_POSTER = '/assets/Finaldraft03-poster.jpg'
 
 // footer waitlist capture — stores to Firestore when Firebase is configured,
 // otherwise confirms locally so the demo still responds
@@ -200,9 +207,9 @@ function SportGlyph({ name, c }) {
 // full Pick Your Game roster — 2 live, 2 coming soon
 const SPORTS = [
   { title: 'Tennis', to: '/tennis', img: '/assets/sport-tennis.jpg', desc: 'Serve, return, and full rally intelligence.', glyph: 'tennis', live: true },
-  { title: 'Pickleball', to: '/pickleball', img: '/assets/sport-pickleball-edit.png', desc: 'Shot tracking, kitchen play, and rally analytics.', glyph: 'pickle', live: true },
+  { title: 'Pickleball', to: '/pickleball', img: '/assets/sport-pickleball-edit.webp', desc: 'Shot tracking, kitchen play, and rally analytics.', glyph: 'pickle', live: true },
   { title: 'Badminton', img: '/assets/sport-badminton.jpg', desc: 'Smash speed, footwork, and rally control.', glyph: 'badminton', live: false },
-  { title: 'Padel', img: '/assets/sports-paddle.png', desc: 'Wall play, lob depth, and point construction.', glyph: 'padel', live: false },
+  { title: 'Padel', img: '/assets/sports-paddle.webp', desc: 'Wall play, lob depth, and point construction.', glyph: 'padel', live: false },
 ]
 // footer: one app card per audience, each with store links
 const FOOT_ROLES = [
@@ -562,7 +569,12 @@ export default function Home({ skipLoader = false }) {
             </span>
           </h1>
           <div className="lr-btn" style={{ ...css('display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:38px'), transitionDelay: '2.1s' }}>
-            <button onClick={() => openTrailer()} className="h-glass" style={css("display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:320px;font:600 14px/1 'Sora';color:#16181c;padding:14px 40px 14px 16px;border-radius:12px;background:rgba(255,255,255,.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.24);cursor:pointer;transition:background .15s")}>
+            <button
+              onClick={() => openTrailer()}
+              onMouseEnter={() => warmTrailer(TRAILER)}
+              onFocus={() => warmTrailer(TRAILER)}
+              onTouchStart={() => warmTrailer(TRAILER)}
+              className="h-glass" style={css("display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:320px;font:600 14px/1 'Sora';color:#16181c;padding:14px 40px 14px 16px;border-radius:12px;background:rgba(255,255,255,.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.24);cursor:pointer;transition:background .15s")}>
               <span style={css('width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c9ef2f,#a8cf12);display:flex;align-items:center;justify-content:center;animation:glowPulseP 2.4s infinite')}>
                 <span style={css('width:0;height:0;border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent #16181c;margin-left:2px')} />
               </span>
@@ -689,8 +701,8 @@ export default function Home({ skipLoader = false }) {
       <TrailerModal
         open={trailerOpen}
         onClose={closeTrailer}
-        src="/assets/Finaldraft03.mp4"
-        poster="/assets/home-intro-poster.jpg"
+        src={TRAILER}
+        poster={TRAILER_POSTER}
         title="Lvl-Up Sports trailer"
         accent="#c9f24a"
       />
