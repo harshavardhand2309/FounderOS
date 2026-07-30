@@ -9,10 +9,10 @@ import { css } from '../utils/css.js'
 // One highlight reel per sport, in playing order. Only the card in focus plays,
 // so four videos never decode at once.
 const CLIPS = [
-  { platform: 'Tennis', poster: '/assets/sport-tennis.jpg', glyph: 'ig', src: '/assets/highlight-Tennis.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
-  { platform: 'Pickleball', poster: '/assets/sport-pickleball-edit.webp', glyph: 'yt', src: '/assets/Highlight-Pickleball.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
-  { platform: 'Badminton', poster: '/assets/sport-badminton.jpg', glyph: 'st', src: '/assets/Highlight-Badminton.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
-  { platform: 'Padel', poster: '/assets/sports-paddle.webp', glyph: 'hl', src: '/assets/highlight-padle.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
+  { platform: 'Tennis', poster: '/assets/sport-tennis.jpg', glyph: 'ig', src: '/assets/highlight-Tennis-loop.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
+  { platform: 'Pickleball', poster: '/assets/sport-pickleball-edit.webp', glyph: 'yt', src: '/assets/Highlight-Pickleball-loop.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
+  { platform: 'Badminton', poster: '/assets/sport-badminton.jpg', glyph: 'st', src: '/assets/Highlight-Badminton-loop.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
+  { platform: 'Padel', poster: '/assets/sports-paddle.webp', glyph: 'hl', src: '/assets/highlight-padle-loop.mp4', ratio: '9:16 Reel', res: '1080×1920', dur: 'Highlight', fmt: 'Download MP4' },
 ]
 
 const WAVE = [6, 11, 7, 14, 9, 16, 8, 13, 6, 12, 9, 15, 7, 10]
