@@ -13,7 +13,7 @@ import Loader from '../components/loader/Loader.jsx'
 import T2CourtDraw from '../components/loader/T2CourtDraw.jsx'
 import About from '../components/About.jsx'
 import { joinWaitlist } from '../utils/firebase.js'
-import TrailerModal, { warmTrailer } from '../components/TrailerModal.jsx'
+import TrailerModal, { warmTrailer, cancelWarm } from '../components/TrailerModal.jsx'
 import useHashFlag from '../hooks/useHashFlag.js'
 import StickyRail from '../components/nav/StickyRail.jsx'
 import SectionNav from '../components/SectionNav.jsx'
@@ -574,6 +574,8 @@ export default function Home({ skipLoader = false }) {
               onMouseEnter={() => warmTrailer(TRAILER)}
               onFocus={() => warmTrailer(TRAILER)}
               onTouchStart={() => warmTrailer(TRAILER)}
+              onMouseLeave={cancelWarm}
+              onBlur={cancelWarm}
               className="h-glass" style={css("display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:320px;font:600 14px/1 'Sora';color:#16181c;padding:14px 40px 14px 16px;border-radius:12px;background:rgba(255,255,255,.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.24);cursor:pointer;transition:background .15s")}>
               <span style={css('width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c9ef2f,#a8cf12);display:flex;align-items:center;justify-content:center;animation:glowPulseP 2.4s infinite')}>
                 <span style={css('width:0;height:0;border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent #16181c;margin-left:2px')} />

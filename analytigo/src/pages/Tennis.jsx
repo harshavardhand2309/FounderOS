@@ -4,7 +4,7 @@ import { css } from '../utils/css.js'
 import { useCountUp } from '../hooks/useCountUp.js'
 import { useStickyNav } from '../hooks/useStickyNav.js'
 import TennisView from '../components/TennisView.jsx'
-import TrailerModal, { warmTrailer } from '../components/TrailerModal.jsx'
+import TrailerModal, { warmTrailer, cancelWarm } from '../components/TrailerModal.jsx'
 import useHashFlag from '../hooks/useHashFlag.js'
 import useFullBleed from '../hooks/useFullBleed.js'
 
@@ -118,6 +118,7 @@ export default function Tennis() {
         videoRef={videoRef}
         onWatchTrailer={() => openTrailer()}
         onPrepareTrailer={() => warmTrailer(TRAILER)}
+        onCancelTrailer={cancelWarm}
       />
 
       {dashOpen && (

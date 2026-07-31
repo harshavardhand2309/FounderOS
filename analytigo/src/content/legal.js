@@ -79,11 +79,11 @@ export const TERMS = {
     },
     {
       id: 'your-footage', title: 'Your footage and content',
-      short: 'Your footage stays yours. You give us permission to process it so the Service can work. Using your footage to train our models is a separate opt-in that you can decline or withdraw.',
+      short: 'Your footage stays yours. Creating an account gives us permission to process it so the Service can work, and to use it to improve our models. You can withdraw the training permission at any time in your settings.',
       body: [
         'You keep ownership of the video, images and other content you upload or that is captured for you ("Your Content").',
         'You grant us a non-exclusive, worldwide, royalty-free licence to host, store, reproduce, adapt and process Your Content <strong>strictly for the purpose of operating the Service for you</strong> — that is, to analyse it, generate your statistics and highlights, deliver it to you, and back it up. This licence ends when you delete the content or your account, except for copies we must retain by law and routine backups that expire on their normal cycle.',
-        '<strong>Training our models is separate.</strong> We will not use Your Content to train or improve our machine-learning models unless you give a separate, specific opt-in for that. You can withdraw that opt-in at any time, and we will stop using your content for training from that point. Withdrawing it does not affect models already trained.',
+        '<strong>Improving our models.</strong> The agreement you accept when you create an account also covers using Your Content to train and evaluate our machine-learning models. You can withdraw that permission at any time in your settings — we will stop using your content for training from that point, and withdrawing it does not otherwise affect your account. Withdrawing does not retract models that have already been trained.',
         'You warrant that you have the rights to upload Your Content and that every identifiable person appearing in it has consented to being recorded and analysed — including, where a child appears, the consent of that child\'s parent or guardian.',
       ],
     },
@@ -258,10 +258,10 @@ export const PRIVACY = {
     },
     {
       id: 'model-training', title: 'Using footage to improve our models',
-      short: 'We only train our models on your footage if you separately opt in. It is off unless you turn it on, and you can turn it off again.',
+      short: 'Training our models on your footage is part of the agreement you accept when you create an account. You can withdraw it at any time in your settings.',
       body: [
-        'Improving our computer-vision models is a distinct purpose from delivering the Service to you, so it gets its own consent. It is <strong>off by default</strong>.',
-        'If you opt in, we may use your footage and derived data to train and evaluate our models. You can withdraw at any time in your settings; we stop using your data for training from that point, though we cannot retract models that have already been trained.',
+        'Improving our computer-vision models is covered by the agreement you accept when you create an account, alongside delivering the Service to you. We tell you this on the sign-up form rather than burying it here.',
+        'We may use your footage and derived data to train and evaluate our models. You can <strong>withdraw this at any time in your settings</strong>, as easily as you gave it; we stop using your data for training from that point, though we cannot retract models that have already been trained. Withdrawing does not affect your ability to use the Service.',
         'We never use footage of a user we know to be under 18 for model training.',
       ],
     },
