@@ -1,15 +1,34 @@
 import { useEffect, useRef, useState } from 'react'
+import { readChoice, onChoice } from '../lib/reviewChoice.js'
 import '../styles/about.css'
 
-// About / Leadership — a restrained editorial section. Four premium leadership cards
-// with initials avatars, role, a short bio placeholder, and a LinkedIn placeholder.
-// Entrance is IntersectionObserver-driven (staggered), replays only on full re-enter.
+// About / Leadership, in six directions, switchable at runtime while we decide.
+//
+// Two people, not four. A layout tuned for a four-up grid reads as a gap-toothed
+// row when two of the cards leave, so none of these is the old grid with items
+// removed — each is built for a pair, and most of them make the pair the point:
+// facing each other, stacked as a roster, or set as a diptych.
 
 const TEAM = [
-  { name: 'HarshaVardhan', role: 'CEO & Founder', initials: 'HV', bio: 'Sets the vision and product direction for Lvl-Up.' },
-  { name: 'Yeshwanth Raghav', role: 'Co-founder', initials: 'YR', bio: 'Shapes strategy, partnerships, and the athlete experience.' },
-  { name: 'Arvind Divakar', role: 'CTO', initials: 'AD', bio: 'Leads the AI, analytics, and engineering platform.' },
-  { name: 'Joy Kaarthick Kumaresan', role: 'CRO', initials: 'JK', bio: 'Drives growth, revenue, and go-to-market.' },
+  {
+    name: 'Harsha Vardhan', role: 'CEO & Founder', initials: 'HV', no: '01',
+    bio: 'Sets the vision and product direction for Lvl-Up.',
+    tag: 'Vision · Product',
+  },
+  {
+    name: 'Yeshwanth Raghav', role: 'Co-founder', initials: 'YR', no: '02',
+    bio: 'Shapes strategy, partnerships, and the athlete experience.',
+    tag: 'Strategy · Partnerships',
+  },
+]
+
+export const TEAM_DESIGNS = [
+  { id: 'diptych', name: 'Diptych',       note: 'Two full-height panels, initials set enormous behind the name. Editorial and confident.' },
+  { id: 'roster',  name: 'Team Sheet',    note: 'A numbered line-up — mono type, hairline rules, the broadcast language the nav rail already speaks.' },
+  { id: 'card',    name: 'Player Card',   note: 'Trading-card treatment: role as position, a gradient edge, the initials as a jersey number.' },
+  { id: 'courtside', name: 'Court Side',  note: 'The two set either side of a centre line, facing each other across the net.' },
+  { id: 'monogram', name: 'Monogram',     note: 'The initials become the artwork. Names sit small beneath — fashion-house scale.' },
+  { id: 'dossier', name: 'Dossier',       note: 'An analyst file. Label/value rows on a faint grid, in the dashboard\'s own voice.' },
 ]
 
 const LinkedIn = () => (
@@ -22,6 +41,9 @@ const LinkedIn = () => (
 export default function About() {
   const ref = useRef(null)
   const [shown, setShown] = useState(false)
+  const [design, setDesign] = useState(() => readChoice('team', 'diptych'))
+
+  useEffect(() => onChoice('team', setDesign), [])
 
   useEffect(() => {
     const el = ref.current
@@ -35,7 +57,7 @@ export default function About() {
   }, [])
 
   return (
-    <section className="ab-section" id="about" ref={ref}>
+    <section className="ab-section" id="about" ref={ref} data-ab={design}>
       <div className={shown ? 'ab-inner ab-on' : 'ab-inner'}>
         <div className="ab-head">
           <div className="ab-eyebrow ab-a" style={{ transitionDelay: '.05s' }}>
@@ -48,17 +70,25 @@ export default function About() {
         </div>
 
         <div className="ab-grid">
-          {TEAM.map((m) => (
-            <article className="ab-card" key={m.name}>
-              <div className="ab-avatar" aria-hidden="true">{m.initials}</div>
-              <div className="ab-name">{m.name}</div>
-              <div className="ab-role">{m.role}</div>
-              <p className="ab-bio">{m.bio}</p>
+          {TEAM.map((m, i) => (
+            <article className="ab-card" key={m.name} style={{ transitionDelay: `${0.42 + i * 0.12}s` }}>
+              {/* the oversized initials — artwork in most designs, avatar in the rest */}
+              <div className="ab-mono" aria-hidden="true">{m.initials}</div>
+              <div className="ab-no" aria-hidden="true">{m.no}</div>
+              <div className="ab-body">
+                <div className="ab-name">{m.name}</div>
+                <div className="ab-role">{m.role}</div>
+                <div className="ab-tag" aria-hidden="true">{m.tag}</div>
+                <p className="ab-bio">{m.bio}</p>
+              </div>
               <button type="button" className="ab-linkedin" aria-label={`${m.name} on LinkedIn`}>
                 <LinkedIn />
               </button>
+              <i className="ab-edge" aria-hidden="true" />
             </article>
           ))}
+          {/* the net, for Court Side — inert everywhere else */}
+          <i className="ab-net" aria-hidden="true" />
         </div>
       </div>
     </section>

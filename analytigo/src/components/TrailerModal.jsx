@@ -9,20 +9,39 @@ import { css } from '../utils/css.js'
 // parks a detached <video preload="auto"> on the URL, and when the modal opens
 // its own element requests the same URL and is served from cache.
 //
-// Cached per src so a user sweeping over the button does not start it again, and
-// deliberately never removed — the buffer is the whole point, and there is one
-// trailer per page.
+// DWELL is what stops that being expensive. Firing on the first pixel of hover
+// means a pointer travelling across the page to something else pays for the
+// whole trailer — 10.7MB on the homepage — without ever intending to watch it.
+// Resting on the button for a moment is the difference between passing over a
+// thing and pointing at it, so the fetch waits that long and a pointer that
+// leaves first cancels it. Like a shop door that waits a beat rather than
+// opening for everyone walking past.
+//
+// Cached per src so repeat hovers do not start it again, and deliberately never
+// released — the buffer is the whole point, and there is one trailer per page.
+const DWELL = 140
 const warmed = new Map()
+let pending = 0
+
 export function warmTrailer(src) {
   if (!src || warmed.has(src) || typeof document === 'undefined') return
-  try {
-    const v = document.createElement('video')
-    v.preload = 'auto'
-    v.muted = true
-    v.src = src
-    v.load()
-    warmed.set(src, v)
-  } catch { /* a failed warm just means the old behaviour */ }
+  clearTimeout(pending)
+  pending = setTimeout(() => {
+    if (warmed.has(src)) return
+    try {
+      const v = document.createElement('video')
+      v.preload = 'auto'
+      v.muted = true
+      v.src = src
+      v.load()
+      warmed.set(src, v)
+    } catch { /* a failed warm just means the old behaviour */ }
+  }, DWELL)
+}
+
+// The pointer left before it settled — it was passing through, not aiming.
+export function cancelWarm() {
+  clearTimeout(pending)
 }
 
 // Full-screen trailer. Edge to edge on a black ground, no transport controls —

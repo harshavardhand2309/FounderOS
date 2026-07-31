@@ -3,7 +3,7 @@ import { css } from '../utils/css.js'
 import { useCountUp } from '../hooks/useCountUp.js'
 import { useStickyNav } from '../hooks/useStickyNav.js'
 import LandingView from '../components/LandingView.jsx'
-import TrailerModal, { warmTrailer } from '../components/TrailerModal.jsx'
+import TrailerModal, { warmTrailer, cancelWarm } from '../components/TrailerModal.jsx'
 import useHashFlag from '../hooks/useHashFlag.js'
 import useFullBleed from '../hooks/useFullBleed.js'
 
@@ -64,6 +64,7 @@ export default function Landing() {
         videoRef={videoRef}
         onWatchTrailer={() => openTrailer()}
         onPrepareTrailer={() => warmTrailer(TRAILER)}
+        onCancelTrailer={cancelWarm}
       />
 
       <TrailerModal

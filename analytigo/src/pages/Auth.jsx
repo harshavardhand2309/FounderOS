@@ -56,11 +56,10 @@ export default function Auth({ mode = 'signin' }) {
   const [phoneCode, setPhoneCode] = useState('')
   const [emailOk, setEmailOk] = useState(false)
   // One agreement covering the Terms, the Privacy Policy and use of footage for
-  // model training. It starts unticked and is required to submit.
-  //
-  // NOTE: this bundles model-training consent into the main agreement. Terms
-  // section 82 in src/content/legal.js still promises it is "a separate opt-in
-  // that you can decline or withdraw", so that copy needs to change to match.
+  // model training. It starts unticked and is required to submit — by either
+  // route, the form or Google/Apple. Terms §5 and Privacy §"model-training" in
+  // src/content/legal.js describe it the same way: bundled into this agreement,
+  // withdrawable in settings.
   const [agree, setAgree] = useState(false)
   const confirmRef = useRef(null) // Firebase phone confirmation handle
 
@@ -126,11 +125,16 @@ export default function Auth({ mode = 'signin' }) {
 
   const onSocial = async (provider) => {
     setNotice('')
+    // Signing up through Google or Apple is still signing up: the same
+    // agreement has to be accepted, and recorded, before the account exists.
+    if (isSignup && !agree) { setNotice('Please confirm you have read the Terms of Service and Privacy Policy.'); return }
     if (!firebaseReady) { setNotice(`${provider} sign-in connects once the Firebase keys are added.`); return }
     setBusy(true)
     try {
       const user = await socialLogin(provider)
-      await upsertUserProfile(user, { role, provider: provider.toLowerCase() })
+      await upsertUserProfile(user, isSignup
+        ? { role, provider: provider.toLowerCase(), modelTrainingOptIn: agree }
+        : { role, provider: provider.toLowerCase() })
       await recordSignIn(user, provider.toLowerCase())
       setStep('done')
     }
@@ -284,6 +288,12 @@ export default function Auth({ mode = 'signin' }) {
                   <button type="button" className="au-oauth-btn" onClick={() => onSocial('Google')} disabled={busy}>Google</button>
                   <button type="button" className="au-oauth-btn" onClick={() => onSocial('Apple')} disabled={busy}>Apple</button>
                 </div>
+                {isSignup && (
+                  <p className="au-consent-foot au-consent-oauth">
+                    Continuing with Google or Apple accepts the same <Link to="/terms">Terms</Link> and{' '}
+                    <Link to="/privacy">Privacy Policy</Link> as above.
+                  </p>
+                )}
               </form>
 
               <p className="au-foot">
