@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import BallCursor from './components/BallCursor.jsx'
 import Home from './pages/Home.jsx'
 import Landing from './pages/Landing.jsx'
 import Tennis from './pages/Tennis.jsx'
@@ -17,6 +18,9 @@ const LoadLab = lazy(() => import('./pages/LoadLab.jsx'))
 
 export default function App() {
   return (
+    <>
+      {/* a tennis ball for a pointer, site-wide — see BallCursor.jsx */}
+      <BallCursor />
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/pickleball" element={<Landing />} />
@@ -45,5 +49,6 @@ export default function App() {
       {/* preview harness for the four loading screens — not linked from the site */}
       <Route path="/loadlab" element={<Suspense fallback={null}><LoadLab /></Suspense>} />
     </Routes>
+    </>
   )
 }

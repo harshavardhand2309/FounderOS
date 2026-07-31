@@ -55,10 +55,13 @@ export default function Auth({ mode = 'signin' }) {
   const [contact, setContact] = useState({ email: '', phone: '' })
   const [phoneCode, setPhoneCode] = useState('')
   const [emailOk, setEmailOk] = useState(false)
-  // Two separate consents. Model training must start unticked and must not be
-  // bundled with the main agreement — a pre-ticked or bundled consent is not consent.
+  // One agreement covering the Terms, the Privacy Policy and use of footage for
+  // model training. It starts unticked and is required to submit.
+  //
+  // NOTE: this bundles model-training consent into the main agreement. Terms
+  // section 82 in src/content/legal.js still promises it is "a separate opt-in
+  // that you can decline or withdraw", so that copy needs to change to match.
   const [agree, setAgree] = useState(false)
-  const [trainOptIn, setTrainOptIn] = useState(false)
   const confirmRef = useRef(null) // Firebase phone confirmation handle
 
   const onSignup = async (e) => {
@@ -72,7 +75,9 @@ export default function Auth({ mode = 'signin' }) {
     setBusy(true)
     try {
       const { user, confirmation } = await signUp(data, 'au-recaptcha')
-      await upsertUserProfile(user, { name: data.name, email: data.email, phone: data.phone, role, provider: 'password', modelTrainingOptIn: trainOptIn })
+      // consent to model training is part of the single agreement, so it is
+      // recorded from the same tick rather than a second checkbox
+      await upsertUserProfile(user, { name: data.name, email: data.email, phone: data.phone, role, provider: 'password', modelTrainingOptIn: agree })
       confirmRef.current = confirmation
       setStep('verify')
     } catch (err) {
@@ -258,51 +263,12 @@ export default function Auth({ mode = 'signin' }) {
 
                 {isSignup && (
                   <div className="au-consent">
-                    <h3>Before you create your account</h3>
-                    <div className="au-consent-cols">
-                      <div>
-                        <b>What we collect</b>
-                        <ul>
-                          <li>Your name, email address, phone number and the role you choose</li>
-                          <li>Video of you playing, from venue cameras or your own device</li>
-                          <li>Movement data derived from that video</li>
-                          <li>Your match statistics</li>
-                          <li>Basic device and app information</li>
-                        </ul>
-                      </div>
-                      <div>
-                        <b>What we do with it</b>
-                        <ul>
-                          <li>Produce your match analysis, statistics and highlights</li>
-                          <li>Run your account and answer your messages</li>
-                          <li>Keep the service secure</li>
-                          <li>Take payment where you are on a paid plan</li>
-                        </ul>
-                      </div>
-                      <div>
-                        <b>Choices that stay yours</b>
-                        <ul>
-                          <li>Training our AI on your footage is <strong>off</strong> unless you switch it on</li>
-                          <li>You can withdraw consent at any time, as easily as you gave it</li>
-                          <li>You can download or delete your data whenever you want</li>
-                        </ul>
-                      </div>
-                      <div>
-                        <b>How long we keep it</b>
-                        <ul>
-                          <li>Video — 90 days</li>
-                          <li>Statistics — while your account is open</li>
-                          <li>After you close your account — 180 days, then deleted</li>
-                        </ul>
-                      </div>
-                    </div>
                     <label className="au-consent-check">
                       <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} required />
-                      <span>I have read this and agree to the <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>.</span>
-                    </label>
-                    <label className="au-consent-check">
-                      <input type="checkbox" checked={trainOptIn} onChange={(e) => setTrainOptIn(e.target.checked)} />
-                      <span>Optional — use my footage to help improve Lvl-Up's AI models. You can change this later in settings.</span>
+                      <span>
+                        I agree to the <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>,
+                        including the use of my footage to improve Lvl-Up's AI models.
+                      </span>
                     </label>
                     <p className="au-consent-foot">
                       Questions or complaints: Grievance Officer — <a href="mailto:contact@thelvlupsports.com">contact@thelvlupsports.com</a>,
@@ -327,9 +293,6 @@ export default function Auth({ mode = 'signin' }) {
                   <>New to Lvl-Up? <Link to="/signup" className="au-link strong">Create an account</Link></>
                 )}
               </p>
-              {isSignup && (
-                <p className="au-terms">By creating an account you agree to our <a className="au-link" href="#">Terms</a> and <a className="au-link" href="#">Privacy Policy</a>.</p>
-              )}
             </>
           )}
 
