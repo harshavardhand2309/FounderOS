@@ -11,7 +11,7 @@ import './reviewpicker.css'
 // component, lib/reviewChoice.js, and the exported *_DESIGNS lists.
 
 const GROUPS = [
-  { key: 'cursor', label: 'Pointer', fallback: 'ball', options: CURSORS },
+  { key: 'cursor', label: 'Pointer', fallback: 'trace', options: CURSORS },
   { key: 'team', label: 'The Team', fallback: 'diptych', options: TEAM_DESIGNS },
 ]
 

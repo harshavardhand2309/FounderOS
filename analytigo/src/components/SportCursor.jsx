@@ -26,7 +26,7 @@ export const CURSORS = [
   { id: 'ball',    name: 'Tennis Ball',  note: 'Rolls as it travels — rotation follows distance, so the seams turn and stop when you do.' },
   { id: 'reticle', name: 'Hawk-Eye',     note: 'A broadcast tracking reticle. Corner brackets snap inward on anything clickable.' },
   { id: 'shuttle', name: 'Shuttlecock',  note: 'Leans into the direction of travel, cork first, like it is being struck.' },
-  { id: 'trace',   name: 'Shot Trace',   note: 'The ball plus a fading trajectory line — the shot-tracking read, as a pointer.' },
+  { id: 'trace',   name: 'Shot Trace',   note: 'A 14px ball with a fading six-node trail — the shot-tracking read, as a pointer.' },
   { id: 'chalk',   name: 'Chalk Mark',   note: 'A line-judge dot. Minimal, precise, puffs chalk on click like a ball catching the line.' },
 ]
 
@@ -35,7 +35,7 @@ const SPEC = {
   ball:    { size: 19, centred: false, roll: true },
   reticle: { size: 27, centred: true },
   shuttle: { size: 22, centred: false, tilt: true },
-  trace:   { size: 17, centred: false, roll: true, trail: 6 },
+  trace:   { size: 14, centred: false, roll: true, trail: 6 },
   chalk:   { size: 13, centred: true, puff: true },
 }
 
@@ -43,7 +43,9 @@ const TEXTY = 'input:not([type=checkbox]):not([type=radio]):not([type=button]):n
 const CLICKY = 'a,button,[role="button"],select,label,summary,input[type=checkbox],input[type=radio],input[type=submit],input[type=button]'
 
 export default function SportCursor() {
-  const [variant, setVariant] = useState(() => readChoice('cursor', 'ball'))
+  // Shot Trace is the chosen pointer. The other four stay reachable via
+  // ?cursor= until the About direction is settled and the harness comes out.
+  const [variant, setVariant] = useState(() => readChoice('cursor', 'trace'))
   const ref = useRef(null)
   const trailRef = useRef([])
 

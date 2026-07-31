@@ -52,13 +52,15 @@ html.sc-hide * { cursor: none !important; }
 /* ── 4 · Shot Trace ─────────────────────────────────────────────────────── */
 [data-sc="trace"] { filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .45)); }
 [data-sc="trace"].is-live svg { scale: 1.3; }
+/* Kept well under the 14px ball — at 7px the trail read as a string of beads
+   the same weight as the pointer rather than a trajectory behind it. */
 .sc-trail {
-  width: 7px;
-  height: 7px;
+  width: 5px;
+  height: 5px;
   margin: 0;
   border-radius: 50%;
   background: #d6f637;
-  box-shadow: 0 0 8px rgba(214, 246, 55, .8);
+  box-shadow: 0 0 6px rgba(214, 246, 55, .75);
 }
 /* the trail belongs to this variant only */
 body:has(.sc-cursor[data-sc="trace"].is-on) .sc-trail { opacity: 1; }
