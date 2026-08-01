@@ -1918,15 +1918,22 @@ button {
 .bm-bg {
   position: absolute;
   inset: -3% -2%;
-  /* frame from the top so the athletes' heads are never cropped */
-  background: url('/assets/biomotion-bg.webp') 50% 18% / cover no-repeat;
+  /* frame from the top so the athletes' heads are never cropped.
+     The flat wash on top pulls the exposure down so the copy reads as the
+     brightest thing in frame — it lives in the background stack rather than in
+     a filter because the reduced-motion path sets filter inline to 'none'. */
+  background:
+    linear-gradient(rgba(2, 5, 8, 0.32), rgba(2, 5, 8, 0.32)),
+    url('/assets/biomotion-bg.webp') 50% 18% / cover no-repeat;
   will-change: transform, filter;
 }
 .bm-scrim {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(60% 62% at 24% 42%, rgba(3, 8, 12, 0.88), transparent 66%),
+  /* the left pool sits under .bm-copy — deepened so the headline and the three
+     points sit on near-black rather than on a lit athlete */
+  background: radial-gradient(64% 66% at 24% 42%, rgba(3, 8, 12, 0.94), transparent 70%),
     linear-gradient(180deg, rgba(4, 7, 10, 0.52) 0%, rgba(4, 7, 10, 0.3) 32%, rgba(4, 7, 10, 0.62) 72%, rgba(4, 7, 10, 0.9) 100%),
     radial-gradient(122% 120% at 50% 50%, transparent 50%, rgba(2, 4, 7, 0.62) 100%);
 }

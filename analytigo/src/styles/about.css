@@ -66,222 +66,107 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Six directions for a TWO-person leadership section.
+   The team sheet.
 
-   None of these is the old four-up grid with two cards removed — that reads as
-   a gap-toothed row. Each is built for a pair, and most make the pair the point.
-
-   Shared skeleton, so only the skin changes between them:
-     .ab-card    the person
-     .ab-mono    their initials, oversized — artwork in most, avatar in the rest
-     .ab-no      01 / 02
-     .ab-body    name, role, tag, bio
-     .ab-edge    a per-design accent (rule, glow, gradient spine)
-     .ab-net     the centre line, used only by Court Side
+   A numbered line-up rather than cards — hairline rules, mono numbering, and
+   the name doing the work. Not the old four-up grid with two items removed;
+   that reads as a gap-toothed row.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.ab-grid { position: relative; display: grid; gap: 22px; }
+.ab-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 1px solid rgba(203, 180, 136, .2);
+}
 .ab-card {
   position: relative;
   overflow: hidden;
+  display: grid;
+  grid-template-columns: 74px 1fr auto;
+  align-items: center;
+  gap: 28px;
+  min-height: 108px;
+  padding: 30px 12px;
+  border-bottom: 1px solid rgba(203, 180, 136, .2);
   opacity: 0;
   transform: translateY(26px);
   filter: blur(6px);
   transition: opacity .8s cubic-bezier(.16,.84,.44,1), transform .8s cubic-bezier(.16,.84,.44,1),
-              filter .8s ease, border-color .35s ease, background .35s ease;
+              filter .8s ease;
 }
 .ab-on .ab-card { opacity: 1; transform: translateY(0); filter: blur(0); }
-.ab-name { font: 700 20px/1.2 'Sora', sans-serif; color: #f3ece0; }
-.ab-role { font: 600 11.5px/1 'JetBrains Mono', monospace; letter-spacing: .22em; text-transform: uppercase; color: #cbb488; margin-top: 8px; }
-.ab-tag  { font: 500 11px/1 'JetBrains Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: #7d7364; margin-top: 10px; }
-.ab-bio  { font: 400 14.5px/1.62 'Sora', sans-serif; color: #9d9384; margin: 14px 0 0; max-width: 42ch; }
-.ab-mono, .ab-no, .ab-net, .ab-edge { pointer-events: none; }
-.ab-linkedin {
-  position: absolute; right: 20px; bottom: 20px;
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; border-radius: 50%;
-  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12);
-  color: #cbb488; cursor: pointer; transition: color .3s, background .3s, border-color .3s, transform .3s;
+.ab-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(203, 180, 136, .05);
+  opacity: 0;
+  transition: opacity .35s ease;
 }
-.ab-linkedin:hover, .ab-linkedin:focus-visible { color: #0c0a08; background: #cbb488; border-color: #cbb488; transform: translateY(-2px); }
-.ab-net { display: none; }
-.ab-edge { display: none; }
+.ab-card:hover::before { opacity: 1; }
 
-/* ── 1 · DIPTYCH ─────────────────────────────────────────────────────────
-   Two full-height panels. The initials sit enormous behind the copy, cropped
-   by the panel edge, so the pair reads as one spread rather than two cards. */
-[data-ab="diptych"] .ab-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
-[data-ab="diptych"] .ab-card {
-  min-height: 340px; padding: 40px 38px;
-  display: flex; align-items: flex-end;
-  background: linear-gradient(160deg, #17130e 0%, #0e0c09 100%);
-  border: 1px solid rgba(203,180,136,.14);
+.ab-no {
+  font: 700 42px/1 'Sora', sans-serif;
+  color: transparent;
+  -webkit-text-stroke: 1.2px rgba(203, 180, 136, .45);
+  pointer-events: none;
 }
-[data-ab="diptych"] .ab-card:first-child { border-radius: 20px 4px 4px 20px; }
-[data-ab="diptych"] .ab-card:last-child  { border-radius: 4px 20px 20px 4px; }
-/* Only the right edge crops. Bleeding the top too clipped the caps and read as
-   a mistake rather than a crop. */
-[data-ab="diptych"] .ab-mono {
-  position: absolute; right: -18px; top: 26px;
-  font: 800 172px/.9 'Sora', sans-serif; letter-spacing: -.06em;
-  color: transparent; -webkit-text-stroke: 1.5px rgba(203,180,136,.2);
-  transition: -webkit-text-stroke-color .45s ease, transform .6s cubic-bezier(.16,.84,.44,1);
-}
-[data-ab="diptych"] .ab-card:hover .ab-mono { -webkit-text-stroke-color: rgba(203,180,136,.42); transform: translateY(-6px); }
-[data-ab="diptych"] .ab-card:hover { border-color: rgba(203,180,136,.34); }
-[data-ab="diptych"] .ab-no { position: absolute; top: 32px; left: 38px; font: 600 11px/1 'JetBrains Mono', monospace; letter-spacing: .3em; color: #6c6252; }
-[data-ab="diptych"] .ab-body { position: relative; z-index: 2; }
 
-/* ── 2 · TEAM SHEET ──────────────────────────────────────────────────────
-   A line-up, not cards. Hairline rules, mono numbering, and the name doing all
-   the work — the same broadcast language the nav rail already speaks. */
-[data-ab="roster"] .ab-grid { grid-template-columns: 1fr; gap: 0; border-top: 1px solid rgba(203,180,136,.2); }
-[data-ab="roster"] .ab-card {
-  display: grid; grid-template-columns: 74px 1fr auto; align-items: center; gap: 28px;
-  padding: 30px 12px; border-bottom: 1px solid rgba(203,180,136,.2); background: none;
-}
-[data-ab="roster"] .ab-card::before {
-  content: ''; position: absolute; inset: 0; background: rgba(203,180,136,.05);
-  opacity: 0; transition: opacity .35s ease;
-}
-[data-ab="roster"] .ab-card:hover::before { opacity: 1; }
-[data-ab="roster"] .ab-no { font: 700 42px/1 'Sora', sans-serif; color: transparent; -webkit-text-stroke: 1.2px rgba(203,180,136,.45); }
-[data-ab="roster"] .ab-mono { display: none; }
 /* Fixed columns, not wrapping flex. With flex the longer name pushed its bio
    onto a second line and the two rows came out different heights — a line-up
-   whose rows do not line up. */
-[data-ab="roster"] .ab-body {
-  position: relative; z-index: 2;
-  display: grid; grid-template-columns: minmax(230px, 270px) minmax(0, 1fr);
-  align-items: baseline; gap: 8px 26px;
+   whose rows did not line up. */
+.ab-body {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(230px, 270px) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px 26px;
 }
-[data-ab="roster"] .ab-name { font-size: 27px; }
-[data-ab="roster"] .ab-role { margin-top: 0; }
-[data-ab="roster"] .ab-tag  { display: none; }   /* the bio already says it */
-[data-ab="roster"] .ab-bio  { grid-column: 2; margin-top: 0; max-width: none; }
-[data-ab="roster"] .ab-card { min-height: 108px; }
-[data-ab="roster"] .ab-linkedin { position: relative; right: auto; bottom: auto; }
+.ab-name { font: 700 27px/1.2 'Sora', sans-serif; color: #f3ece0; }
+.ab-role {
+  font: 600 11.5px/1 'JetBrains Mono', monospace;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: #cbb488;
+}
+.ab-bio {
+  grid-column: 2;
+  margin: 0;
+  font: 400 14.5px/1.62 'Sora', sans-serif;
+  color: #9d9384;
+}
 
-/* ── 3 · PLAYER CARD ─────────────────────────────────────────────────────
-   Trading card. Role becomes the position, the initials become the number, and
-   a gradient spine runs down the edge like a foil. */
-[data-ab="card"] .ab-grid { grid-template-columns: repeat(2, minmax(0, 380px)); justify-content: center; gap: 30px; }
-[data-ab="card"] .ab-card {
-  padding: 30px 28px 74px; border-radius: 18px;
-  background: linear-gradient(165deg, rgba(203,180,136,.16) 0%, rgba(20,17,13,.9) 38%, #0d0b09 100%);
-  border: 1px solid rgba(203,180,136,.24);
-  box-shadow: 0 20px 50px -24px rgba(0,0,0,.9);
+.ab-linkedin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .12);
+  color: #cbb488;
+  cursor: pointer;
+  transition: color .3s, background .3s, border-color .3s, transform .3s;
 }
-[data-ab="card"] .ab-edge {
-  display: block; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-  background: linear-gradient(180deg, #cbb488, #d6f637 55%, transparent);
-  opacity: .8;
+.ab-linkedin:hover,
+.ab-linkedin:focus-visible {
+  color: #0c0a08;
+  background: #cbb488;
+  border-color: #cbb488;
+  transform: translateY(-2px);
 }
-[data-ab="card"] .ab-mono {
-  position: absolute; right: 20px; top: 14px;
-  font: 800 74px/1 'Sora', sans-serif; letter-spacing: -.05em;
-  color: rgba(203,180,136,.18);
-}
-[data-ab="card"] .ab-no { font: 600 10.5px/1 'JetBrains Mono', monospace; letter-spacing: .34em; color: #7d7364; }
-[data-ab="card"] .ab-body { position: relative; z-index: 2; margin-top: 44px; }
-[data-ab="card"] .ab-card:hover { transform: translateY(-6px); border-color: rgba(214,246,55,.45); }
-[data-ab="card"] .ab-card:hover .ab-mono { color: rgba(214,246,55,.3); }
 
-/* ── 4 · COURT SIDE ──────────────────────────────────────────────────────
-   The two set either side of a centre line, facing each other across the net —
-   the layout says "head to head" without a word of copy. */
-[data-ab="courtside"] .ab-grid { grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
-[data-ab="courtside"] .ab-net {
-  display: block; position: absolute; left: 50%; top: -10px; bottom: -10px; width: 2px;
-  transform: translateX(-50%);
-  background: repeating-linear-gradient(180deg, rgba(203,180,136,.5) 0 7px, transparent 7px 14px);
-}
-[data-ab="courtside"] .ab-net::after {
-  content: ''; position: absolute; left: 50%; top: 50%; width: 11px; height: 11px;
-  margin: -5.5px 0 0 -5.5px; border-radius: 50%; background: #d6f637;
-  box-shadow: 0 0 18px rgba(214,246,55,.8);
-}
-/* A flex column so everything — initials, copy, the LinkedIn button — hugs the
-   net. Absolutely positioning the button sent it to the far outer edge of the
-   half, which broke the head-to-head read. */
-[data-ab="courtside"] .ab-card {
-  padding: 34px 30px; background: none;
-  display: flex; flex-direction: column; align-items: flex-start;
-}
-[data-ab="courtside"] .ab-card:first-child { text-align: right; align-items: flex-end; }
-[data-ab="courtside"] .ab-card:first-child .ab-bio { margin-left: auto; }
-[data-ab="courtside"] .ab-linkedin { position: relative; right: auto; bottom: auto; margin-top: 22px; }
-[data-ab="courtside"] .ab-mono {
-  font: 800 96px/1 'Sora', sans-serif; letter-spacing: -.05em;
-  color: transparent; -webkit-text-stroke: 1.4px rgba(203,180,136,.38);
-  transition: -webkit-text-stroke-color .4s ease;
-}
-[data-ab="courtside"] .ab-card:hover .ab-mono { -webkit-text-stroke-color: rgba(214,246,55,.6); }
-[data-ab="courtside"] .ab-no { display: none; }
-
-/* ── 5 · MONOGRAM ────────────────────────────────────────────────────────
-   The initials are the artwork. Names sit small beneath at fashion-house
-   scale — the most restrained of the six, and the most confident. */
-[data-ab="monogram"] .ab-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
-[data-ab="monogram"] .ab-card { padding: 0 0 70px; background: none; text-align: center; }
-[data-ab="monogram"] .ab-mono {
-  display: block;
-  font: 800 clamp(88px, 13vw, 176px)/.9 'Sora', sans-serif; letter-spacing: -.07em;
-  background: linear-gradient(170deg, #f3ece0 0%, #cbb488 46%, #6b5f47 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  transition: transform .6s cubic-bezier(.16,.84,.44,1), filter .4s ease;
-}
-[data-ab="monogram"] .ab-card:hover .ab-mono { transform: translateY(-8px); filter: drop-shadow(0 12px 26px rgba(203,180,136,.3)); }
-[data-ab="monogram"] .ab-no { display: none; }
-[data-ab="monogram"] .ab-body { margin-top: 16px; }
-[data-ab="monogram"] .ab-bio { margin-left: auto; margin-right: auto; }
-[data-ab="monogram"] .ab-edge {
-  display: block; position: absolute; left: 50%; bottom: 46px; width: 0; height: 1px;
-  transform: translateX(-50%); background: #cbb488; transition: width .5s cubic-bezier(.16,.84,.44,1);
-}
-[data-ab="monogram"] .ab-card:hover .ab-edge { width: 64px; }
-[data-ab="monogram"] .ab-linkedin { left: 50%; right: auto; transform: translateX(-50%); }
-[data-ab="monogram"] .ab-linkedin:hover { transform: translateX(-50%) translateY(-2px); }
-
-/* ── 6 · DOSSIER ─────────────────────────────────────────────────────────
-   An analyst file, in the dashboard's own voice: faint grid, mono labels, data
-   laid out as rows. The most on-brand for an analytics company. */
-[data-ab="dossier"] .ab-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
-[data-ab="dossier"] .ab-card {
-  padding: 26px 26px 70px; border-radius: 12px;
-  border: 1px solid rgba(203,180,136,.2);
-  background:
-    linear-gradient(rgba(203,180,136,.05) 1px, transparent 1px) 0 0 / 100% 26px,
-    linear-gradient(90deg, rgba(203,180,136,.05) 1px, transparent 1px) 0 0 / 26px 100%,
-    #0c0a08;
-}
-[data-ab="dossier"] .ab-mono {
-  position: absolute; right: 22px; top: 20px;
-  font: 700 15px/1 'JetBrains Mono', monospace; letter-spacing: .2em;
-  color: #0c0a08; background: #cbb488; padding: 7px 9px; border-radius: 4px;
-}
-[data-ab="dossier"] .ab-no { font: 600 10px/1 'JetBrains Mono', monospace; letter-spacing: .34em; color: #6c6252; }
-[data-ab="dossier"] .ab-body { margin-top: 18px; }
-[data-ab="dossier"] .ab-name { font-size: 21px; }
-[data-ab="dossier"] .ab-role,
-[data-ab="dossier"] .ab-tag { display: block; padding: 9px 0; border-top: 1px solid rgba(203,180,136,.14); margin-top: 12px; }
-[data-ab="dossier"] .ab-card:hover { border-color: rgba(203,180,136,.42); background-color: #0f0d0a; }
-
-/* ── responsive: every design collapses to one column ───────────────────── */
 @media (max-width: 900px) {
   .ab-section { padding: 88px 22px 96px; }
-  [data-ab] .ab-grid { grid-template-columns: 1fr !important; gap: 18px; }
-  [data-ab="courtside"] .ab-net { display: none; }
-  [data-ab="courtside"] .ab-card:first-child { text-align: left; align-items: flex-start; }
-  [data-ab="courtside"] .ab-card:first-child .ab-bio { margin-left: 0; }
-  [data-ab="roster"] .ab-body { grid-template-columns: minmax(0, 1fr); }
-  [data-ab="roster"] .ab-bio { grid-column: 1; }
-  [data-ab="roster"] .ab-card { grid-template-columns: 54px minmax(0, 1fr) auto; gap: 18px; }
-  [data-ab="diptych"] .ab-card { min-height: 240px; border-radius: 16px !important; }
-  [data-ab="diptych"] .ab-mono { font-size: 120px; }
-  [data-ab="card"] .ab-grid { justify-content: stretch; }
+  .ab-card { grid-template-columns: 54px minmax(0, 1fr) auto; gap: 18px; }
+  .ab-body { grid-template-columns: minmax(0, 1fr); }
+  .ab-bio { grid-column: 1; }
+  .ab-no { font-size: 32px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ab-card, .ab-mono, .ab-edge, .ab-linkedin { transition: none !important; }
+  .ab-card, .ab-linkedin { transition: none !important; }
 }

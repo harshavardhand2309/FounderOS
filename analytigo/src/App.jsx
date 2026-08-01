@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import SportCursor from './components/SportCursor.jsx'
-import ReviewPicker from './components/dev/ReviewPicker.jsx'
 import Home from './pages/Home.jsx'
 import Landing from './pages/Landing.jsx'
 import Tennis from './pages/Tennis.jsx'
@@ -22,8 +21,6 @@ export default function App() {
     <>
       {/* the pointer, site-wide — see SportCursor.jsx */}
       <SportCursor />
-      {/* REVIEW BUILD ONLY — switches the pointer and team variants live */}
-      <ReviewPicker />
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/pickleball" element={<Landing />} />

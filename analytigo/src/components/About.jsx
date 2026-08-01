@@ -1,34 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
-import { readChoice, onChoice } from '../lib/reviewChoice.js'
 import '../styles/about.css'
 
-// About / Leadership, in six directions, switchable at runtime while we decide.
+// About / Leadership — a team sheet.
 //
-// Two people, not four. A layout tuned for a four-up grid reads as a gap-toothed
-// row when two of the cards leave, so none of these is the old grid with items
-// removed — each is built for a pair, and most of them make the pair the point:
-// facing each other, stacked as a roster, or set as a diptych.
+// Two people, not four. A layout tuned for a four-up grid reads as a
+// gap-toothed row when two of the cards leave, so this is not the old grid with
+// items removed — it is a numbered line-up, in the same mono/hairline broadcast
+// language the nav rail already speaks.
 
 const TEAM = [
   {
     name: 'Harsha Vardhan', role: 'CEO & Founder', initials: 'HV', no: '01',
     bio: 'Sets the vision and product direction for Lvl-Up.',
-    tag: 'Vision · Product',
   },
   {
     name: 'Yeshwanth Raghav', role: 'Co-founder', initials: 'YR', no: '02',
     bio: 'Shapes strategy, partnerships, and the athlete experience.',
-    tag: 'Strategy · Partnerships',
   },
-]
-
-export const TEAM_DESIGNS = [
-  { id: 'diptych', name: 'Diptych',       note: 'Two full-height panels, initials set enormous behind the name. Editorial and confident.' },
-  { id: 'roster',  name: 'Team Sheet',    note: 'A numbered line-up — mono type, hairline rules, the broadcast language the nav rail already speaks.' },
-  { id: 'card',    name: 'Player Card',   note: 'Trading-card treatment: role as position, a gradient edge, the initials as a jersey number.' },
-  { id: 'courtside', name: 'Court Side',  note: 'The two set either side of a centre line, facing each other across the net.' },
-  { id: 'monogram', name: 'Monogram',     note: 'The initials become the artwork. Names sit small beneath — fashion-house scale.' },
-  { id: 'dossier', name: 'Dossier',       note: 'An analyst file. Label/value rows on a faint grid, in the dashboard\'s own voice.' },
 ]
 
 const LinkedIn = () => (
@@ -38,26 +26,44 @@ const LinkedIn = () => (
   </svg>
 )
 
+// Survives a remount. A pinned stage above this section collapses as it is
+// scrolled through, which remounts this subtree — component state would reset
+// to unrevealed and the entrance would replay, or never play at all.
+let revealed = false
+
 export default function About() {
   const ref = useRef(null)
-  const [shown, setShown] = useState(false)
-  const [design, setDesign] = useState(() => readChoice('team', 'diptych'))
-
-  useEffect(() => onChoice('team', setDesign), [])
+  const [shown, setShown] = useState(revealed)
 
   useEffect(() => {
+    if (shown) return
     const el = ref.current
     if (!el) return
-    const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting && e.intersectionRatio >= 0.2) { setShown(true); io.disconnect() } },
-      { threshold: [0, 0.2] },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
+    // A position check rather than an IntersectionObserver. The collapse above
+    // does not just remount this subtree, it moves it — the section can jump
+    // from below the fold to above it between two frames, and an observer will
+    // not report an intersection that has already been skipped over. That left
+    // the section blank for the rest of the visit.
+    const check = () => {
+      if (!ref.current) return
+      if (ref.current.getBoundingClientRect().top < window.innerHeight * 0.85) {
+        revealed = true
+        setShown(true)
+      }
+    }
+    check()
+    const raf = requestAnimationFrame(check)   // catch a layout shift on mount
+    window.addEventListener('scroll', check, { passive: true })
+    window.addEventListener('resize', check, { passive: true })
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', check)
+      window.removeEventListener('resize', check)
+    }
+  }, [shown])
 
   return (
-    <section className="ab-section" id="about" ref={ref} data-ab={design}>
+    <section className="ab-section" id="about" ref={ref}>
       <div className={shown ? 'ab-inner ab-on' : 'ab-inner'}>
         <div className="ab-head">
           <div className="ab-eyebrow ab-a" style={{ transitionDelay: '.05s' }}>
@@ -72,23 +78,17 @@ export default function About() {
         <div className="ab-grid">
           {TEAM.map((m, i) => (
             <article className="ab-card" key={m.name} style={{ transitionDelay: `${0.42 + i * 0.12}s` }}>
-              {/* the oversized initials — artwork in most designs, avatar in the rest */}
-              <div className="ab-mono" aria-hidden="true">{m.initials}</div>
               <div className="ab-no" aria-hidden="true">{m.no}</div>
               <div className="ab-body">
                 <div className="ab-name">{m.name}</div>
                 <div className="ab-role">{m.role}</div>
-                <div className="ab-tag" aria-hidden="true">{m.tag}</div>
                 <p className="ab-bio">{m.bio}</p>
               </div>
               <button type="button" className="ab-linkedin" aria-label={`${m.name} on LinkedIn`}>
                 <LinkedIn />
               </button>
-              <i className="ab-edge" aria-hidden="true" />
             </article>
           ))}
-          {/* the net, for Court Side — inert everywhere else */}
-          <i className="ab-net" aria-hidden="true" />
         </div>
       </div>
     </section>
