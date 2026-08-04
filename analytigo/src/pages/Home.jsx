@@ -12,6 +12,7 @@ import HeroShowcase from '../components/HeroShowcase.jsx'
 import Loader from '../components/loader/Loader.jsx'
 import T2CourtDraw from '../components/loader/T2CourtDraw.jsx'
 import About from '../components/About.jsx'
+import SportOrbs from '../components/SportOrbs.jsx'
 import { joinWaitlist } from '../utils/firebase.js'
 import TrailerModal, { warmTrailer, cancelWarm } from '../components/TrailerModal.jsx'
 import useHashFlag from '../hooks/useHashFlag.js'
@@ -67,10 +68,10 @@ const ICON_BOX_LIVE_RED = css(
   'width:46px;height:46px;border-radius:13px;background:linear-gradient(145deg,rgba(227,185,74,.2),rgba(227,185,74,.05));border:1px solid rgba(227,185,74,.32);display:flex;align-items:center;justify-content:center',
 )
 const ICON_BOX_LIVE_SOFT = css(
-  'width:46px;height:46px;border-radius:13px;background:linear-gradient(145deg,rgba(227,185,74,.16),rgba(227,185,74,.04));border:1px solid rgba(227,185,74,.26);display:flex;align-items:center;justify-content:center',
+  'width:56px;height:56px;border-radius:15px;background:linear-gradient(145deg,rgba(227,185,74,.16),rgba(227,185,74,.04));border:1px solid rgba(227,185,74,.26);display:flex;align-items:center;justify-content:center',
 )
 const ICON_BOX_SOON = css(
-  'width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center',
+  'width:56px;height:56px;border-radius:15px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center',
 )
 
 const GLASS_STAT_STR =
@@ -98,7 +99,7 @@ function tween(el) {
   requestAnimationFrame(step)
 }
 
-function SportCard({ to, cardClass, cardStyle, iconBox, icon, badge, title, desc, descColor, cta, image }) {
+function SportCard({ to, cardClass, cardStyle, iconBox, icon, badge, title, desc, descColor, cta, image, orb }) {
   const inner = (
     <>
       {image && (
@@ -109,7 +110,18 @@ function SportCard({ to, cardClass, cardStyle, iconBox, icon, badge, title, desc
         </>
       )}
       <div style={css('position:relative;z-index:2;display:flex;align-items:flex-start;justify-content:space-between')}>
-        <span style={iconBox}>{icon}</span>
+        {/* The 3D object takes the icon's slot rather than floating loose in
+            the card. The card is 243x198: the band between the icon and the
+            title is 19px, and the bottom corner runs under the description on
+            the two cards that have no CTA — so this is the only reserved space
+            no copy reaches. It also replaces a glyph of the very same sport,
+            so nothing is lost. This element paints nothing itself; SportOrbs
+            reads its box each frame and scissors the object into it from one
+            shared canvas, which is also why it tracks the pinned stage's
+            fly-in with no layout to keep in sync. */}
+        {orb
+          ? <span style={iconBox} data-orb={orb} aria-hidden="true" />
+          : <span style={iconBox}>{icon}</span>}
         {badge}
       </div>
       <div style={css('position:relative;z-index:2;text-align:left')}>
@@ -206,10 +218,10 @@ function SportGlyph({ name, c }) {
 
 // full Pick Your Game roster — 2 live, 2 coming soon
 const SPORTS = [
-  { title: 'Tennis', to: '/tennis', img: '/assets/sport-tennis.jpg', desc: 'Serve, return, and full rally intelligence.', glyph: 'tennis', live: true },
-  { title: 'Pickleball', to: '/pickleball', img: '/assets/sport-pickleball-edit.webp', desc: 'Shot tracking, kitchen play, and rally analytics.', glyph: 'pickle', live: true },
-  { title: 'Badminton', img: '/assets/sport-badminton.jpg', desc: 'Smash speed, footwork, and rally control.', glyph: 'badminton', live: false },
-  { title: 'Padel', img: '/assets/sports-paddle.webp', desc: 'Wall play, lob depth, and point construction.', glyph: 'padel', live: false },
+  { title: 'Tennis', to: '/tennis', img: '/assets/sport-tennis.jpg', desc: 'Serve, return, and full rally intelligence.', glyph: 'tennis', live: true, orb: 'tennis' },
+  { title: 'Pickleball', to: '/pickleball', img: '/assets/sport-pickleball-edit.webp', desc: 'Shot tracking, kitchen play, and rally analytics.', glyph: 'pickle', live: true, orb: 'pickle' },
+  { title: 'Badminton', img: '/assets/sport-badminton.jpg', desc: 'Smash speed, footwork, and rally control.', glyph: 'badminton', live: false, orb: 'badminton' },
+  { title: 'Padel', img: '/assets/sports-paddle.webp', desc: 'Wall play, lob depth, and point construction.', glyph: 'padel', live: false, orb: 'padel' },
 ]
 // footer: one app card per audience, each with store links
 const FOOT_ROLES = [
@@ -598,6 +610,8 @@ export default function Home({ skipLoader = false }) {
             <p style={css("font:400 16px/1.6 'Sora';color:#ffffff;max-width:620px;margin:0 auto;text-shadow:0 1px 14px rgba(0,0,0,.6)")}>Analytics tuned to your sport — weaknesses exposed, progress tracked. Venue intelligence adds the context: every surface, every condition, and how you play under pressure.</p>
           </div>
 
+          {/* one shared WebGL canvas for all four card objects */}
+          <SportOrbs />
           {/* sport cards */}
           <div ref={cardsRef} className="ag-sport-grid" style={css('display:grid;grid-template-columns:repeat(4,1fr);gap:22px;width:100%;max-width:1080px;margin:0 auto')}>
             {SPORTS.map((s, i) => (
@@ -606,6 +620,7 @@ export default function Home({ skipLoader = false }) {
                   to={s.live ? s.to : undefined}
                   cardClass="h-sportcard"
                   image={s.img}
+                  orb={s.orb}
                   cardStyle={s.live ? CARD_LIVE : CARD_SOON}
                   iconBox={s.live ? ICON_BOX_LIVE_SOFT : ICON_BOX_SOON}
                   icon={<SportGlyph name={s.glyph} c={s.live ? GOLD : '#aeb6bf'} />}

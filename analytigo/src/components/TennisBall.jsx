@@ -2,9 +2,11 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
+import { smoothBall } from './smoothBall.js'
 
 // Premium 3D tennis ball (uses the supplied GLB). Slow auto-rotation, gentle float,
 // PBR studio reflections, themed rim glow, and a subtle mouse-parallax tilt.
+
 export default function TennisBall({ onReveal, prompt = 'Touch the ball to reveal athlete profiles' }) {
   const mountRef = useRef(null)
   const target = useRef({ x: 0, y: 0 })
@@ -56,6 +58,19 @@ export default function TennisBall({ onReveal, prompt = 'Touch the ball to revea
       '/assets/tennis_ball.glb',
       (gltf) => {
         const ball = gltf.scene
+        const maxAniso = renderer.capabilities.getMaxAnisotropy()
+        ball.traverse((o) => {
+          if (!o.isMesh) return
+          const smoothed = smoothBall(o.geometry, 2)
+          o.geometry.dispose()
+          o.geometry = smoothed
+          // the felt is viewed at a grazing angle around most of the ball, where
+          // bilinear filtering smears it into a flat wash
+          for (const slot of ['map', 'normalMap', 'roughnessMap', 'metalnessMap']) {
+            const tex = o.material?.[slot]
+            if (tex) { tex.anisotropy = maxAniso; tex.needsUpdate = true }
+          }
+        })
         const box = new THREE.Box3().setFromObject(ball)
         const size = new THREE.Vector3(); box.getSize(size)
         const center = new THREE.Vector3(); box.getCenter(center)
