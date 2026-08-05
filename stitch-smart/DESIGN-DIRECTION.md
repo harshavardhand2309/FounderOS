@@ -153,23 +153,43 @@ Beyond the marker, all unclaimed: the **pattern piece** (notches, grainline, sea
 
 ## 4. Palette, typography, imagery
 
-### Palette — warm neutrals
+### Palette — cream, white, gold
 
-Every competitor is either **sterile cold** (blue / black / purple) or **sustainability sage**.
-Nobody owns the palette of actual textiles.
+Derived from the logo (client-specified). It lands in unclaimed territory: every competitor is
+either **sterile cold** (blue / black / purple) or **sustainability sage**. Nobody owns the palette
+of actual textiles, and cream reads "greige" and "undyed cotton" pre-cognitively.
 
 ```
-Greige          #C8BFB2    undyed, unbleached — the ground
-Kraft           #A8977F    paper, packaging, trim cards
-Bleach white    #F7F5F1    the sheet, the spec, the light
-Ink             #1A1917    type, rules, structure
-Indigo          #2E3A4F    the one inherited fashion colour
-TCX accent      #E8452C    a real Pantone TCX chip — hot, single-use, earned
+Paper white     #FCFAF5    the sheet, the spec, the light
+Cream           #F4EEE1    the ground — greige, unbleached
+Kraft           #E2D8C1    packaging, trim cards, secondary surfaces
+Leaf gold       #C9A227    fills, rules, chips, ornament — NEVER type
+Deep gold       #9C761A    the only gold that may carry type
+Ink             #1C1A15    type, rules, structure
 ```
 
-Warm neutrals read "textile" pre-cognitively. This palette is unclaimed in the category and
-directly counters the dark-mode-purple AI-SaaS default that the research flags as the single most
-template-coded look on the web.
+> **Provisional.** Sampled from the description "cream white gold," not from the logo file. These
+> become exact once the asset is supplied.
+
+**Two golds, and the reason matters.** Leaf gold on cream is roughly **2.6:1** — it fails WCAG AA
+for text at any size (4.5:1 normal, 3:1 large). Deep gold clears 4.5:1 on cream and is the one that
+may carry type. Collapsing them into a single "brand gold" is the most likely accessibility failure
+in this palette, and it is the specific mistake this split exists to prevent.
+
+**A tension worth naming.** Gold is a *luxury* signal, not an industrial one. It pulls against the
+dense technical spec-sheet register argued for in §2. Two ways to resolve it, and the choice
+depends on the answer to §0:
+
+1. **Gold as metal, not ornament** — treat it the way a trim card or a metal garment fitting reads:
+   sparse, functional, structural. Hairline rules, chip marks, the single accent on a data figure.
+   This keeps the technical register intact and is the recommended path for factory-floor software.
+2. **Gold as luxury** — lean premium and brand-side, which would mean revisiting the density
+   argument entirely. Appropriate only if the buyer is brand-side rather than production-side.
+
+The direction assumes (1). Note also that dark-mode-purple is not the only contaminated default —
+**cream + serif + gold is close to the "warm cream editorial" look now common in AI-generated
+design.** The escape is register, not hue: technical drawing rather than magazine spread, monospace
+carrying data rather than a serif display headline, hairline rules rather than soft shadows.
 
 ### Typography — serif display + technical mono, both doing real work
 
