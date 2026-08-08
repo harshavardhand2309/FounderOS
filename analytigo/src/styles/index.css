@@ -844,12 +844,13 @@ button {
    right, so it is left exactly as it was. Portrait phones especially — `cover`
    there would crop the subject out of the shot entirely. */
 .lh-bg .lh-video {
-  object-fit: contain;
+  /* object-fit is set inline by HeroVideo, measured from the video's own
+     intrinsic size against the live viewport. The old rule here was a
+     `contain` / `cover` media-query pair pinned to 16/9, which is only correct
+     while every source shares the original footage's 1.794 aspect — a square
+     source cropped 51% of its height under it. */
   object-position: center;
   filter: contrast(1.05) saturate(1.06);
-}
-@media (min-aspect-ratio: 16/9) {
-  .lh-bg .lh-video { object-fit: cover; }
 }
 /* blurred edge-fill behind the sharp layer — covers any letterbox / pillarbox
    gap so the backdrop reaches edge-to-edge on every aspect ratio (no black bars),
@@ -2832,3 +2833,32 @@ button {
   background: linear-gradient(180deg, rgba(6, 12, 22, 0.5) 0%, rgba(6, 12, 22, 0.16) 34%, rgba(6, 12, 22, 0.62) 100%);
 }
 .gv-card-media > :not(.gv-video) { position: relative; z-index: 2; }
+
+/* REVIEW BUILD ONLY — hero picker on /tennis. Delete with heroChoice.js. */
+.hv-pick {
+  position: fixed;
+  left: 14px;
+  bottom: 14px;
+  z-index: 80;
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(8, 12, 14, .72);
+  border: 1px solid rgba(255, 255, 255, .14);
+  backdrop-filter: blur(10px);
+}
+.hv-pick button {
+  font: 600 11px/1 'Sora', sans-serif;
+  letter-spacing: .04em;
+  padding: 8px 13px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #cfe0e4;
+  cursor: pointer;
+  transition: background .25s, color .25s;
+}
+.hv-pick button:hover { background: rgba(255, 255, 255, .10); }
+.hv-pick button[aria-pressed="true"] { background: var(--ta, #0fb6a4); color: #04211f; }
+.hv-pick button:focus-visible { outline: 2px solid var(--ta, #0fb6a4); outline-offset: 2px; }

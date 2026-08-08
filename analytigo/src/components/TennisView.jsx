@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { css } from '../utils/css.js'
+import HeroVideo from './HeroVideo.jsx'
+import { HEROES, readHero, writeHero, onHero } from '../lib/heroChoice.js'
 
 // Tennis marketing view — a single hero screen (lower sections removed).
 // Teal accent via var(--ta) / rgba(var(--tc), x) set on the page root.
@@ -8,16 +11,26 @@ export default function TennisView({ navRef, videoRef, onWatchTrailer, onPrepare
   // Both the logo and the Home button return to the Pick Your Game section via this one
   // handler, so they can never diverge. Router <Link>/#sports preserves Back/Forward.
   const goHome = () => { try { sessionStorage.setItem('lvlup:goto', 'sports') } catch { /* ignore */ } }
+  // REVIEW BUILD ONLY — remove with the picker below once a hero is chosen.
+  const [hero, setHero] = useState(readHero)
+  useEffect(() => onHero(setHero), [])
   return (
     <div>
       {/* fixed, full-frame Tennis background video — continuous backdrop */}
-      <div className="lh-bg">
-        <video className="lh-bg-fill" autoPlay muted loop playsInline preload="auto" poster="/assets/tennis-bg-poster.jpg" aria-hidden="true">
-          <source src="/assets/tennis-bg-fill.mp4" type="video/mp4" />
-        </video>
-        <video ref={videoRef} className="lh-video" autoPlay muted loop playsInline preload="auto" poster="/assets/tennis-bg-poster.jpg" aria-hidden="true">
-          <source src="/assets/tennis-bg.mp4" type="video/mp4" />
-        </video>
+      <HeroVideo hero={hero} videoRef={videoRef} />
+
+      {/* REVIEW BUILD ONLY — switches the hero backdrop live. Delete this, the
+          HEROES list and lib/heroChoice.js once one is chosen. */}
+      <div className="hv-pick">
+        {HEROES.map((h) => (
+          <button
+            key={h.id}
+            type="button"
+            aria-pressed={hero.id === h.id}
+            title={h.note}
+            onClick={() => writeHero(h.id)}
+          >{h.name}</button>
+        ))}
       </div>
 
       {/* NAV — Home only, no brand block */}
